@@ -1,22 +1,34 @@
-version: "3.4"
-
 services:
-  db:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    env_file: .env
-    volumes:
-      - ./backup:/docker-entrypoint-initdb.d/
+  atkisdb:
+    container_name: atkisdb
+    image: postgis/postgis:16-3.4
     ports:
       - "${MAPPED_POSTGRES_PORT}:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: atkis_db
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -h atkisdb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db_import:
+    container_name: db_shp_import
+    build:
+      context: db_import
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: atkis_db
+    depends_on:
+      atkisdb:
+        condition: service_healthy
+
   ontop:
-    image: ontop/ontop
-    env_file: .env
+    container_name: ontop
+    image: ontop/ontop:5.1.2
     restart: unless-stopped
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/atkis1.ttl
@@ -26,18 +38,13 @@ services:
       ONTOP_PORTAL_FILE: /opt/ontop/input/atkis1.portal.toml
       ONTOP_CORS_ALLOWED_ORIGINS: "*"
       ONTOP_DEV_MODE: "true"
+      ONTOP_LOG_LEVEL: "DEBUG"
+
     volumes:
       - ./vkg:/opt/ontop/input
       - ./jdbc:/opt/ontop/jdbc
-      - ./wait-for-it:/opt/wait-for-it
-    entrypoint:
-      [
-        "/opt/wait-for-it/wait-for-it.sh",
-        "db:5432",
-        "--timeout=0",
-        "--strict",
-        "--",
-        "/opt/ontop/entrypoint.sh",
-      ]
     ports:
       - "${SERVER_PORT}:8080"
+    depends_on:
+      db_import:
+        condition: service_completed_successfully
