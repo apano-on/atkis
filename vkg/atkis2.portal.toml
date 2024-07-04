@@ -307,10 +307,10 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 # the river starts from Nederland, but ATKIS has data only about Germany
 SELECT * WHERE {
 ?a a :WaterBodyCourse ; rdfs:label ?waterLabel ; geo:hasDefaultGeometry ?g ; geo:sfIntersects ?loc .
-?g a sf:Polygon ; geo:asWKT ?water .
+?g a sf:MultiPolygon ; geo:asWKT ?water .
  BIND("red" as ?waterColor)
 ?loc a :Location ; rdfs:label ?locationLabel ; geo:hasDefaultGeometry ?locgeo .
-?locgeo a geo:Geometry, sf:Polygon ; geo:asWKT ?location .
+?locgeo a geo:Geometry, sf:MultiPolygon ; geo:asWKT ?location .
   BIND("blue" as ?locationColor)
 #FILTER(?waterLabel = "Rhein")
 }
