@@ -6,7 +6,7 @@ This project utilizes Virtual Knowledge Graphs (VKG) to query ATKIS (DLM250) dat
 ATKIS Dataset: https://gdz.bkg.bund.de/index.php/default/digitales-landschaftsmodell-1-250-000-ebenen-dlm250-ebenen.html
 
 ## Instructions to run
-Keep ports `7777` (PostgreSQL) and `8083` (Ontop free). Modify the ports as needed via `.env` file.
+Keep ports `7777` (PostgreSQL) and `8083` (Ontop) free. Modify the ports as needed via `.env` file.
 
 Execute from the command line:
 ```

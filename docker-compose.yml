@@ -31,11 +31,11 @@ services:
     image: ontop/ontop:5.1.2
     restart: unless-stopped
     environment:
-      ONTOP_ONTOLOGY_FILE: /opt/ontop/input/atkis1.ttl
+      ONTOP_ONTOLOGY_FILE: /opt/ontop/input/atkis2.ttl
       ONTOP_MAPPING_FILE: /opt/ontop/input/atkis1.obda
       ONTOP_XML_CATALOG_FILE: /opt/ontop/input/catalog-v001.xml
       ONTOP_PROPERTIES_FILE: /opt/ontop/input/atkis1.docker.properties
-      ONTOP_PORTAL_FILE: /opt/ontop/input/atkis1.portal.toml
+      ONTOP_PORTAL_FILE: /opt/ontop/input/atkis2.portal.toml
       ONTOP_CORS_ALLOWED_ORIGINS: "*"
       ONTOP_DEV_MODE: "true"
       ONTOP_LOG_LEVEL: "DEBUG"

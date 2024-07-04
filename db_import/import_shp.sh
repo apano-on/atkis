@@ -31,3 +31,8 @@ do
 done
 
 echo "All SHP files imported successfully!"
+
+sleep 3
+
+echo "Materialize tables with ehInside/within relations"
+psql -h atkisdb -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f addtables.sql

@@ -1,0 +1,318 @@
+title="ATKIS VKG"
+
+[[tabGroups]]
+name="Thesis Queries"
+
+[[tabGroups.tabs]]
+name="Q1"
+query="""
+# Q1: Find all instances of class AdministrativeArea, their name and all geometries tied to that class.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE {
+?a a :Administrative ; rdfs:label ?name ; geo:hasDefaultGeometry/geo:asWKT ?wkt .
+}
+LIMIT 10000
+"""
+
+[[tabGroups.tabs]]
+name="Q2"
+query="""
+# Q2: Find all instances of a specific River from WaterBodyCourse, filtering for a specific
+# River, name and geometries.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE{
+?a a :WaterBodyCourse ; rdfs:label ?name ; geo:hasDefaultGeometry/geo:asWKT ?wkt .
+FILTER(?name= 'Rhein')
+}
+LIMIT 10000
+"""
+
+[[tabGroups.tabs]]
+name="Q3"
+query="""
+# Q3: Get all instances of the theme Settlement.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE {
+?s a :Settlement .
+}
+"""
+
+[[tabGroups.tabs]]
+name="Q4"
+query="""
+# Q4: Count all triples in the graph.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT (COUNT(?s) AS ?triples) WHERE { ?s ?p ?o }
+"""
+
+[[tabGroups.tabs]]
+name="Q5"
+query="""
+# Q5: Find instances of feature TestSite, name and their geometry.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE {
+?s a :TestSite ; geo:hasDefaultGeometry/geo:asWKT ?sWkt ; rdfs:label ?sLabel
+}
+LIMIT 10000
+"""
+
+[[tabGroups.tabs]]
+name="Q6"
+query="""
+# Q6: Find the distance from a Point of interest (Oberhof), to other city points, with the
+#use of geof:distance function. We filter out the point geometries from the target
+#class.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE {
+?a a :Location ; rdfs:label ?label ; geo:hasDefaultGeometry ?geom .
+?geom a geo:Geometry, sf:Point ; geo:asWKT ?wkt .
+?a1 a :Location ; rdfs:label ?label1 ; geo:hasDefaultGeometry ?geom1 .
+?geom1 a geo:Geometry, sf:Point ; geo:asWKT ?wkt1 .
+filter(?label1 = 'Oberhof')
+BIND(geof:distance(?wkt1, ?wkt, uom:metre) as ?distance)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Q7"
+query="""
+# Q7: Find all WaterBodyCourse, filtered by name that intersects with another given
+#class polygon Location, using geosparql function geof:sfInterects.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE {
+?w a :WaterBodyCourse ; rdfs:label ?wLabel ; geo:hasGeometry/geo:asWKT ?wkt .
+filter(?wLabel = 'Rhein')
+?b1 a :Location ; rdfs:label ?slabel ; geo:hasDefaultGeometry/geo:asWKT ?wkt1 .
+filter(geof:sfIntersects(?wkt, ?wkt1))
+}
+limit 10
+"""
+
+[[tabGroups.tabs]]
+name="Q8"
+query="""
+# Q8: Find various buildings within a given BuildingFacility with a 5000 metre buffer
+#around it with geof:buffer, and return the geof:distance from the target point to
+#other buildings.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE{
+?b a :BuildingFacility ; rdfs:label ?wktLabel ; geo:hasDefaultGeometry/geo:asWKT ?wkt .
+filter (?wktLabel = "Lethturm")
+?b1 a :BuildingFacility ; rdfs:label ?bfgeo1Label ; geo:hasDefaultGeometry/geo:asWKT ?bfgeo1 .
+FILTER(contains(str(?b1), "/p"))
+BIND("blue" AS ?bfgeo1Color)
+BIND(geof:buffer(?wkt, 5000, uom:metre) AS ?bufferedgeom)
+BIND("red" as ?bufferedgeomColor)
+BIND(geof:distance(?wkt, ?bfgeo1, uom:metre) AS ?distance)
+FILTER(?distance <= 5000)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Q9"
+query="""
+# Q9: Find all entries of class Location that are within an AdministrativeArea and their
+#districts, filtering by using the geof:sfContains function.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE {
+?b a :Location; rdfs:label ?label ; geo:hasDefaultGeometry/geo:asWKT ?wkt .
+?a a :Administrative; rdfs:label ?label1 ; geo:hasDefaultGeometry/geo:asWKT ?wkt1 .
+FILTER(geof:sfContains(?wkt1, ?wkt))
+}
+LIMIT 10
+"""
+
+[[tabGroups.tabs]]
+name="Q10"
+query="""
+# Q10: Find feature HarborBasin that are geof:sfWithin within feature Port.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE{
+?t a :HarborBasin ; geo:hasDefaultGeometry/geo:asWKT ?wkt ; rdfs:label ?name .
+?t1 a :Port ; geo:hasDefaultGeometry/geo:asWKT ?wkt1 ; rdfs:label ?name1 .
+FILTER(geof:sfWithin(?wkt, ?wkt1))
+}
+LIMIT 1000
+"""
+
+[[tabGroups.tabs]]
+name="Q11"
+query="""
+# Q11: This query is the transformed query of Q7, using geo:sfIntersects instead
+#of the functional query geof:sfIntersects
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE {
+?w a :WaterBodyCourse ; rdfs:label ?wLabel ; geo:hasGeometry/geo:asWKT ?wkt ; geo:sfIntersects ?b1 .
+filter(?wLabel = 'Rhein')
+?b1 a :Location ; rdfs:label ?slabel ; geo:hasDefaultGeometry/geo:asWKT ?wkt1 .
+}
+limit 10000
+"""
+
+[[tabGroups.tabs]]
+name="Q12"
+query="""
+# Q12: Find all instances of SpecialFacility which are inside Location, using the rela-
+#tional predicate geo:ehInside
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE {
+?b a :SpecialFacility; rdfs:label ?label ; geo:hasDefaultGeometry/geo:asWKT ?wkt ; geo:ehInside ?a .
+?a a :Location; rdfs:label ?label1 ; geo:hasDefaultGeometry/geo:asWKT ?wkt1 .
+}
+LIMIT 10000
+"""
+
+[[tabGroups.tabs]]
+name="Q13"
+query="""
+# Q13: Find all RoadTraffic that crosses a filtered Location, using geo:sfCrosses relation.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE {
+?b a :RoadTraffic; rdfs:label ?label ; geo:hasDefaultGeometry/geo:asWKT ?wkt ; geo:sfCrosses ?a .
+?a a :Location; rdfs:label ?label1 ; geo:hasDefaultGeometry/geo:asWKT ?wkt1 .
+filter(?label1 = 'Rust')
+}
+"""
+
+[[tabGroups.tabs]]
+name="Q14"
+query="""
+# Q14: Find all instances of WaterBodyCourse that intersects with Agricultural instance,
+#using geo:sfIntersects.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE {
+?b a :WaterBodyCourse; rdfs:label ?label ;
+    geo:hasDefaultGeometry/geo:asWKT ?wkt ;
+    geo:sfIntersects ?a .
+?a a :Agricultural; rdfs:label ?label1 ; geo:hasDefaultGeometry/geo:asWKT ?wkt1 .
+}
+"""
+
+[[tabGroups.tabs]]
+name="Q15"
+query="""
+# Q15: Find all Building which are inside Location, using geo:ehInside.
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+
+SELECT * WHERE {
+?b a :Building; rdfs:label ?label ; geo:hasDefaultGeometry/geo:asWKT ?wkt ; geo:ehInside ?a .
+?a a :Location; rdfs:label ?label1 ; geo:hasDefaultGeometry/geo:asWKT ?wkt1 .
+}
+"""
+
+[[tabGroups]]
+name="Other Queries"
+
+[[tabGroups.tabs]]
+name="River Rhein"
+query="""
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+
+# see which river passes through city
+# the river starts from Nederland, but ATKIS has data only about Germany
+SELECT * WHERE {
+?a a :WaterBodyCourse ; rdfs:label ?waterLabel ; geo:hasDefaultGeometry ?g ; geo:sfIntersects ?loc .
+?g a sf:Polygon ; geo:asWKT ?water .
+ BIND("red" as ?waterColor)
+?loc a :Location ; rdfs:label ?locationLabel ; geo:hasDefaultGeometry ?locgeo .
+?locgeo a geo:Geometry, sf:Polygon ; geo:asWKT ?location .
+  BIND("blue" as ?locationColor)
+#FILTER(?waterLabel = "Rhein")
+}
+limit 1
+"""

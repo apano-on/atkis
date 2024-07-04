@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <uri id="Imports Wizard Entry" name="https://schema.org/version/latest/schemaorg-current-http.rdf" uri="ontologies/schema.owl"/>
     <uri id="Imports Wizard Entry" name="http://www.opengis.net/ont/sf/1.1" uri="ontologies/sf.ttl"/>
+    <uri id="Imports Wizard Entry" name="http://www.opengis.net/ont/geosparql/1.1" uri="ontologies/geo.ttl"/>
     <uri id="Imports Wizard Entry" name="http://www.opengis.net/ont/geosparql/1.1" uri="ontologies/geosparql.ttl"/>
     <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
-        <uri id="Automatically generated entry, Timestamp=1716905421606" name="http://www.opengis.net/ont/gml" uri="ontologies/gml.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1716905421606" name="http://www.w3.org/2003/01/geo/wgs84_pos" uri="ontologies/wgs84.rdf"/>
-        <uri id="Automatically generated entry, Timestamp=1716905421606" name="https://schema.org/version/latest/schemaorg-current-http.rdf" uri="ontologies/schema.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1720108177606" name="http://www.opengis.net/ont/gml" uri="ontologies/gml.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1720108177606" name="https://schema.org/version/latest/schemaorg-current-http.rdf" uri="ontologies/schema.owl"/>
     </group>
 </catalog>

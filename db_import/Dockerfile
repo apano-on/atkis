@@ -15,5 +15,8 @@ RUN cp -R dlm250.gk3.shape.ebenen/dlm250_ebenen/* shp_data/
 COPY import_shp.sh .
 RUN chmod +x import_shp.sh
 
+# Copy SQL script to create tables with ehInside/within relation
+COPY addtables.sql .
+
 # Load data
 ENTRYPOINT ["/import_shp.sh"]

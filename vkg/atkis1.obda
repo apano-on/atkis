@@ -180,14 +180,14 @@ target		:Location/f/{gid1} geo:sfWithin :Administrative/f/{gid2} .
 source		select a.gid as gid1, b.gid as gid2 from sie01_f a
 			join geb01_f b on st_within(a.geom, b.geom)
 
-;TODO: Check how tables were created to generate mappings
-;mappingId	building inside settlement
-;target		:Building/p/{id} geo:ehInside :Location/f/{gid} .
-;source		select * from building_in_city
+;NOTE: These tables are materialized from the original
+mappingId	building inside settlement
+target		:Building/p/{b_gid} geo:ehInside :Location/f/{loc_gid} .
+source		select * from building_in_city
 
-;mappingId	river through settlement
-;target		:WaterBodyCourse/f/{id} geo:sfIntersects :Location/f/{gid} .
-;source		select * from wbcourse_in_loc
+mappingId	river through settlement
+target		:WaterBodyCourse/f/{w_gid} geo:sfIntersects :Location/f/{loc_gid} .
+source		select * from wbcourse_in_loc
 
 mappingId	WaterBody linestrings_length
 target		:WaterBodyCourse/geo/l/{gid} geo:hasMetricLength {length}^^xsd:double .
