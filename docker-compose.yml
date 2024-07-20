@@ -39,7 +39,6 @@ services:
       ONTOP_CORS_ALLOWED_ORIGINS: "*"
       ONTOP_DEV_MODE: "true"
       ONTOP_LOG_LEVEL: "DEBUG"
-
     volumes:
       - ./vkg:/opt/ontop/input
       - ./jdbc:/opt/ontop/jdbc

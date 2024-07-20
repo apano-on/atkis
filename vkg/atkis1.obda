@@ -16,7 +16,7 @@ schema:		http://schema.org/
 
 [MappingDeclaration] @collection [[
 mappingId	Area for linestring_l
-target		:Administrative/l/{gid} a :Administrative ; :land {land}^^xsd:string ; :objart {objart}^^xsd:integer ; :beginn {beginn}^^xsd:timestamp ; geo:hasDefaultGeometry :Administrative/geo/l/{gid} . :Administrative/geo/l/{gid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral . 
+target		:Administrative/l/{gid} a :Administrative ; :land {land}^^xsd:string ; :objart {objart}^^xsd:string ; :beginn {beginn}^^xsd:timestamp ; geo:hasDefaultGeometry :Administrative/geo/l/{gid} . :Administrative/geo/l/{gid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select gid, st_astext(geom) as wkt, objart, beginn, land from "geb01_l"
 
 mappingId	administrative polygon
@@ -76,7 +76,7 @@ target		:Location/p/{gid} a :Location ; rdfs:label {nam} ; geo:hasDefaultGeometr
 source		select gid, nam, st_astext(geom) as wkt  from "sie01_p"
 
 mappingId	areas dominated by buildings, polygon f
-target		:AreaDominatedByBuilding/f/{gid} a :AreaDominatedByBuilding ; :objart {objart} ; rdfs:label {nam} ; :fkt {fkt} ; geo:hasDefaultGeometry :AreaDominatedByBuilding/geo/f/{gid} . :AreaDominatedByBuilding/geo/f/{gid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:AreaDominatedByBuilding/f/{gid} a :AreaDominatedByBuilding ; :objart {objart} ; rdfs:label {nam} ; :fkt {fkt}^^xsd:string ; geo:hasDefaultGeometry :AreaDominatedByBuilding/geo/f/{gid} . :AreaDominatedByBuilding/geo/f/{gid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select gid, nam, fkt, objart, st_astext(geom) as wkt from "sie02_f"
 
 mappingId	Building/facilities polygon_f
@@ -104,8 +104,16 @@ target		:SpecialFacility/p/{gid} a :SpecialFacility ; rdfs:label {nam} ; :objart
 source		select gid, nam, st_astext(geom) as wkt, objart_txt from "sie04_p"
 
 mappingId	Building point_p
-target		:Building/p/{gid} a :Building ; rdfs:label {nam} ; :gfk {gfk} ; geo:hasDefaultGeometry :Building/geo/p/{gid} . :Building/geo/p/{gid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:Building/p/{gid} a :Building ; rdfs:label {nam} ; :gfk :BuildingFunction/p/{gfk} ; geo:hasDefaultGeometry :Building/geo/p/{gid} . :Building/geo/p/{gid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select gid, nam, bwf, gfk ,st_astext(geom) as wkt from "sie05_p"
+
+mappingId	BuildingFunction
+target		:BuildingFunction/p/{code} a :BuildingFunction ; rdfs:label {name_de}@de ; rdfs:comment {definition_de}@de .
+source		select code, name_de, definition_de from "gebaeudefunktion"
+
+mappingId	BuildingFunction - English
+target		:BuildingFunction/p/{code} rdfs:label {name_en}@en .
+source		select code, name_en from "gebaeudefunktion"
 
 mappingId	Agricultural polygon_f
 target		:Agricultural/f/{gid} a :Agricultural ; rdfs:label {nam} ; geo:hasDefaultGeometry :Agricultural/geo/f/{gid} . :Agricultural/geo/f/{gid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .

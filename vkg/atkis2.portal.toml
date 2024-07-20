@@ -316,3 +316,19 @@ SELECT * WHERE {
 }
 limit 1
 """
+
+
+[[tabGroups.tabs]]
+name="Building Functions"
+query = """
+# Q2: Find all Museums in the dataset
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * WHERE {
+?b a :Building; rdfs:label ?label ; :gfk ?gfk .
+?gfk rdfs:label ?function .
+FILTER(LANG(?function) = "en")
+FILTER(STR(?function)='Museum')
+}
+"""

@@ -27,6 +27,9 @@
 ###  http://example.org/ontologies/atkis#existsIn
 :existsIn rdf:type owl:ObjectProperty .
 
+###  http://example.org/ontologies/atkis#gfk
+:gfk rdf:type owl:ObjectProperty ;
+     rdfs:comment """categorisation of buildings defined by gfk values. e.g. gfk 2072 = youth hostel"""@en .
 
 ###  http://example.org/ontologies/atkis#hasArea
 :hasArea rdf:type owl:ObjectProperty .
@@ -62,29 +65,30 @@
 #    Data properties
 #################################################################
 
-###  http://example.org/ontologies/atkis#area
-:area rdf:type owl:DatatypeProperty ;
-      rdfs:subPropertyOf owl:topDataProperty ;
-      rdfs:domain :Area ;
-      rdfs:range xsd:string .
-
-
-###  http://example.org/ontologies/atkis#beginn
-:beginn rdf:type owl:DatatypeProperty ;
+###  http://example.org/ontologies/atkis#begin
+:begin rdf:type owl:DatatypeProperty ;
         rdfs:subPropertyOf owl:topDataProperty ;
-        rdfs:comment "Lifetime interval begins" .
+        rdfs:comment "Lifetime interval begins"@en ;
+        rdfs:comment "Lebenszeitintervall Beginnt"@de ;
+        rdfs:label "begin"@en ;
+        rdfs:label "Beginn"@de ;
+        rdfs:range xsd:dateTime .
 
-
-###  http://example.org/ontologies/atkis#bemerkung
-:bemerkung rdf:type owl:DatatypeProperty ;
-           rdfs:comment "remark or comment" .
+###  http://example.org/ontologies/atkis#remark
+:remark rdf:type owl:DatatypeProperty ;
+        rdfs:subPropertyOf owl:topDataProperty ;
+        rdfs:comment "Remark or comment"@en ;
+        rdfs:comment "Bemerkung oder Kommentar"@de ;
+        rdfs:label "remark"@en ;
+        rdfs:label "Bemerkung"@de .
 
 
 ###  http://example.org/ontologies/atkis#bez
 :bez rdf:type owl:DatatypeProperty ;
      rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Designation" ,
-                  "Traffic code, highway code. Example E6" .
+     rdfs:comment "Designation"@en ;
+     skos:example "Traffic code, highway code; e.g. E6" ;
+     rdfs:comment "bezeichnung"@de .
 
 
 ###  http://example.org/ontologies/atkis#bound
@@ -93,107 +97,100 @@
 
 ###  http://example.org/ontologies/atkis#brf
 :brf rdf:type owl:DatatypeProperty ;
-     rdfs:comment "Width of roadway" .
-
-
-###  http://example.org/ontologies/atkis#buildingPolygon
-:buildingPolygon rdf:type owl:DatatypeProperty ;
-                 rdfs:subPropertyOf owl:topDataProperty ;
-                 rdfs:comment "multipolygon border for buildings (sports, museums etc)" .
+     rdfs:comment "Width of roadway"@en ;
+     rdfs:comment "breiteDerFahrbahn"@de ;
+     skos:example "The minimum value for one lane is 2.5 meters."@en ;
+     skos:example "Der Mindestwert für eine Fahrspur beträgt 2,5 Meter."@de ;
+     rdfs:range xsd:decimal .
 
 
 ###  http://example.org/ontologies/atkis#bvb
 :bvb rdf:type owl:DatatypeProperty ;
      rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Special traffic importance" .
+     rdfs:comment "Special traffic importance"@en ;
+     rdfs:comment "besondereVerkehrsbedeutung"@de ;
+     rdfs:range [ a rdfs:Datatype ;
+                      owl:oneOf ("interurban traffic"^^xsd:string "local traffic"^^xsd:string)
+                    ] ;
+         skos:prefLabel "interurban traffic"@en, "Überörtlicher Verkehr"@de ;
+         skos:altLabel "local traffic"@en, "Nahverkehr"@de .
 
 
-###  http://example.org/ontologies/atkis#district
-:district rdf:type owl:DatatypeProperty ;
-          rdfs:subPropertyOf owl:topDataProperty ;
-          rdfs:domain :Administrative ;
-          rdfs:range xsd:string .
-
-
-###  http://example.org/ontologies/atkis#ende
-:ende rdf:type owl:DatatypeProperty ;
-      rdfs:comment "Lifetime interval ends" .
-
+###  http://example.org/ontologies/atkis#end
+:end rdf:type owl:DatatypeProperty ;
+        rdfs:subPropertyOf owl:topDataProperty ;
+        rdfs:comment "Lifetime interval ends"@en ;
+        rdfs:comment "Lebenszeitintervall Endet"@de ;
+        rdfs:label "end"@en ;
+        rdfs:label "Ende"@de ;
+        rdfs:range xsd:dateTime .
 
 ###  http://example.org/ontologies/atkis#fkt
-:fkt rdf:type owl:DatatypeProperty .
+:fkt rdf:type owl:DatatypeProperty ;
+        rdfs:label "function"@en ;
+        rdfs:label "Funktion"@de .
 
 
 ###  http://example.org/ontologies/atkis#fsz
 :fsz rdf:type owl:DatatypeProperty ;
      rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Number of lanes" .
+     rdfs:comment "Number of lanes"@en ;
+     rdfs:comment "Anzahl Der Fahrstreifen"@de ;
+     rdfs:range xsd:integer .
 
 
 ###  http://example.org/ontologies/atkis#ftr
 :ftr rdf:type owl:DatatypeProperty ;
-     rdfs:comment "Lane seperation" .
-
-
-###  http://example.org/ontologies/atkis#gfk
-:gfk rdf:type owl:DatatypeProperty ;
-     rdfs:comment """categorisation of buildings defined by gfk values.
-e.g. gfk 2072 = youth hostel"""@en .
+     rdfs:comment "Lane seperation" ;
+     rdfs:comment "Fahrbahntrennung"@de .
 
 
 ###  http://example.org/ontologies/atkis#hdu_x
 :hdu_x rdf:type owl:DatatypeProperty ;
        rdfs:subPropertyOf owl:topDataProperty ;
-       rdfs:comment "Has direct under pass" .
+       rdfs:comment "Has direct under pass"@en ;
+       rdfs:comment "Hat Direkt Unten Existiert"@de .
 
 
 ###  http://example.org/ontologies/atkis#idb
-:idb rdf:type owl:DatatypeProperty ;
+:ibd rdf:type owl:DatatypeProperty ;
      rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "International importance" .
+     rdfs:comment "International importance"@en ;
+     rdfs:comment "Internationale Bedeutung"@de .
 
 
 ###  http://example.org/ontologies/atkis#land
 :land rdf:type owl:DatatypeProperty ;
       rdfs:subPropertyOf owl:topDataProperty ;
-      rdfs:comment "Country code" .
-
-
-###  http://example.org/ontologies/atkis#lat
-:lat rdf:type owl:DatatypeProperty .
-
-
-###  http://example.org/ontologies/atkis#location
-:location rdf:type owl:DatatypeProperty ;
-          rdfs:subPropertyOf owl:topDataProperty ;
-          rdfs:range xsd:string .
-
-
-###  http://example.org/ontologies/atkis#long
-:long rdf:type owl:DatatypeProperty .
+      rdfs:comment "Country code"@en ;
+      rdfs:comment "Landeskennung"@de ;
+      skos:example "DE" .
 
 
 ###  http://example.org/ontologies/atkis#modellart
 :modellart rdf:type owl:DatatypeProperty ;
            rdfs:subPropertyOf owl:topDataProperty ;
-           rdfs:comment "Model type identifier" .
-
-
-###  http://example.org/ontologies/atkis#municipality
-:municipality rdf:type owl:DatatypeProperty .
+           rdfs:comment "Model type identifier"@en ;
+           rdfs:comment "Modellarten Kennung"@de ;
+           skos:example "Basis-DLM" ;
+           rdfs:range xsd:string .
 
 
 ###  http://example.org/ontologies/atkis#objart
 :objart rdf:type owl:DatatypeProperty ;
         rdfs:subPropertyOf owl:topDataProperty ;
-        rdfs:comment "Object type" .
+        rdfs:comment "Object type"@en ;
+        rdfs:comment "Objektart"@de ;
+        rdfs:range xsd:string .
 
 
 ###  http://example.org/ontologies/atkis#objart_txt
 :objart_txt rdf:type owl:DatatypeProperty ;
             rdfs:subPropertyOf owl:topDataProperty ;
             rdfs:domain :Settlement ;
-            rdfs:comment "Object type text" .
+            rdfs:comment "Object type text"@en ;
+            rdfs:comment "Objektart Text"@de ;
+            rdfs:range xsd:string .
 
 
 ###  http://example.org/ontologies/atkis#objart_z
@@ -201,56 +198,47 @@ e.g. gfk 2072 = youth hostel"""@en .
           rdfs:comment "Object types without spatial references (ZUSO)" .
 
 
-###  http://example.org/ontologies/atkis#objectId
-:objectId rdf:type owl:DatatypeProperty ;
-          rdfs:domain :Area ,
-                      :Settlement ,
-                      :Traffic .
-
-
-###  http://example.org/ontologies/atkis#objecttxt
-:objecttxt rdf:type owl:DatatypeProperty ;
-           rdfs:domain :SpecialFacility ;
-           rdfs:range xsd:string .
-
-
 ###  http://example.org/ontologies/atkis#objid
 :objid rdf:type owl:DatatypeProperty ;
        rdfs:subPropertyOf owl:topDataProperty ;
-       rdfs:comment "Unique Object identifier" .
+       rdfs:comment "Unique Object identifier"@en ;
+       rdfs:comment "Eindeutiger Objektidentifikator"@de .
 
 
 ###  http://example.org/ontologies/atkis#objid_z
 :objid_z rdf:type owl:DatatypeProperty ;
          rdfs:subPropertyOf owl:topDataProperty ;
-         rdfs:comment "Unique identifier for feature types without spatial reference (ZUSO)" .
-
-
-###  http://example.org/ontologies/atkis#place
-:place rdf:type owl:DatatypeProperty .
+         rdfs:comment "Unique identifier for feature types without spatial reference (ZUSO)"@en ;
+         rdfs:comment "Eindeutiger Identifikator für Objektarten ohne räumlichen Bezug (ZUSO)"@de .
 
 
 ###  http://example.org/ontologies/atkis#rgs
 :rgs rdf:type owl:DatatypeProperty ;
-     rdfs:domain :Settlement .
+     rdfs:domain :Settlement ;
+     rdfs:comment "regional language"@en ;
+     rdfs:comment "Regional Sprache"@de .
 
 
 ###  http://example.org/ontologies/atkis#wdm
 :wdm rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Dedication" .
+        rdfs:subPropertyOf owl:topDataProperty ;
+        rdfs:comment "Dedication"@en ;
+        rdfs:comment "Widmung"@de .
 
 
 ###  http://example.org/ontologies/atkis#znm
 :znm rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Middle name" .
+        rdfs:subPropertyOf owl:topDataProperty ;
+        rdfs:comment "Middle name"@en ;
+        rdfs:comment "Zweit Name"@de ;
+        rdfs:range xsd:string .
 
 
 ###  http://example.org/ontologies/atkis#zus
 :zus rdf:type owl:DatatypeProperty ;
      rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Condition" .
+     rdfs:comment "Condition"@en ;
+     rdfs:comment "Zustand"@de .
 
 
 #################################################################
@@ -321,6 +309,10 @@ e.g. gfk 2072 = youth hostel"""@en .
 ###  http://example.org/ontologies/atkis#BuildingFacility
 :BuildingFacility rdf:type owl:Class ;
                   rdfs:subClassOf :Settlement .
+
+
+###  http://example.org/ontologies/atkis#BuildingFunction
+:BuildingFunction rdf:type owl:Class .
 
 
 ###  http://example.org/ontologies/atkis#CableOrSuspensionRailway
