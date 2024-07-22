@@ -1,3 +1,4 @@
+-- Add 2 missing linkage tables
 CREATE TABLE building_in_city AS
 SELECT DISTINCT ON (t1.gid) t1.gid AS b_gid, t2.gid AS loc_gid
     FROM "sie05_p" t1
@@ -14,10 +15,27 @@ SELECT DISTINCT ON (t1.gid) t1.gid AS w_gid, t2.gid AS loc_gid
 ALTER TABLE wbcourse_in_loc ADD PRIMARY KEY (w_gid);
 
 
+-- Some attributes in the RoadTraffic table contain -9998 instead of NULL values
+UPDATE ver01_l
+SET brf = CASE
+          WHEN brf = -9998 THEN NULL
+          ELSE brf
+END;
+
+UPDATE ver01_l
+SET fsz = CASE
+          WHEN fsz = -9998 THEN NULL
+          ELSE fsz
+END;
+
+
+-- Source: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/binarywriterservlet?imgUid=78f7a5be-17ae-4819-393b-216067bef8a0&uBasVariant=11111111-1111-1111-1111-111111111111#_C11007-_A11007_46283
+-- FROM: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/, OK AAA-Anwendungsschema 7.1.2 (HTML)
+-- VERSION 7.1.2 needed for this dataset
 -- Add tables which map respective attribute codes to their names in German and their respective English translation
 -- English translation is performed via Deepl
 -- Attribute: gebaeudefunktion
--- Source: https://www.adv-online.de/icc/extdeu/nav/35b/binarywriterservlet?imgUid=76070147-1420-4e71-0832-12914a39df1f&uBasVariant=11111111-1111-1111-1111-111111111111#_C9096
+
 CREATE TABLE gebaeudefunktion (
     code VARCHAR(4) PRIMARY KEY,
     name_en TEXT,
@@ -264,8 +282,301 @@ INSERT INTO gebaeudefunktion VALUES (3290, 'Tourist information centre', 'Touris
 INSERT INTO gebaeudefunktion VALUES (9998, 'Cannot be specified according to sources', 'Nach Quellenlage nicht zu spezifizieren', '''Nach Quellenlage nicht zu spezifizieren'' bedeutet, dass keine Aussage über die Werteart gemacht werden kann.');
 
 
-
-
-
-
 ALTER TABLE "sie05_p" ADD CONSTRAINT gebaeudefunktion_fk FOREIGN KEY (gfk) REFERENCES gebaeudefunktion(code);
+
+
+-- Attribute: besondereverkehrsbedeutung
+CREATE TABLE besondereverkehrsbedeutung (
+                                            code VARCHAR(4) PRIMARY KEY,
+                                            name_en TEXT,
+                                            name_de TEXT,
+                                            definition_de TEXT,
+                                            CONSTRAINT check_column_format CHECK (
+                                                code ~ '^[0-9]{4}$'
+                                                OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO besondereverkehrsbedeutung VALUES (1000, 'Interurban traffic', 'Überörtlicher Verkehr' , '''Überörtlicher Verkehr'' beschreibt das durchgehende Straßennetz des tatsächlich stattfindenden Verkehrs, über den aufgrund des Ausbauzustandes und der örtlichen Verkehrsregelung der überörtliche Verkehr geleitet wird. Dieser ist unabhängig von gesetzlichen Festlegungen (z. B. Landesstraßengesetz). Deshalb richtet er sich auch nicht nach der Widmung. Die Werteart BVB 1000 beschreibt somit gleichzeitig den überörtlichen Verkehr und den dazugehörigen innerörtlichen Durchgangsverkehr.');
+INSERT INTO besondereverkehrsbedeutung VALUES (1003, 'Local transport', 'Nahverkehr' , '''Nahverkehr'' beschreibt sowohl den zwischenörtlichen Verkehr ohne überörtliche Bedeutung, als auch den innerörtlichen Durchgangsverkehr des angebundenen Ortes.');
+INSERT INTO besondereverkehrsbedeutung VALUES (2000, 'Local traffic', 'Ortsverkehr' , '''Ortsverkehr'' beschreibt den tatsächlich stattfindenden Verkehr auf einer Straße (Ortsstraße), unabhängig von örtlichen Festlegungen (z. B. Ortssatzungen). Unter Ortsverkehr werden sowohl Sammel- als auch Anliegerverkehr subsumiert. Er bezeichnet sämtliche innerörtliche Verkehrswege, die nicht dem überörtlichen Verkehr oder Nahverkehr zugeordnet werden können.');
+INSERT INTO besondereverkehrsbedeutung VALUES (2001, 'Collective transport', 'Sammelverkehr' , '''Sammelverkehr'' beschreibt den tatsächlich stattfindenden Verkehr auf einer Straße (Sammelstraße), unabhängig von örtlichen Festlegungen (z. B. Ortssatzungen). Die Sammelstraße leitet hauptsächlich den innerörtlichen Verkehr von den Anliegerstraßen zum überörtlichen Verkehr oder Nahverkehr.');
+INSERT INTO besondereverkehrsbedeutung VALUES (2002, 'Residential traffic', 'Anliegerverkehr' , '''Anliegerverkehr'' beschreibt den tatsächlich stattfindenden Verkehr auf einer Straße (Anliegerstraße), unabhängig von örtlichen Festlegungen (z. B. Ortssatzungen). Die Anliegerstraße ist eine Straße auf die jeder Straßenanlieger von seinem Anwesen aus freie Zufahrt hat und die nicht die Funktion einer Sammelstraße übernimmt.');
+
+
+ALTER TABLE "ver01_l" ADD CONSTRAINT besondereverkehrsbedeutung_fk FOREIGN KEY (bvb) REFERENCES besondereverkehrsbedeutung(code);
+
+
+-- Attribute: widmung_traffic
+CREATE TABLE widmung_traffic (
+                                 code VARCHAR(4) PRIMARY KEY,
+                                 name_en TEXT,
+                                 name_de TEXT,
+                                 definition_de TEXT,
+                                 CONSTRAINT check_column_format CHECK (
+                                     code ~ '^[0-9]{4}$'
+                                     OR LENGTH(code) = 4
+)
+    );
+INSERT INTO widmung_traffic VALUES (1301, 'Federal motorway', 'Bundesautobahn' , '''Bundesautobahn'' ist eine durch Verwaltungsakt zur Bundesautobahn gewidmete Bundesfernstraße.');
+INSERT INTO widmung_traffic VALUES (1303, 'Federal road', 'Bundesstraße' , '''Bundesstraße'' ist eine durch Verwaltungsakt zur Bundesstraße gewidmete Bundesfernstraße.');
+INSERT INTO widmung_traffic VALUES (1305, 'National road, state road', 'Landesstraße, Staatsstraße' , '''Landesstraße, Staatsstraße'' ist eine durch Verwaltungsakt zur Landesstraße bzw. Staatsstraße gewidmete Straße.');
+INSERT INTO widmung_traffic VALUES (1306, 'District road', 'Kreisstraße' , '''Kreisstraße'' ist eine durch Verwaltungsakt zur Kreisstraße gewidmete Straße.');
+INSERT INTO widmung_traffic VALUES (1307, 'Municipal road', 'Gemeindestraße' , '''Gemeindestraße'' ist eine durch Verwaltungsakt zur Gemeindestrasse gewidmete Straße.');
+INSERT INTO widmung_traffic VALUES (9997, 'Non-public road', 'Nicht öffentliche Straße' , 'Nicht öffentliche Straße'' bedeutet, dass hier in Straßenverkehr laubt ist, dieser ber nur zweckgebunden, z. B. in einem Krankenhausgelände, durchgeführt wird.');
+INSERT INTO widmung_traffic VALUES (9999, 'Other public road', 'Sonstiges öffentliche Straße' , '''Sonstige öffentliche Straße'' bedeutet, dass es sich um eine öffentliche Straße handelt, die aber keiner der vorhandenen Widmung zugewiesen werden kann.');
+
+
+ALTER TABLE "ver01_l" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm) REFERENCES widmung_traffic(code);
+
+-- Attribute: widmung_waterbodies
+CREATE TABLE widmung_waterbodies (
+                                     code VARCHAR(4) PRIMARY KEY,
+                                     name_en TEXT,
+                                     name_de TEXT,
+                                     definition_de TEXT,
+                                     CONSTRAINT check_column_format CHECK (
+                                         code ~ '^[0-9]{4}$'
+                                         OR LENGTH(code) = 4
+)
+    );
+INSERT INTO widmung_waterbodies VALUES (1310, 'Waterbodies 1. order - federal waterway', 'Gewässer I. Ordnung - Bundeswasserstraße' , '''Gewässer I. Ordnung - Bundeswasserstraße'' ist ein Gewässer, das der Zuständigkeit des Bundes obliegt.');
+INSERT INTO widmung_waterbodies VALUES (1320, 'Waterbodies 1. order - state waterway', 'Gewässer I. Ordnung - nach Landesrecht' , '''Gewässer I. Ordnung - nach Landesrecht'' ist ein Gewässer, das der Zuständigkeit des Landes obliegt.');
+INSERT INTO widmung_waterbodies VALUES (1330, 'Waterbodies 2. order', 'Gewässer II. Ordnung' , '''Gewässer II. Ordnung'' ist ein Gewässer, für das die Unterhaltungsverbände zuständig sind.');
+INSERT INTO widmung_waterbodies VALUES (1340, 'Waterbodies 3. order', 'Gewässer III. Ordnung' , '''Gewässer III. Ordnung'' ist ein Gewässer, das weder zu den Gewässern I. noch II. Ordnung zählt.');
+
+
+ALTER TABLE "gew01_f" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm) REFERENCES widmung_waterbodies(code);
+ALTER TABLE "gew01_l" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm) REFERENCES widmung_waterbodies(code);
+
+-- Attribute: zustand
+CREATE TABLE zustand (
+                         code VARCHAR(4) PRIMARY KEY,
+                         name_en TEXT,
+                         name_de TEXT,
+                         definition_de TEXT,
+                         CONSTRAINT check_column_format CHECK (
+                             code ~ '^[0-9]{4}$'
+                             OR LENGTH(code) = 4
+)
+    );
+INSERT INTO zustand VALUES (1000, 'Officially established', 'Amtlich festgestellt' , '''Amtlich festgestellt'' bedeutet, dass der Zustand für eine dem Natur-, Umwelt- oder Bodenschutzrecht unterliegende Fläche durch eine Verwaltungsstelle festgelegt wird.');
+INSERT INTO zustand VALUES (1100, 'In provisional state', 'In behelfsmäßigem Zustand' , '''In behelfsmäßigem Zustand'' bedeutet, dass das Gebäude nur eingeschränkt bewohnt oder genutzt werden kann.');
+INSERT INTO zustand VALUES (1200, 'In unused state', 'In ungenutztem Zustand' , '''In ungenutztem Zustand'' bedeutet, dass das Gebäude nicht genutzt wird.');
+INSERT INTO zustand VALUES (2000, 'Temporarily established', 'Einstweilig sicher gestellt' , '''Einstweilig sicher gestellt'' bedeutet, dass durch die zuständige Fachbehörde eine dem Natur-, Umwelt- oder Bodenschutzrecht unterliegende Fläche eine Veränderungssperre erlassen wurde.');
+INSERT INTO zustand VALUES (2100, 'Out of service, shut down, abandoned', 'Außer Betrieb, stillgelegt, verlassen' , '''Außer Betrieb, stillgelegt, verlassen'' bedeutet, dass sich die Bahnverkehrsanlage nicht mehr in regelmäßiger, der Bestimmung entsprechenden Nutzung befindet.');
+INSERT INTO zustand VALUES (2200, 'Dilapidated, destroyed', 'Verfallen, zerstört' , '''Verfallen, zerstört'' bedeutet, dass sich der ursprüngliche Zustand des Gebäudes durch menschliche oder zeitliche Einwirkungen so verändert hat, dass eine Nutzung nicht mehr möglich ist.');
+INSERT INTO zustand VALUES (2300, 'Partially destroyed', 'Teilweise zerstört' , '''Teilweise zerstört'' bedeutet, dass sich der ursprüngliche Zustand des Gebäudes durch menschliche oder zeitliche Einwirkungen so verändert hat, dass eine Nutzung nur noch teilweise möglich ist.');
+INSERT INTO zustand VALUES (3000, 'Planned and requested', 'Geplant und beantragt' , '''Geplant und beantragt'' bedeutet, dass ein Gebäude geplant und dessen Errichtung beantragt ist.');
+INSERT INTO zustand VALUES (4000, 'Under construction', 'Im Bau' , '''Im Bau'' bedeutet, dass sich überwiegende Teile der Bahnverkehrsanlage im Bau befinden.');
+INSERT INTO zustand VALUES (4100, 'Disputed/contentious', 'Streitig/strittig' , '''Streitig/strittig'' bedeutet, dass der Grenzverlauf umstritten ist.');
+INSERT INTO zustand VALUES (4200, 'Fictitious boundary', 'Grenzverlauf, fiktiv' , '''Grenzverlauf, fiktiv’ bedeutet, dass für den Grenzverlauf des Gebietes keine explizite Grenzgeometrie festgelegt ist.');
+INSERT INTO zustand VALUES (5000, 'Wet', 'Nass' , '''Nass'' bezeichnet eine Vegetationsfläche, die aufgrund besonderer Bodenbeschaffenheit ganzjährig wassergesättigt ist, zeitweise auch unter Wasser stehen kann.');
+INSERT INTO zustand VALUES (6100, 'Forest regeneration, new planting area', 'Waldverjüngungs-, Neuanpflanzungsfläche' , '''Waldverjüngungs-, Neuanpflanzungsfläche'' bedeutet, dass sich der Wald durch Aufforstung, Naturverjüngung oder durch Anpflanzung neu bildet.');
+INSERT INTO zustand VALUES (8000, 'Expansion, new settlement', 'Erweiterung, Neuansiedlung' , '''Erweiterung, Neuansiedlung'' bedeutet, dass die Fläche in ihrer Nutzung gemäß der Objektart erweitert wird und eine Fertigstellung absehbar ist.');
+
+ALTER TABLE "sie02_f" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "sie03_f" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "sie03_p" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "sie04_l" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "sie04_p" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "sie05_p" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "ver01_l" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "ver03_l" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "ver04_f" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "ver06_f" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "ver06_l" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "ver06_p" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "veg04_f" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "gew01_f" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "gew01_l" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+ALTER TABLE "geb01_l" ADD CONSTRAINT zustand_fk FOREIGN KEY (zus) REFERENCES zustand(code);
+
+
+-- Attribute: bauwerksfunktion
+CREATE TABLE bauwerksfunktion (
+    code VARCHAR(4),
+    objart VARCHAR(5),
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    PRIMARY KEY (code, objart),
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$'
+        OR LENGTH(code) = 4
+                              )
+    );
+
+INSERT INTO bauwerksfunktion VALUES (1001, 51001, 'Water tower', 'Wasserturm' , '''Wasserturm'' ist ein hochgelegenes Bauwerk mit einem Behälter, in dem Wasser für die Wasserversorgung und Konstanthaltung des Wasserdruckes gespeichert wird.');
+INSERT INTO bauwerksfunktion VALUES (1002, 51001, 'Church tower, bell tower', 'Kirchturm, Glockenturm' , '''Kirchturm, Glockenturm'' ist ein freistehender Turm, der die Glockenstube mit den Glocken aufnimmt.');
+INSERT INTO bauwerksfunktion VALUES (1003, 51001, 'Observation tower', 'Aussichtsturm' , '''Aussichtsturm'' ist ein Bauwerk, das ausschließlich der Fernsicht dient.');
+INSERT INTO bauwerksfunktion VALUES (1004, 51001, 'Control tower', 'Kontrollturm' , '''Kontrollturm'' (Tower) ist ein Bauwerk auf dem Fluggelände, in dem die für die Lenkung und Überwachung des Flugverkehrs erforderlichen Anlagen und Einrichtungen untergebracht sind.');
+INSERT INTO bauwerksfunktion VALUES (1005, 51001, 'Cooling tower', 'Kühlturm' , '''Kühlturm'' ist eine turmartige Kühlanlage (Nass- oder Trockenkühlturm), in der erwärmtes Kühlwasser insbesondere von Kraftwerken rückgekühlt wird.');
+INSERT INTO bauwerksfunktion VALUES (1006, 51001, 'Lighthouse', 'Leuchtturm' , '''Leuchtturm'' ist ein als Schifffahrtszeichen erirchteter hoher Turm.');
+INSERT INTO bauwerksfunktion VALUES (1007, 51001, 'Fire station tower', 'Feuerwachturm' , '''Feuerwachturm'' ist ein Turm, der zum Erkennen von Gefahren (Feuer) dient.');
+INSERT INTO bauwerksfunktion VALUES (1008, 51001, 'Transmission tower, radio tower, telecommunications tower', 'Sende-, Funkturm, Fernmeldeturm' , '''Sende-, Funkturm, Fernmeldeturm''’ ist ein Bauwerk, ausgerüstet mit Sende - und Empfangsantennen zum Übertragen und Empfangen von Nachrichten aller Arten von Telekommunikation.');
+INSERT INTO bauwerksfunktion VALUES (1009, 51001, 'City tower, gate tower', 'Stadt-, Torturm' , '''Stadtturm'' ist ein historischer Turm, der das Stadtbild prägt. ''Torturm'' ist der auf einem Tor stehende Turm, wobei das Tor allein stehen oder in eine Befestigungsanlage eingebunden sein kann.');
+INSERT INTO bauwerksfunktion VALUES (1010, 51001, 'Pithead tower', 'Förderturm' , '''Förderturm'' ist ein Turm über einem Schacht. An Förderseile, die über Seilscheiben im Turm geführt werden, werden Lasten in den Schacht gesenkt oder aus dem Schacht gehoben.');
+INSERT INTO bauwerksfunktion VALUES (1011, 51001, 'Drilling rig', 'Bohrturm' , '''Bohrturm'' ist ein zur Gewinnung von Erdöl, Erdgas oder Sole verwendetes, meist aus einer Stahlkonstruktion bestehendes Gerüst, in dem das Bohrgestänge aufgehängt ist.');
+INSERT INTO bauwerksfunktion VALUES (1012, 51001, 'Castle tower', 'Schloss-, Burgturm' , '''Schloss-, Burgturm'' ist ein Turm innerhalb einer Schloss- bzw. einer Burganlage, auch Bergfried genannt.');
+INSERT INTO bauwerksfunktion VALUES (9998, 51001, 'Not specified according to sources', 'Nach Quellenlage nicht zu spezifizieren' , '''Nach Quellenlage nicht zu spezifizieren'' bedeutet, dass zum Zeitpunkt der Erhebung keine Funktion zuweisbar war.');
+INSERT INTO bauwerksfunktion VALUES (9999, 51001, 'Other', 'Sonstiges' , '''Sonstiges'' bedeutet, dass die Funktion bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+
+INSERT INTO bauwerksfunktion VALUES (1110, 51005, 'Overhead cable', 'Freileitung' , '''Freileitung'' ist eine aus einem oder mehreren Drähten oder Fasern hergestellte oberirdische Leitung zum Transport von elektrischer Energie und zur Übertragung von elektrischen Signalen.');
+INSERT INTO bauwerksfunktion VALUES (1111, 51005, 'Underground cable', 'Erdkabel' , '''Erdkabel'' ist eine aus einem oder mehreren Drähten oder Fasern hergestellte unterirdische Leitung zum Transport von elektrischer Energie und/oder zur Übertragung von elektrischen Signalen.');
+
+INSERT INTO bauwerksfunktion VALUES (1101, 51004, 'Pipeline', 'Rohrleitung, Pipeline' , '''Rohrleitung, Pipeline'' ist ein langgestreckter Hohlkörper zum Transport von Flüssigkeiten und Gasen.');
+INSERT INTO bauwerksfunktion VALUES (1102, 51004, 'Conveyor belt', 'Förderband, Bandstraße' , '''Förderband, Bandstraße'' ist ein mechanisch bewegtes Band zum Transport von Gütern.');
+INSERT INTO bauwerksfunktion VALUES (1103, 51004, 'Pump', 'Pumpe' , '''Pumpe'' ist eine Vorrichtung zum An-, Absaugen oder Injizieren von Flüssigkeiten oder Gasen; Verdichtungsstation für Gase.');
+
+INSERT INTO bauwerksfunktion VALUES (1201, 51003, 'Silo', 'Silo' , '''Silo'' ist ein Großraumbehälter zum Speichern von Schüttgütern (Getreide, Erz, Zement, Sand) oder Gärfutter (gehäckseltes Grüngut).');
+INSERT INTO bauwerksfunktion VALUES (1202, 51003, 'Filling hopper', 'Fülltrichter' , '');
+INSERT INTO bauwerksfunktion VALUES (1203, 51003, 'Bunker', 'Bunker' , '''Bunker'' ist ein Bauwerk, in dem Schüttgut gelagert wird.');
+INSERT INTO bauwerksfunktion VALUES (1204, 51003, 'Grain elevator', 'Getreideheber' , '');
+INSERT INTO bauwerksfunktion VALUES (1205, 51003, 'Tank', 'Tank' , '''Tank'' ist ein Behälter, in dem Flüssigkeiten gelagert oder Gase gespeichert werden.');
+INSERT INTO bauwerksfunktion VALUES (1206, 51003, 'Gasometer', 'Gasometer' , '''Gasometer'' ist ein volumenveränderbarer Niederdruckbehälter für Gas.');
+INSERT INTO bauwerksfunktion VALUES (9999, 51003, 'Other', 'Sonstiges' , '''Sonstiges'' bedeutet, dass die Funktion bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+
+INSERT INTO bauwerksfunktion VALUES (1210, 51002, 'Clarifier', 'Klärbecken' , '''Klärbecken'' ist ein künstlich errichtetes Becken oder eine Geländevertiefung, in der Feststoffe aus einer Flüssigkeit ausgefällt werden.');
+INSERT INTO bauwerksfunktion VALUES (1215, 51002, 'Biogas plant', 'Biogasanlage' , '''Biogasanlage'' ist eine Anlage, in der aus Biomasse Gas erzeugt wird.');
+INSERT INTO bauwerksfunktion VALUES (1220, 51002, 'Wind turbine', 'Windrad' , '''Windrad'' ist ein mit Flügeln besetztes Rad, das durch Wind in Rotation versetzt wird und mit Hilfe eines eingebauten Generators elektrische Energie erzeugt.');
+INSERT INTO bauwerksfunktion VALUES (1230, 51002, 'Solar panel', 'Solarzellen' , '''Solarzellen'' sind Flächenelemente aus Halbleitern, die die Energie der Sonnenstrahlen in elektrische Energie umwandeln.');
+INSERT INTO bauwerksfunktion VALUES (1240, 51002, 'Waterwheel', 'Wasserrad' , '''Wasserrad'' ist ein mit Schaufeln oder Zellen besetztes Rad, das die Energie des strömenden Wassers zum Antrieb, besonders von Mühlen, ausnutzt oder zum Schöpfen von Wasser (Schöpfrad) genutzt wird.');
+INSERT INTO bauwerksfunktion VALUES (1250, 51002, 'Mast', 'Mast' , '''Mast'' ist eine senkrecht stehende Konstruktion mit stützender oder tragender Funktion.');
+INSERT INTO bauwerksfunktion VALUES (1251, 51002, 'Overhead pylon', 'Freileitungsmast' , '''Freileitungsmast'' ist ein Mast, an dem Hochspannungsleitungen befestigt sind.');
+INSERT INTO bauwerksfunktion VALUES (1260, 51002, 'Radio tower', 'Funkmast' , '''Funkmast'' ist ein Mast mit Vorrichtungen zum Empfangen, Umformen und Weitersenden von elektromagnetischen Wellen.');
+INSERT INTO bauwerksfunktion VALUES (1270, 51002, 'Antenna', 'Antenne' , '''Antenne'' ist eine Vorrichtung zum Empfang oder zur Ausstrahlung elektromagnetischer Wellen.');
+INSERT INTO bauwerksfunktion VALUES (1275, 51002, 'Radio navigation system', 'Funknavigationsanlage' , '''Funknavigationsanlage'' ist eine Vorrichtung zur Verkehrssicherung.');
+INSERT INTO bauwerksfunktion VALUES (1280, 51002, 'Radio telescope', 'Radioteleskop' , '''Radioteleskop'' ist ein Bauwerk mit einer Parabolantenne für den Empfang und/oder das Senden von elektromagnetischer Strahlung aus dem/in das Weltall.');
+INSERT INTO bauwerksfunktion VALUES (1290, 51002, 'Chimney', 'Schornstein' , '''Schornstein'' ist ein freistehend senkrecht hochgeführter Abzugskanal für die Rauchgase einer Feuerungsanlage oder für andere Abgase.');
+INSERT INTO bauwerksfunktion VALUES (1310, 51002, 'Tunnel mouth', 'Stollenmundloch' , '''Stollenmundloch'' ist der Eingang eines unterirdischen Gangs, der annähernd horizontal von der Erdoberfläche in das Gebirge führt.');
+INSERT INTO bauwerksfunktion VALUES (1320, 51002, 'Shaft opening', 'Schachtöffnung' , '''Schachtöffnung'' ist der Eingang auf der Erdoberfläche zu einem Schacht.');
+INSERT INTO bauwerksfunktion VALUES (1330, 51002, 'Crane', 'Kran' , '''Kran'' ist eine Vorrichtung, die aus einer fahrbaren oder ortsfesten Konstruktion besteht und die zum Heben von Lasten benutzt wird.');
+INSERT INTO bauwerksfunktion VALUES (1331, 51002, 'Slewing crane', 'Drehkran' , '');
+INSERT INTO bauwerksfunktion VALUES (1332, 51002, 'Gantry crane', 'Portalkran' , '');
+INSERT INTO bauwerksfunktion VALUES (1333, 51002, 'Overhead travelling crane, bridge travelling crane', 'Laufkran, Brückenlaufkran' , '');
+INSERT INTO bauwerksfunktion VALUES (1340, 51002, 'Dry dock', 'Trockendock' , '''Trockendock'' ist eine Anlage in Werften und Häfen, in der das Schiff zum Ausbessern aus dem Wasser genommen wird.');
+INSERT INTO bauwerksfunktion VALUES (1350, 51002, 'Furnace', 'Hochofen' , '''Hochofen'' ist ein hoher Schachtofen zum Schmelzen von Eisenerz.');
+INSERT INTO bauwerksfunktion VALUES (1360, 51002, 'Marker, marker stone', 'Merkzeichen, Merkstein' , '');
+INSERT INTO bauwerksfunktion VALUES (1370, 51002, 'Hydrant', 'Hydrant' , '');
+INSERT INTO bauwerksfunktion VALUES (1371, 51002, 'Above-ground hydrant', 'Oberflurhydrant' , '');
+INSERT INTO bauwerksfunktion VALUES (1372, 51002, 'Underground hydrant', 'Unterflurhydrant' , '');
+INSERT INTO bauwerksfunktion VALUES (1380, 51002, 'Sliding cap', 'Schieberkappe' , '');
+INSERT INTO bauwerksfunktion VALUES (1390, 51002, 'Access shaft', 'Einsteigeschacht' , '');
+INSERT INTO bauwerksfunktion VALUES (1400, 51002, 'Transformer', 'Umformer' , '');
+INSERT INTO bauwerksfunktion VALUES (1700, 51002, 'Mining operation', 'Bergbaubetrieb' , '''Bergbaubetrieb'' ist eine Fläche, die für die Förderung des Abbaugutes unter Tage genutzt wird');
+INSERT INTO bauwerksfunktion VALUES (9999, 51002, 'Other', 'Sonstiges' , '''Sonstiges'' bedeutet, dass die Funktion bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+INSERT INTO bauwerksfunktion VALUES (2530, 51002, 'Power station', 'Kraftwerk' , '''Kraftwerk'' bezeichnet eine Fläche mit Bauwerken und sonstigen Einrichtungen zur Erzeugung von elektrischer Energie.');
+
+INSERT INTO bauwerksfunktion VALUES (1410, 51006, 'Pitch', 'Spielfeld' , '''Spielfeld'' ist eine abgegrenzte, markierte Fläche, auf der die Sportart unmittelbar ausgeübt wird, z.B. die einzelnen Fußballfelder (Hauptplatz und Trainingsplätze) einer größeren Anlage oder die Trainings-/Reitplätze i. V. m. Reitsport. Die zusammenhängenden Spielflächen innerhalb einer Tennisanlage werden zu einem Spielfeld zusammengefasst.');
+INSERT INTO bauwerksfunktion VALUES (1411, 51006, 'Transformer', 'Hartplatz' , '');
+INSERT INTO bauwerksfunktion VALUES (1412, 51006, 'Transformer', 'Rasenplatz' , '');
+INSERT INTO bauwerksfunktion VALUES (1420, 51006, 'Racecourse, running track, track', 'Rennbahn, Laufbahn, Geläuf' , '''Rennbahn, Laufbahn, Geläuf'' ist eine je nach Art des Rennens verschiedenartig gestaltete Strecke (oval, gerade, kurvig), auf der das Rennen stattfindet.');
+INSERT INTO bauwerksfunktion VALUES (1431, 51006, 'Spectator grandstand, roofed', 'Zuschauertribüne, überdacht' , '''Zuschauertribüne, überdacht'' bedeutet, dass ''Zuschauertribüne'' mit einer Dachfläche ausgestattet ist.');
+INSERT INTO bauwerksfunktion VALUES (1432, 51006, 'Spectator grandstand, not roofed', 'Zuschauertribüne, nicht überdacht' , '''Zuschauertribüne, nicht überdacht'' bedeutet, dass die Zuschauertribüne keine Dachfläche besitzt.');
+INSERT INTO bauwerksfunktion VALUES (1440, 51006, 'Stadium', 'Stadion' , '''Stadion'' ist ein Bauwerk mit Tribünen und entsprechenden Einrichtungen, das vorwiegend zur Ausübung von bestimmten Sportarten dient.');
+INSERT INTO bauwerksfunktion VALUES (1441, 51006, 'Stadium, roofed', 'Stadion, überdacht' , '''Stadion, überdacht'' ist ein Bauwerk mit Tribünen und entsprechenden Einrichtungen, das vorwiegend zur Ausübung von bestimmten Sportarten dient und ganz oder nahezu ganz überdacht ist.');
+INSERT INTO bauwerksfunktion VALUES (1442, 51006, 'Stadium, not roofed', 'Stadion, nicht überdacht' , '''Stadion, nicht überdacht'' ist ein Bauwerk mit Tribünen und entsprechenden Einrichtungen, das vorwiegend zur Ausübung von bestimmten Sportarten dient, aber ohne Dachflächen ist.');
+INSERT INTO bauwerksfunktion VALUES (1450, 51006, 'Swimming pool', 'Schwimmbecken' , '''Schwimmbecken'' ist ein mit Wasser gefülltes Becken zum Schwimmen oder Baden.');
+INSERT INTO bauwerksfunktion VALUES (1470, 51006, 'Ski jump (inrun)', 'Sprungschanze (Anlauf)' , '''Sprungschanze (Anlauf)'' ist eine Anlage zum Skispringen mit einer stark abschüssigen, in einem Absprungtisch endenden Bahn zum Anlauf nehmen.');
+INSERT INTO bauwerksfunktion VALUES (1480, 51006, 'Shooting range', 'Schießanlage' , '''Schießanlage'' ist eine Anlage mit Schießbahnen für Schießübungen oder sportliche Wettbewerbe.');
+INSERT INTO bauwerksfunktion VALUES (1490, 51006, 'Graduation tower', 'Gradierwerk' , '''Gradierwerk'' ist ein mit Reisig bedecktes Gerüst, über das Sole rieselt, die durch erhöhte Verdunstung konzentriert wird.');
+INSERT INTO bauwerksfunktion VALUES (1510, 51006, 'Wildlife enclosure', 'Wildgehege' , '''Wildgehege'' ist ein eingezäuntes Areal, in dem Wild waidgerecht betreut wird oder beobachtet werden kann.');
+INSERT INTO bauwerksfunktion VALUES (1610, 51006, 'Zoo', 'Zoo' , '''Zoo'' ist ein Gelände mit Tierschauhäusern und umzäunten Gehegen, auf dem Tiere gehalten und gezeigt werden.');
+INSERT INTO bauwerksfunktion VALUES (1620, 51006, 'Safari park, game park', 'Safaripark, Wildpark' , '''Safaripark, Wildpark'', ist ein Gelände mit umzäunten Gehegen, in denen Tiere im Freien gehalten und gezeigt werden.');
+INSERT INTO bauwerksfunktion VALUES (1630, 51006, 'Amusement park', 'Freizeitpark' , '''Freizeitpark'' ist ein Gelände mit Karussells, Verkaufs- und Schaubuden und/oder Wildgattern, das der Freizeitgestaltung dient.');
+INSERT INTO bauwerksfunktion VALUES (1640, 51006, 'Open-air theatre', 'Freilichtbühne' , '''Freilichtbühne'' ist ein Anlage mit Bühnen und Zuschauerbänken für Aufführungen im Freien.');
+INSERT INTO bauwerksfunktion VALUES (1650, 51006, 'Watersports centre', 'Wassersportanlage' , '''Wassersportanlage'' bezeichnet ein Areal welches beispielsweise zum Rudern, Segeln oder für Wasserski genutzt wird.');
+INSERT INTO bauwerksfunktion VALUES (9999, 51006, 'Other', 'Sonstiges' , '''Sonstiges'' bedeutet, dass die Funktion bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+
+INSERT INTO bauwerksfunktion VALUES (1610, 51009, 'Canopy', 'Überdachung' , 'Überdachungen sind i. d. R. an allen Seiten offen. Eine geschlossene Seite kann über eine besondere Gebäudelinie mit der Werteart ''Geschlossene Seite einer Überdachung'' nachgewiesen werden.');
+INSERT INTO bauwerksfunktion VALUES (1611, 51009, 'Carport', 'Carport' , 'Carports sind i. d. R. an allen Seiten offen. Eine geschlossene Seite kann über eine besondere Gebäudelinie mit der Werteart ''Geschlossene Seite einer Überdachung'' nachgewiesen werden.');
+INSERT INTO bauwerksfunktion VALUES (1620, 51009, 'Staircase', 'Treppe' , '''Treppe'' ist ein stufenförmiges Bauwerk zur Überwindung von Höhenunterschieden.');
+INSERT INTO bauwerksfunktion VALUES (1621, 51009, 'Open staircase', 'Freitreppe' , '');
+INSERT INTO bauwerksfunktion VALUES (1622, 51009, 'Escalator', 'Rolltreppe' , '');
+INSERT INTO bauwerksfunktion VALUES (1630, 51009, 'Bottom edge of stairs', 'Treppenunterkante' , '');
+INSERT INTO bauwerksfunktion VALUES (1640, 51009, 'Cellar entrance', 'Kellereingang' , '''Kellereingang'' ist der Eingang zu einem unterirdischen Vorratsraum außerhalb von Gebäuden.');
+INSERT INTO bauwerksfunktion VALUES (1641, 51009, 'Cellar entrance, open', 'Kellereingang, offen' , '''Kellereingang, offen'' ist der offene Eingang zu einem unterirdischen Vorratsraum außerhalb von Gebäuden.');
+INSERT INTO bauwerksfunktion VALUES (1642, 51009, 'Cellar entrance, closed', 'Kellereingang, geschlossen' , '''Kellereingang, geschlossen'' ist der geschlossene Eingang zu einem unterirdischen Vorratsraum außerhalb von Gebäuden.');
+INSERT INTO bauwerksfunktion VALUES (1650, 51009, 'Ramp', 'Rampe' , '');
+INSERT INTO bauwerksfunktion VALUES (1670, 51009, 'Terrace', 'Terrasse' , 'Es werden nur unterkellerte Terrassen erfasst.');
+INSERT INTO bauwerksfunktion VALUES (1700, 51009, 'Wall', 'Mauer' , '''Mauer'' ist ein freistehendes, langgestrecktes Bauwerk, das aus Natur- bzw. Kunststeinen oder anderen Materialien besteht.');
+INSERT INTO bauwerksfunktion VALUES (1701, 51009, 'Wall edge, right', 'Mauerkante, rechts' , '');
+INSERT INTO bauwerksfunktion VALUES (1702, 51009, 'Wall edge, left', 'Mauerkante, links' , '');
+INSERT INTO bauwerksfunktion VALUES (1703, 51009, 'Wall centre', 'Mauermitte' , '');
+INSERT INTO bauwerksfunktion VALUES (1720, 51009, 'Support wall', 'Stützmauer' , '''Stützmauer'' ist eine zum Stützen von Erdreich dienende Mauer.');
+INSERT INTO bauwerksfunktion VALUES (1721, 51009, 'Support wall, right', 'Stützmauer, rechts' , '');
+INSERT INTO bauwerksfunktion VALUES (1722, 51009, 'Support wall, left', 'Stützmauer, links' , '');
+INSERT INTO bauwerksfunktion VALUES (1723, 51009, 'Support wall centre', 'Stützmauermitte' , '');
+INSERT INTO bauwerksfunktion VALUES (1740, 51009, 'Fence', 'Zaun' , '''Zaun'' ist eine Abgrenzung oder Einfriedung aus Holz- oder Metallstäben oder aus Draht bzw. Drahtgeflecht.');
+INSERT INTO bauwerksfunktion VALUES (1750, 51009, 'Memorial, monument, memorial stone, statue', 'Gedenkstätte, Denkmal, Denkstein, Standbild' , '''Gedenkstätte, Denkmal, Denkstein, Standbild'' ist ein zum Gedenken errichtete Anlage oder Bauwerk an eine Person, ein Ereignis oder eine plastische Darstellung.');
+INSERT INTO bauwerksfunktion VALUES (1760, 51009, 'Wayside shrine, wayside cross, summit cross', 'Bildstock, Wegekreuz, Gipfelkreuz' , '''Bildstock, Wegekreuz, Gipfelkreuz'' ist ein frei stehendes Mal aus Holz oder Stein, das in einem tabernakelartigen Aufbau ein Kruzifix oder eine Heiligendarstellung enthält und als Andachtsbild, als Erinnerung an Verstorbene oder als Sühnemal errichtet wurde; ist ein errichtetes Kreuz z.B. an Wegen; ist ein Kreuz auf dem Gipfel eines Berges.');
+INSERT INTO bauwerksfunktion VALUES (1761, 51009, 'Wayside shrine', 'Bildstock' , '');
+INSERT INTO bauwerksfunktion VALUES (1762, 51009, 'Wayside cross', 'Wegekreuz' , '');
+INSERT INTO bauwerksfunktion VALUES (1763, 51009, 'Summit cross', 'Gipfelkreuz' , '');
+INSERT INTO bauwerksfunktion VALUES (1770, 51009, 'Milestone, historical boundary stone', 'Meilenstein, historischer Grenzstein' , '''Meilenstein, historischer Grenzstein'' sind Steine von kulturgeschichtlicher Bedeutung, die am Rande von Verkehrswegen aufgestellt sind und Entfernungen in unterschiedlichenMaßeinheiten (z. B. Meilen, Kilometer oder Stunden) angeben oder als Grenzsteine vergangene Eigentumsverhältnisse dokumentieren.');
+INSERT INTO bauwerksfunktion VALUES (1780, 51009, 'Fountain', 'Brunnen' , '''Brunnen'' ist eine Anlage zur Gewinnung von Grundwasser bzw. ein architektonisch ausgestaltetes Bauwerk mit Becken zum Auffangen von Wasser.');
+INSERT INTO bauwerksfunktion VALUES (1781, 51009, 'Well (drinking water supply)', 'Brunnen (Trinkwasserversorgung)' , '''Brunnen (Trinkwasserversorgung)'' bedeutet, dass in dem Brunnen ausschließlich Trinkwasser gewonnen wird.');
+INSERT INTO bauwerksfunktion VALUES (1782, 51009, 'Fountains, ornamental fountains', 'Springbrunnen, Zierbrunnen' , '');
+INSERT INTO bauwerksfunktion VALUES (1783, 51009, 'Drawing well', 'Ziehbrunnen' , '');
+INSERT INTO bauwerksfunktion VALUES (1790, 51009, 'Sheet pile wall', 'Spundwand' , '''Spundwand'' ist ein Sicherungsbauwerk (wasserdichte Wand) aus miteinander verbundenen schmalen, langen Holz-, Stahl- oder Stahlbetonbohlen zum Schutz gegen das Außenwasser. Die Bohlen werden horizontal hinter Pfählen (Bohlwand) oder vertikal als Spundwand eingebaut und meist rückwärtig verankert.');
+INSERT INTO bauwerksfunktion VALUES (1791, 51009, 'Hump line', 'Höckerlinie' , '''Höckerlinie'' bezeichnet die ehemalige Panzersperre Westwall.');
+INSERT INTO bauwerksfunktion VALUES (9999, 51009, 'Other', 'Sonstiges' , '''Sonstiges'' bedeutet, dass die Funktion bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+
+INSERT INTO bauwerksfunktion VALUES (1800, 53001, 'Bridge', 'Brücke' , '''Brücke'' ist ein Bauwerk, das einen Verkehrsweges über, ein Gewässer oder einen Tierpfad (Grünbrücke) über ein natürliches oder künstliches Hindernis führt.');
+INSERT INTO bauwerksfunktion VALUES (1801, 53001, 'Multi-level bridge', 'Mehrstöckige Brücke' , '''Mehrstöckige Brücke'' ist eine Brücke, die mit Verkehrswegen in mehreren Etagen ausgestattet ist.');
+INSERT INTO bauwerksfunktion VALUES (1802, 53001, 'Arch bridge', 'Bogenbrücke' , '''Bogenbrücke'' ist eine Brücke, bei der das Tragwerk aus Bögen besteht.');
+INSERT INTO bauwerksfunktion VALUES (1803, 53001, 'Truss bridge', 'Fachwerkbrücke' , '''Fachwerkbrücke'' ist eine Brücke, bei der das Tragwerk aus starr zusammengesetzten Tragbalken (Holz oder Metall) besteht.');
+INSERT INTO bauwerksfunktion VALUES (1804, 53001, 'Suspension bridge', 'Hängebrücke' , '''Hängebrücke'' ist eine Brücke, bei der das Tragwerk von Hängegurten (Kabel) an einem oder mehreren Pylonen gehalten wird.');
+INSERT INTO bauwerksfunktion VALUES (1805, 53001, 'Pontoon bridge', 'Pontonbrücke' , '''Pontonbrücke'' ist eine Behelfsbrücke, die sich aus kastenförmigen Schwimmkörpern zusammensetzt.');
+INSERT INTO bauwerksfunktion VALUES (1806, 53001, 'Swing bridge', 'Drehbrücke' , '''Drehbrücke'' ist eine Brücke, bei der sich das Tragwerk um einen senkrechten Zapfen (Königsstuhl) dreht.');
+INSERT INTO bauwerksfunktion VALUES (1807, 53001, 'Lifting bridge', 'Hebebrücke' , '''Hebebrücke'' ist eine Brücke, bei der das Tragwerk an Seilen oder Ketten emporgehoben wird.');
+INSERT INTO bauwerksfunktion VALUES (1808, 53001, 'Drawbridge', 'Zugbrücke' , '''Zugbrücke'' ist eine Brücke, bei der das Tragwerk um eine waagerechte Achse hochgeklappt wird.');
+INSERT INTO bauwerksfunktion VALUES (1810, 53001, 'Walkway', 'Steg' , '''Steg'' ist eine kleine Brücke ein facher Bauart.');
+INSERT INTO bauwerksfunktion VALUES (1820, 53001, 'Landing bridge', 'Landebrücke' , '');
+INSERT INTO bauwerksfunktion VALUES (1830, 53001, 'Elevated railway, elevated road', 'Hochbahn, Hochstraße' , '''Hochbahn, Hochstraße'' ist ein brückenartiges, aufgeständertes Verkehrsbauwerk.');
+INSERT INTO bauwerksfunktion VALUES (1840, 53001, 'Bridge piers', 'Brückenpfeiler' , '');
+INSERT INTO bauwerksfunktion VALUES (1845, 53001, 'Abutment', 'Widerlager' , '');
+INSERT INTO bauwerksfunktion VALUES (1850, 53001, 'Power pillar', 'Strompfeiler' , '');
+INSERT INTO bauwerksfunktion VALUES (1870, 53001, 'Tunnel, underpass', 'Tunnel, Unterführung' , '''Tunnel, Unterführung'' ist ein künstlich angelegtes unterirdisches Bauwerk, das im Verlauf von Verkehrswegen durch Bergmassive oder unter Flussläufen, Meerengen, städt. Bebauungen u. a. hindurchführt.');
+INSERT INTO bauwerksfunktion VALUES (1880, 53001, 'Protective gallery, enclosure', 'Schutzgalerie, Einhausung' , '''Schutzgalerie, Einhausung'' ist eine bauliche Einrichtung an Verkehrswegen zum Schutz gegen Lawinen, Schneeverwehungen, Steinschlägen sowie zum Schutz gegen Emission. Schutzgalerien sind einseitige Überbauungen an Verkehrswegen, Einhausungen umschließen die Verkehrswege meist vollständig.');
+INSERT INTO bauwerksfunktion VALUES (1890, 53001, 'Lock chamber', 'Schleusenkammer' , '''Schleusenkammer'' ist eine Einrichtung zur Überführung von Wasserfahrzeugen zwischen Gewässern mit unterschiedlichen Wasserspiegelhöhen.');
+INSERT INTO bauwerksfunktion VALUES (1900, 53001, 'Passageway', 'Durchfahrt' , '''Durchfahrt'' ist eine Stelle, an der mit Fahrzeugen durch ein Bauwerk (z.B. ein Turm, eine Mauer) hindurch gefahren werden kann.');
+INSERT INTO bauwerksfunktion VALUES (1910, 53001, 'Approach lighting', 'Anflugbefeuerung' , '');
+INSERT INTO bauwerksfunktion VALUES (9999, 53001, 'Other', 'Sonstiges' , '''Sonstiges'' bedeutet, dass die Funktion bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+
+INSERT INTO bauwerksfunktion VALUES (2010, 53009, 'Culvert', 'Durchlass' , '''Durchlass'' ist ein Bauwerk, in dem ein Gewässer unter einem auf der Erdoberfläche liegenden Hindernis (Verkehrsweg, Siedlungsfläche) hindurchgeführt wird oder unter der Erdoberfläche in freier Feldlage oder abgedeckt (verdolt) auf der Erdoberfläche verläuft.');
+INSERT INTO bauwerksfunktion VALUES (2011, 53009, 'Pipe culvert', 'Rohrdurchlass' , '''Rohrdurchlass'' ist ein Bauwerk zur Unterführung eines Gewässers unter einem Verkehrsweg.');
+INSERT INTO bauwerksfunktion VALUES (2012, 53009, 'Düker', 'Düker' , '''Düker'' ist ein Kreuzungsbauwerk, in dem ein Gewässer unter einem anderen Gewässer, einem Geländeeinschnitt oder einem tieferliegenden Hindernis unter Druck hindurchgeleitet wird.');
+INSERT INTO bauwerksfunktion VALUES (2013, 53009, 'Water tunnel, pressure tunnel', 'Wassertunnel, Wasserstollen, Druckstollen' , '''Wassertunnel, Wasserstollen, Druckstollen'' ist ein in einen Berg oder Hügel getriebener unterirdischer Tunnel (Stollen), durch den Wasser hindurchgeführt wird. Dabei fließt das Wasser in einem Wassertunnel bzw. Wasserstollen in Richtung des gebauten Gefälles. In einem Druckstollen, der als Wasserleitung genutzt wird, baut sich durch die vollständige Füllung des Stollens ein hydrostatischer Wasserdruck auf, so dass das Wasser auch ansteigende Abschnitte überwinden kann.');
+INSERT INTO bauwerksfunktion VALUES (2020, 53009, 'Retention basin', 'Rückhaltebecken' , '''Rückhaltebecken'' ist ein natürliches oder künstlich angelegtes Becken, ggf. mit Bauwerken und Einrichtungen, zur vorübergehenden Speicherung großer Wassermengen.');
+INSERT INTO bauwerksfunktion VALUES (2030, 53009, 'Dam wall', 'Staumauer' , '''Staumauer'' ist ein aus Mauerwerk oder Beton bestehendes Absperrbauwerk zur Erzeugung eines Staus.');
+INSERT INTO bauwerksfunktion VALUES (2040, 53009, 'Embankment dam', 'Staudamm' , '''Staudamm'' ist ein meist aus natürlichen Baustoffen, meist aufgeschüttetes Absperrbauwerk zur Erzeugung eines Staus.');
+INSERT INTO bauwerksfunktion VALUES (2050, 53009, 'Weir', 'Wehr' , '''Wehr'' ist ein festes oder mit beweglichen Teilen ausgestattetes Bauwerk im Gewässerbereich zur Regulierung des Wasserabflusses.');
+INSERT INTO bauwerksfunktion VALUES (2060, 53009, 'Security gate', 'Sicherheitstor' , '''Sicherheitstor'' ist ein Bauwerk zum Abschließen von Kanalstrecken, um bei Schäden das Auslaufen der gesamten Kanalhaltung zu verhindern.');
+INSERT INTO bauwerksfunktion VALUES (2070, 53009, 'Siel', 'Siel' , '''Siel'' ist ein Bauwerk mit Verschlusseinrichtung (gegen rückströmendes Wasser) zum Durchleiten eines oberirdischen Gewässers durch einen Deich.');
+INSERT INTO bauwerksfunktion VALUES (2080, 53009, 'Barrier', 'Sperrwerk' , '''Sperrwerk'' ist ein Bauwerk in einem Tideflussgewässer mit Verschlusseinrichtung zum Absperren bestimmter Tiden, vor allem zum Schutz gegen Sturmfluten auch bei Tidehäfen.');
+INSERT INTO bauwerksfunktion VALUES (2085, 53009, 'Sealing structure', 'Verschlussbauwerk' , '''Verschlussbauwerk'' ist ein Bauwerk mit einem Verschlussmechanismus zur Regulierung des Wasserablaufs bzw. zum Schutz vor Hochwasser.');
+INSERT INTO bauwerksfunktion VALUES (2090, 53009, 'Pumping station', 'Schöpfwerk' , '''Schöpfwerk'' ist eine Anlage, in der Pumpen Wasser einem höher gelegenen Vorfluter zuführen, u. a. zur künstlichen Entwässerung von landwirtschaftlich genutzten Flächen und im Falle von Polder- und Mündungsschöpfwerken auch zur Sicherstellung des Hochwasser- oder Überschwemmungsschutzes.');
+INSERT INTO bauwerksfunktion VALUES (2110, 53009, 'Fish ladder', 'Fischtreppe' , '''Fischtreppe''ist eine Vorrichtung mit Stufen oder Wasserbecken für Fische, um Höhenunterschiede im Gewässer zu überwinden.');
+INSERT INTO bauwerksfunktion VALUES (2120, 53009, 'Gauge', 'Pegel' , '''Pegel'' ist eine Messeinrichtung zur Feststellung des Wasserstandes von Gewässern.');
+INSERT INTO bauwerksfunktion VALUES (2130, 53009, 'Embankment stabilisation', 'Uferbefestigung' , '''Uferbefestigung'' ist eine Anlage zum Schutze des Ufers.');
+INSERT INTO bauwerksfunktion VALUES (2131, 53009, 'Breakwater, groyne', 'Wellenbrecher, Buhne' , '''Wellenbrecher, Buhne'' ist ein ins Meer oder in den Fluss hinein angelegtes Bauwerk zum Uferschutz aus Buschwerk, Holz, Stein, Stahlbeton oder Asphalt.');
+INSERT INTO bauwerksfunktion VALUES (2132, 53009, 'Lahnung', 'Lahnung' , '''Lahnung'' ist ein Bauwerk zum Küstenschutz und zur Landgewinnung zumeist im Wattenmeer. Es besteht aus doppelten Holzpflockreihen, mit dazwischen geschnürten Sträuchern, den sog. Faschinen. Bei ablaufendem Wasser sammeln sich hinter der Lahnung Sedimente und Schlick.');
+INSERT INTO bauwerksfunktion VALUES (2133, 53009, 'Harbour dam, pier', 'Hafendamm, Mole' , '''Hafendamm, Mole'' ist ein in das Wasser vorgestreckter Steindamm, der eine Hafeneinfahrt begrenzt und das Hafenbecken vor Strömung und Wellenschlag schützt.');
+INSERT INTO bauwerksfunktion VALUES (2134, 53009, 'Yard', 'Höft' , '''Höft'' ist eine vorspringende Ecke bei Kaimauern in einem Hafen.');
+INSERT INTO bauwerksfunktion VALUES (2135, 53009, 'Revetment', 'Deckwerk' , '''Deckwerk'' ist ein geböschter Uferschutz an Schardeichen (Deiche ohne Vorland).');
+INSERT INTO bauwerksfunktion VALUES (2136, 53009, 'Embankment wall, quay wall', 'Ufermauer, Kaimauer' , '''Ufermauer, Kaimauer'' ist eine Mauer entlang der Uferlinie eines Gewässers zum Schutz des Ufers bzw. eine Uferbefestigung im Hafengelände zum Anlegen von Schiffen.');
+INSERT INTO bauwerksfunktion VALUES (9999, 53009, 'Other', 'Sonstiges' , '''Sonstiges'' bedeutet, dass die Funktion bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+
+ALTER TABLE "sie03_f" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
+ALTER TABLE "sie03_l" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
+--Table "sie03_p" contains identical values for bwf which apply to different classes of objects. Hence a simple FK cannot be added.
+--2 out of 5 examples are: 1610 Zoo/Canopy, 1650 Ramp/Staircase
+--We add a composite key based on bwf and class identifier i.e. objart.
+ALTER TABLE "sie03_p" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
+--TODO: Table "sie05_p" contains some invalid values for bwf e.g. 9999#1003, 1008#1003 which need to be cleaned
+--ALTER TABLE "sie05_p" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf) REFERENCES bauwerksfunktion(code);
+ALTER TABLE "ver06_f" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
+ALTER TABLE "ver06_l" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
+ALTER TABLE "ver06_p" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);

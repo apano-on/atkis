@@ -332,3 +332,18 @@ FILTER(LANG(?function) = "en")
 FILTER(STR(?function)='Museum')
 }
 """
+
+[[tabGroups.tabs]]
+name="Radio/Telecom Towers"
+query = """
+# Q3: Find all radio/telecom towers in the dataset
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * WHERE {
+?b a :Building; rdfs:label ?label ; :bwf ?bwf .
+?bwf rdfs:label ?function .
+FILTER(LANG(?function) = "en")
+FILTER(STR(?function)='Transmission tower, radio tower, telecommunications tower')
+}
+"""

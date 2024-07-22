@@ -24,6 +24,19 @@
 #    Object Properties
 #################################################################
 
+###  http://example.org/ontologies/atkis#bvb
+:bvb rdf:type owl:ObjectProperty ;
+     rdfs:comment "Special traffic importance"@en ;
+     rdfs:comment "besondereVerkehrsbedeutung"@de ;
+     rdfs:domain :RoadTraffic ;
+     rdfs:range :SpecialTrafficImportance .
+
+###  http://example.org/ontologies/atkis#bwm
+:wdm rdf:type owl:ObjectProperty ;
+        rdfs:comment "StructureFunction"@en ;
+        rdfs:comment "BauersFunktion"@de ;
+        rdfs:range :StructureFunction .
+
 ###  http://example.org/ontologies/atkis#existsIn
 :existsIn rdf:type owl:ObjectProperty .
 
@@ -60,6 +73,17 @@
 :isLocatedIn rdf:type owl:ObjectProperty ;
              rdfs:comment "Is Located In"@en .
 
+###  http://example.org/ontologies/atkis#wdm
+:wdm rdf:type owl:ObjectProperty ;
+        rdfs:comment "EntityClassification"@en ;
+        rdfs:comment "Widmung"@de ;
+        rdfs:range :EntityClassification .
+
+###  http://example.org/ontologies/atkis#zus
+:zus rdf:type owl:ObjectProperty ;
+     rdfs:comment "Condition"@en ;
+     rdfs:comment "Zustand"@de ;
+        rdfs:range :EntityCondition .
 
 #################################################################
 #    Data properties
@@ -101,19 +125,8 @@
      rdfs:comment "breiteDerFahrbahn"@de ;
      skos:example "The minimum value for one lane is 2.5 meters."@en ;
      skos:example "Der Mindestwert für eine Fahrspur beträgt 2,5 Meter."@de ;
+     rdfs:domain :RoadTraffic ;
      rdfs:range xsd:decimal .
-
-
-###  http://example.org/ontologies/atkis#bvb
-:bvb rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Special traffic importance"@en ;
-     rdfs:comment "besondereVerkehrsbedeutung"@de ;
-     rdfs:range [ a rdfs:Datatype ;
-                      owl:oneOf ("interurban traffic"^^xsd:string "local traffic"^^xsd:string)
-                    ] ;
-         skos:prefLabel "interurban traffic"@en, "Überörtlicher Verkehr"@de ;
-         skos:altLabel "local traffic"@en, "Nahverkehr"@de .
 
 
 ###  http://example.org/ontologies/atkis#end
@@ -136,27 +149,36 @@
      rdfs:subPropertyOf owl:topDataProperty ;
      rdfs:comment "Number of lanes"@en ;
      rdfs:comment "Anzahl Der Fahrstreifen"@de ;
+     rdfs:domain :RoadTraffic ;
      rdfs:range xsd:integer .
 
 
 ###  http://example.org/ontologies/atkis#ftr
 :ftr rdf:type owl:DatatypeProperty ;
      rdfs:comment "Lane seperation" ;
-     rdfs:comment "Fahrbahntrennung"@de .
+     rdfs:comment "Fahrbahntrennung"@de ;
+     rdfs:domain :RoadTraffic ;
+     rdfs:range xsd:boolean .
 
 
 ###  http://example.org/ontologies/atkis#hdu_x
 :hdu_x rdf:type owl:DatatypeProperty ;
        rdfs:subPropertyOf owl:topDataProperty ;
        rdfs:comment "Has direct under pass"@en ;
-       rdfs:comment "Hat Direkt Unten Existiert"@de .
+       rdfs:comment "Hat Direkt Unten Existiert"@de ;
+       rdfs:domain :RoadTraffic ;
+       rdfs:range xsd:boolean .
 
 
 ###  http://example.org/ontologies/atkis#idb
 :ibd rdf:type owl:DatatypeProperty ;
      rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "International importance"@en ;
-     rdfs:comment "Internationale Bedeutung"@de .
+     rdfs:label "International importance"@en ;
+     rdfs:label "Internationale Bedeutung"@de ;
+     rdfs:comment "'European roads' are sections of federal highways that form part of the international European road network adopted by the European Conference of Transport Ministers."@en ;
+     rdfs:comment "'Europastraßen' sind Abschnitte von Bundesfernstraßen, die einen Teil des von der Europäischen Konferenz der Verkehrsminister beschlossenen internationalen europäischen Straßennetzes bilden."@de ;
+     rdfs:domain :RoadTraffic ;
+     rdfs:range xsd:boolean .
 
 
 ###  http://example.org/ontologies/atkis#land
@@ -195,7 +217,8 @@
 
 ###  http://example.org/ontologies/atkis#objart_z
 :objart_z rdf:type owl:DatatypeProperty ;
-          rdfs:comment "Object types without spatial references (ZUSO)" .
+            rdfs:comment "Object types without spatial references (ZUSO)"@en ;
+            rdfs:comment "Objektarten ohne räumlichen Bezug (ZUSO)"@de .
 
 
 ###  http://example.org/ontologies/atkis#objid
@@ -219,26 +242,12 @@
      rdfs:comment "Regional Sprache"@de .
 
 
-###  http://example.org/ontologies/atkis#wdm
-:wdm rdf:type owl:DatatypeProperty ;
-        rdfs:subPropertyOf owl:topDataProperty ;
-        rdfs:comment "Dedication"@en ;
-        rdfs:comment "Widmung"@de .
-
-
 ###  http://example.org/ontologies/atkis#znm
 :znm rdf:type owl:DatatypeProperty ;
         rdfs:subPropertyOf owl:topDataProperty ;
         rdfs:comment "Middle name"@en ;
         rdfs:comment "Zweit Name"@de ;
         rdfs:range xsd:string .
-
-
-###  http://example.org/ontologies/atkis#zus
-:zus rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Condition"@en ;
-     rdfs:comment "Zustand"@de .
 
 
 #################################################################
@@ -344,6 +353,14 @@
 :DistrictArea rdf:type owl:Class ;
               rdfs:subClassOf :Administrative .
 
+###  http://example.org/ontologies/atkis#EntityClassification
+:EntityClassification rdf:type owl:Class ;
+            rdfs:comment "Entity Classification indicates the legal classification according to the road/water laws of the countries"@en ;
+            rdfs:comment "'Widmung' gibt die gesetzliche Klassifizierung nach den Strassen/Wassergesetzen der Länder an."@de .
+
+###  http://example.org/ontologies/atkis#EntityCondition
+:EntityCondition rdf:type owl:Class ;
+            rdfs:comment "Zustand"@de .
 
 ###  http://example.org/ontologies/atkis#FlowingWaterBody
 :FlowingWaterBody rdf:type owl:Class ;
@@ -548,6 +565,10 @@ ReliefForms and MeasurementData for the relief""" .
                  rdfs:subClassOf :Settlement .
 
 
+###  http://example.org/ontologies/atkis#SpecialTrafficImportance
+:SpecialTrafficImportance rdf:type owl:Class .
+
+
 ###  http://example.org/ontologies/atkis#SpoilHeap
 :SpoilHeap rdf:type owl:Class ;
            rdfs:subClassOf :AreaDominatedByBuilding .
@@ -571,6 +592,10 @@ ReliefForms and MeasurementData for the relief""" .
 ###  http://example.org/ontologies/atkis#StructuralLine
 :StructuralLine rdf:type owl:Class ;
                 rdfs:subClassOf :ReliefForm .
+
+###  http://example.org/ontologies/atkis#EntityCondition
+:StructureFunction rdf:type owl:Class ;
+            rdfs:comment "Bauwerksfunktion"@de .
 
 
 ###  http://example.org/ontologies/atkis#StructureOrFacilityForIndustryAndCommerce
