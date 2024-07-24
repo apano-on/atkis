@@ -24,6 +24,40 @@
 #    Object Properties
 #################################################################
 
+###  http://example.org/ontologies/atkis#aga
+:aga rdf:type owl:ObjectProperty ;
+    rdfs:domain :WaterLineAxis
+    rdfs:range :WaterStationingAxis ;
+    rdfs:comment "water stationing axis"@en ;
+    rdfs:comment "artDerGewaesserachse"@de .
+
+###  http://example.org/ontologies/atkis#agt
+:agt rdf:type owl:ObjectProperty ;
+    rdfs:domain :AreaDominatedByBuilding
+    rdfs:range :MinedMaterial ;
+    rdfs:comment "mined material"@en ;
+    rdfs:comment "abbaugut"@de .
+
+###  http://example.org/ontologies/atkis#art
+:art rdf:type owl:ObjectProperty ;
+    rdfs:range :SpecificType ;
+    rdfs:comment "type"@en ;
+    rdfs:comment "art"@de .
+
+###  http://example.org/ontologies/atkis#atp
+:atp rdf:type owl:ObjectProperty ;
+     rdfs:domain :BuildingFacility ;
+     rdfs:range :ArchaologicalType ;
+     rdfs:comment "archeological type"@en ;
+     rdfs:comment "archäologischerTyp"@de .
+
+###  http://example.org/ontologies/atkis#bkt
+:bkt rdf:type owl:ObjectProperty ;
+     rdfs:domain :RailwayTraffic ;
+     rdfs:range :RailwayCategory ;
+     rdfs:comment "Railway category"@en ;
+     rdfs:comment "Bahn Kategorie"@de .
+
 ###  http://example.org/ontologies/atkis#bvb
 :bvb rdf:type owl:ObjectProperty ;
      rdfs:comment "Special traffic importance"@en ;
@@ -31,11 +65,18 @@
      rdfs:domain :RoadTraffic ;
      rdfs:range :SpecialTrafficImportance .
 
-###  http://example.org/ontologies/atkis#bwm
-:wdm rdf:type owl:ObjectProperty ;
+###  http://example.org/ontologies/atkis#bwf
+:bwf rdf:type owl:ObjectProperty ;
         rdfs:comment "StructureFunction"@en ;
         rdfs:comment "BauersFunktion"@de ;
         rdfs:range :StructureFunction .
+
+###  http://example.org/ontologies/atkis#bws
+:bws rdf:type owl:ObjectProperty ;
+        rdfs:comment "GroundCover"@en ;
+        rdfs:comment "Bewuchs"@de ;
+        rdfs:domain :VegetationCharacteristic ;
+        rdfs:range :GroundCover .
 
 ###  http://example.org/ontologies/atkis#existsIn
 :existsIn rdf:type owl:ObjectProperty .
@@ -43,6 +84,13 @@
 ###  http://example.org/ontologies/atkis#gfk
 :gfk rdf:type owl:ObjectProperty ;
      rdfs:comment """categorisation of buildings defined by gfk values. e.g. gfk 2072 = youth hostel"""@en .
+
+###  http://example.org/ontologies/atkis#gls
+:gls rdf:type owl:ObjectProperty ;
+        rdfs:comment "Number of Railway Tracks"@en ;
+        rdfs:comment "Anzahl Der Streckengleise"@de ;
+        rdfs:domain RailwayTraffic ;
+        rdfs:range :RailwayTracks .
 
 ###  http://example.org/ontologies/atkis#hasArea
 :hasArea rdf:type owl:ObjectProperty .
@@ -73,6 +121,50 @@
 :isLocatedIn rdf:type owl:ObjectProperty ;
              rdfs:comment "Is Located In"@en .
 
+###  http://example.org/ontologies/atkis#kon
+:kon rdf:type owl:ObjectProperty ;
+    rdfs:domain :SpecialFacility ;
+    rdfs:range :WaterNavigationLock ;
+    rdfs:comment "Design Feature"@en ;
+    rdfs:comment "Konstruktionsmerkmal Bauart"@de .
+
+###  http://example.org/ontologies/atkis#nrb
+:nrb rdf:type owl:ObjectProperty ;
+     rdfs:range :RailwayNumber ;
+     rdfs:comment "Railway number"@en ;
+     rdfs:comment "Nummer Der Bahnstrecke"@de .
+
+###  http://example.org/ontologies/atkis#ntz
+:ntz rdf:type owl:ObjectProperty ;
+     rdfs:range :Usage ;
+     rdfs:comment "Usage"@en ;
+     rdfs:comment "Nutzung"@de .
+
+###  http://example.org/ontologies/atkis#ofm
+:ofm rdf:type owl:ObjectProperty ;
+     rdfs:comment "Surface material"@en ;
+     rdfs:comment "Oberflaechenmaterial"@de ;
+     rdfs:range :SurfaceMaterial .
+
+###  http://example.org/ontologies/atkis#sfk
+:spo rdf:type owl:ObjectProperty ;
+     rdfs:range :NavigationCategory ;
+     rdfs:comment "navigation category e.g. inland waterway, see route etc."@en ;
+     rdfs:comment "schifffahrtskategorie"@de .
+
+###  http://example.org/ontologies/atkis#spo
+:spo rdf:type owl:ObjectProperty ;
+     rdfs:domain :BuildingFacility ;
+     rdfs:comment "type of sport"@en ;
+     rdfs:comment "sportart"@de .
+
+###  http://example.org/ontologies/atkis#spw
+:spw rdf:type owl:ObjectProperty ;
+     rdfs:domain :RailwayTraffic ;
+     rdfs:range :TrackGauge ;
+     rdfs:comment "Track gauge"@en ;
+     rdfs:comment "Spurweite"@de .
+
 ###  http://example.org/ontologies/atkis#wdm
 :wdm rdf:type owl:ObjectProperty ;
         rdfs:comment "EntityClassification"@en ;
@@ -84,6 +176,20 @@
      rdfs:comment "Condition"@en ;
      rdfs:comment "Zustand"@de ;
         rdfs:range :EntityCondition .
+
+###  http://example.org/ontologies/atkis#vkw
+:vkw rdf:type owl:ObjectProperty ;
+     rdfs:comment "Traffic service"@en ;
+     rdfs:comment "Verkehrsdienst"@de ;
+     rdfs:domain :RailwayTraffic ;
+     rdfs:range :TrafficService .
+
+###  http://example.org/ontologies/atkis#veg
+:vkw rdf:type owl:ObjectProperty ;
+     rdfs:comment "Vegetation feature"@en ;
+     rdfs:comment "Vegetationsmerkmal"@de ;
+     rdfs:domain :Agricultural ;
+     rdfs:range :VegetationFeature .
 
 #################################################################
 #    Data properties
@@ -128,6 +234,28 @@
      rdfs:domain :RoadTraffic ;
      rdfs:range xsd:decimal .
 
+###  http://example.org/ontologies/atkis#wsg
+:brg rdf:type owl:DatatypeProperty ;
+     rdfs:comment "Width of a water body"@en ;
+     rdfs:comment "Breite Des Gewaessers"@de ;
+     rdfs:domain :WaterBodyCourse ;
+     rdfs:range xsd:integer .
+
+###  http://example.org/ontologies/atkis#bro
+:bro rdf:type owl:DatatypeProperty ;
+     rdfs:comment "Object width"@en ;
+     rdfs:comment "breiteDesObjekts"@de ;
+     rdfs:range xsd:decimal ;
+     rdfs:subPropertyOf uom:length ;
+     uom:unit uom:metre .
+
+###  http://example.org/ontologies/atkis#elk
+:elk rdf:type owl:DatatypeProperty ;
+       rdfs:subPropertyOf owl:topDataProperty ;
+       rdfs:comment "Electrified rail"@en ;
+       rdfs:comment "Elektrifizierung"@de ;
+       rdfs:domain :RailwayTraffic ;
+       rdfs:range xsd:boolean .
 
 ###  http://example.org/ontologies/atkis#end
 :end rdf:type owl:DatatypeProperty ;
@@ -143,6 +271,13 @@
         rdfs:label "function"@en ;
         rdfs:label "Funktion"@de .
 
+###  http://example.org/ontologies/atkis#elk
+:flr rdf:type owl:DatatypeProperty ;
+       rdfs:subPropertyOf owl:topDataProperty ;
+       rdfs:comment "‘Flow direction’ is the direction in which the water flows. The direction of the geometry of the
+       water stationing axis and the direction of flow are identical (true)."@en ;
+       rdfs:comment "Fließrichtung"@de ;
+       rdfs:range xsd:boolean .
 
 ###  http://example.org/ontologies/atkis#fsz
 :fsz rdf:type owl:DatatypeProperty ;
@@ -167,6 +302,14 @@
        rdfs:comment "Has direct under pass"@en ;
        rdfs:comment "Hat Direkt Unten Existiert"@de ;
        rdfs:domain :RoadTraffic ;
+       rdfs:range xsd:boolean .
+
+###  http://example.org/ontologies/atkis#hyd
+:hyd rdf:type owl:DatatypeProperty ;
+       rdfs:subPropertyOf owl:topDataProperty ;
+       rdfs:comment "Hydrological feature, only one code 2000 for not constantly carrying water"@en ;
+       rdfs:comment "Hydrologisches Merkmal"@de ;
+       rdfs:domain :WaterBodyCourse ;
        rdfs:range xsd:boolean .
 
 
@@ -238,9 +381,17 @@
 ###  http://example.org/ontologies/atkis#rgs
 :rgs rdf:type owl:DatatypeProperty ;
      rdfs:domain :Settlement ;
+     rdfs:range xsd:string ;
      rdfs:comment "regional language"@en ;
      rdfs:comment "Regional Sprache"@de .
 
+###  http://example.org/ontologies/atkis#wsg
+:wsg rdf:type owl:DatatypeProperty ;
+     rdfs:comment "Water level in standing water"@en ;
+     rdfs:comment "Wasserspiegelhoehe In Stehendem Gewaesser"@de ;
+     skos:example "Difference between e.g. tank height and current water level"@en ;
+     rdfs:domain :WaterBodyCourse ;
+     rdfs:range xsd:decimal .
 
 ###  http://example.org/ontologies/atkis#znm
 :znm rdf:type owl:DatatypeProperty ;
@@ -287,7 +438,7 @@
 ###  http://example.org/ontologies/atkis#Area
 :Area rdf:type owl:Class ;
       rdfs:subClassOf geo:Feature ;
-      rdfs:comment "The Object theme Area, containing three \"contents\": Administartive, Protected and Geographical areas"@en .
+      rdfs:comment "The Object theme Area, containing three \"contents\": Administrative, Protected and Geographical areas"@en .
 
 
 ###  http://example.org/ontologies/atkis#AreaDominatedByBuilding
@@ -382,6 +533,10 @@
                         rdfs:subClassOf :Administrative .
 
 
+###  http://example.org/ontologies/atkis#GroundCover
+:GroundCover rdf:type owl:Class ;
+             rdfs:comment "bewuchs"@de .
+
 ###  http://example.org/ontologies/atkis#HarborBasin
 :HarborBasin rdf:type owl:Class ;
              rdfs:subClassOf :WaterBodyCourse .
@@ -421,6 +576,9 @@
 :MeasurementData rdf:type owl:Class ;
                  rdfs:subClassOf :Relief .
 
+###  http://example.org/ontologies/atkis#MinedMaterial
+:MinedMaterial rdf:type owl:Class ;
+            rdfs:comment "abbaugut"@de .
 
 ###  http://example.org/ontologies/atkis#MunicipalArea
 :MunicipalArea rdf:type owl:Class ;
@@ -430,6 +588,10 @@
 ###  http://example.org/ontologies/atkis#NationalArea
 :NationalArea rdf:type owl:Class ;
               rdfs:subClassOf :Administrative .
+
+
+###  http://example.org/ontologies/atkis#NationalArea
+:NavigationCategory rdf:type owl:Class .
 
 
 ###  http://example.org/ontologies/atkis#NatureEnvironmentOrSoilProtectionLaw
@@ -482,9 +644,24 @@
                 rdfs:subClassOf :Protected .
 
 
+###  http://example.org/ontologies/atkis#SportType
+:RailwayCategory rdf:type owl:Class ;
+            rdfs:comment "Bahn Kategorie"@de .
+
+
+###  http://example.org/ontologies/atkis#SportType
+:RailwayNumber rdf:type owl:Class ;
+            rdfs:comment "Nummer der Bahnstrecke"@de .
+
+
 ###  http://example.org/ontologies/atkis#RailwayLine
 :RailwayLine rdf:type owl:Class ;
              rdfs:subClassOf :RailwayTraffic .
+
+
+###  http://example.org/ontologies/atkis#SportType
+:RailwayTracks rdf:type owl:Class ;
+            rdfs:comment "Anzahl Der Streckengleise"@de .
 
 
 ###  http://example.org/ontologies/atkis#RailwayTraffic
@@ -568,11 +745,16 @@ ReliefForms and MeasurementData for the relief""" .
 ###  http://example.org/ontologies/atkis#SpecialTrafficImportance
 :SpecialTrafficImportance rdf:type owl:Class .
 
+###  http://example.org/ontologies/atkis#SpecificType
+:SpecificType rdf:type owl:Class .
 
 ###  http://example.org/ontologies/atkis#SpoilHeap
 :SpoilHeap rdf:type owl:Class ;
            rdfs:subClassOf :AreaDominatedByBuilding .
 
+###  http://example.org/ontologies/atkis#SportType
+:SportType rdf:type owl:Class ;
+            rdfs:comment "sportart"@de .
 
 ###  http://example.org/ontologies/atkis#SportRecreationAndLeisureArea
 :SportRecreationAndLeisureArea rdf:type owl:Class ;
@@ -608,6 +790,11 @@ ReliefForms and MeasurementData for the relief""" .
                                                   rdfs:subClassOf :BuildingFacility .
 
 
+###  http://example.org/ontologies/atkis#SurfaceMaterial
+:SurfaceMaterial rdf:type owl:Class ;
+            rdfs:comment "oberflaechenmaterial"@de .
+
+
 ###  http://example.org/ontologies/atkis#Swamp
 :Swamp rdf:type owl:Class ;
        rdfs:subClassOf :VegetationArea .
@@ -616,6 +803,16 @@ ReliefForms and MeasurementData for the relief""" .
 ###  http://example.org/ontologies/atkis#TestSite
 :TestSite rdf:type owl:Class ;
           rdfs:subClassOf :SpecialFacility .
+
+
+###  http://example.org/ontologies/atkis#TrackGauge
+:TrackGauge rdf:type owl:Class ;
+            rdfs:comment "Spurweite"@de .
+
+
+###  http://example.org/ontologies/atkis#TrafficService
+:TrafficService rdf:type owl:Class ;
+            rdfs:comment "verkehrsdienst"@de .
 
 
 ###  http://example.org/ontologies/atkis#Traffic
@@ -639,6 +836,11 @@ ReliefForms and MeasurementData for the relief""" .
                     rdfs:subClassOf :TransportBuildingAndFacility .
 
 
+###  http://example.org/ontologies/atkis#Usage
+:Usage rdf:type owl:Class ;
+            rdfs:comment "nutzung"@de .
+
+
 ###  http://example.org/ontologies/atkis#Vegetation
 :Vegetation rdf:type owl:Class ;
             rdfs:subClassOf geo:Feature ;
@@ -654,6 +856,9 @@ ReliefForms and MeasurementData for the relief""" .
 :VegetationCharacteristic rdf:type owl:Class ;
                           rdfs:subClassOf :Vegetation .
 
+###  http://example.org/ontologies/atkis#Usage
+:VegetationFeature rdf:type owl:Class ;
+            rdfs:comment "vegetationsmerkmal"@de .
 
 ###  http://example.org/ontologies/atkis#VerticalRelation
 :VerticalRelation rdf:type owl:Class ;
@@ -684,6 +889,16 @@ ReliefForms and MeasurementData for the relief""" .
 ###  http://example.org/ontologies/atkis#WaterLineAxis
 :WaterLineAxis rdf:type owl:Class ;
                rdfs:subClassOf :WaterBody .
+
+
+###  http://example.org/ontologies/atkis#WaterNavigationLock
+:WaterNavigationLock rdf:type owl:Class ;
+            rdfs:comment "konstruktionsmerkmalBauart"@de .
+
+
+###  http://example.org/ontologies/atkis#WaterStationingAxis
+:WaterStationingAxis rdf:type owl:Class ;
+            rdfs:comment "Art Der Gewaesserstationierungsachse"@de .
 
 
 ###  http://example.org/ontologies/atkis#WaterWayStructure

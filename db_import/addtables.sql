@@ -28,6 +28,18 @@ SET fsz = CASE
           ELSE fsz
 END;
 
+UPDATE ver06_l
+SET bro = CASE
+              WHEN bro = -9999 THEN NULL
+              ELSE bro
+    END;
+
+UPDATE ver06_p
+SET bro = CASE
+              WHEN bro = -9999 THEN NULL
+              ELSE bro
+    END;
+
 
 -- Source: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/binarywriterservlet?imgUid=78f7a5be-17ae-4819-393b-216067bef8a0&uBasVariant=11111111-1111-1111-1111-111111111111#_C11007-_A11007_46283
 -- FROM: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/, OK AAA-Anwendungsschema 7.1.2 (HTML)
@@ -308,46 +320,45 @@ ALTER TABLE "ver01_l" ADD CONSTRAINT besondereverkehrsbedeutung_fk FOREIGN KEY (
 
 
 -- Attribute: widmung_traffic
-CREATE TABLE widmung_traffic (
-                                 code VARCHAR(4) PRIMARY KEY,
-                                 name_en TEXT,
-                                 name_de TEXT,
-                                 definition_de TEXT,
-                                 CONSTRAINT check_column_format CHECK (
-                                     code ~ '^[0-9]{4}$'
-                                     OR LENGTH(code) = 4
+CREATE TABLE widmung (
+                     code VARCHAR(4),
+                     objart VARCHAR(5),
+                     name_en TEXT,
+                     name_de TEXT,
+                     definition_de TEXT,
+                     PRIMARY KEY (code, objart),
+                     CONSTRAINT check_column_format CHECK (
+                         code ~ '^[0-9]{4}$'
+                         OR LENGTH(code) = 4
 )
     );
-INSERT INTO widmung_traffic VALUES (1301, 'Federal motorway', 'Bundesautobahn' , '''Bundesautobahn'' ist eine durch Verwaltungsakt zur Bundesautobahn gewidmete Bundesfernstraße.');
-INSERT INTO widmung_traffic VALUES (1303, 'Federal road', 'Bundesstraße' , '''Bundesstraße'' ist eine durch Verwaltungsakt zur Bundesstraße gewidmete Bundesfernstraße.');
-INSERT INTO widmung_traffic VALUES (1305, 'National road, state road', 'Landesstraße, Staatsstraße' , '''Landesstraße, Staatsstraße'' ist eine durch Verwaltungsakt zur Landesstraße bzw. Staatsstraße gewidmete Straße.');
-INSERT INTO widmung_traffic VALUES (1306, 'District road', 'Kreisstraße' , '''Kreisstraße'' ist eine durch Verwaltungsakt zur Kreisstraße gewidmete Straße.');
-INSERT INTO widmung_traffic VALUES (1307, 'Municipal road', 'Gemeindestraße' , '''Gemeindestraße'' ist eine durch Verwaltungsakt zur Gemeindestrasse gewidmete Straße.');
-INSERT INTO widmung_traffic VALUES (9997, 'Non-public road', 'Nicht öffentliche Straße' , 'Nicht öffentliche Straße'' bedeutet, dass hier in Straßenverkehr laubt ist, dieser ber nur zweckgebunden, z. B. in einem Krankenhausgelände, durchgeführt wird.');
-INSERT INTO widmung_traffic VALUES (9999, 'Other public road', 'Sonstiges öffentliche Straße' , '''Sonstige öffentliche Straße'' bedeutet, dass es sich um eine öffentliche Straße handelt, die aber keiner der vorhandenen Widmung zugewiesen werden kann.');
+INSERT INTO widmung VALUES (1301, 42002, 'Federal motorway', 'Bundesautobahn' , '''Bundesautobahn'' ist eine durch Verwaltungsakt zur Bundesautobahn gewidmete Bundesfernstraße.');
+INSERT INTO widmung VALUES (1303, 42002, 'Federal road', 'Bundesstraße' , '''Bundesstraße'' ist eine durch Verwaltungsakt zur Bundesstraße gewidmete Bundesfernstraße.');
+INSERT INTO widmung VALUES (1305, 42002, 'National road, state road', 'Landesstraße, Staatsstraße' , '''Landesstraße, Staatsstraße'' ist eine durch Verwaltungsakt zur Landesstraße bzw. Staatsstraße gewidmete Straße.');
+INSERT INTO widmung VALUES (1306, 42002, 'District road', 'Kreisstraße' , '''Kreisstraße'' ist eine durch Verwaltungsakt zur Kreisstraße gewidmete Straße.');
+INSERT INTO widmung VALUES (1307, 42002, 'Municipal road', 'Gemeindestraße' , '''Gemeindestraße'' ist eine durch Verwaltungsakt zur Gemeindestrasse gewidmete Straße.');
+INSERT INTO widmung VALUES (9997, 42002, 'Non-public road', 'Nicht öffentliche Straße' , 'Nicht öffentliche Straße'' bedeutet, dass hier in Straßenverkehr laubt ist, dieser ber nur zweckgebunden, z. B. in einem Krankenhausgelände, durchgeführt wird.');
+INSERT INTO widmung VALUES (9999, 42002, 'Other public road', 'Sonstiges öffentliche Straße' , '''Sonstige öffentliche Straße'' bedeutet, dass es sich um eine öffentliche Straße handelt, die aber keiner der vorhandenen Widmung zugewiesen werden kann.');
 
+INSERT INTO widmung VALUES (1310, 44002, 'Waterbodies 1. order - federal waterway', 'Gewässer I. Ordnung - Bundeswasserstraße' , '''Gewässer I. Ordnung - Bundeswasserstraße'' ist ein Gewässer, das der Zuständigkeit des Bundes obliegt.');
+INSERT INTO widmung VALUES (1320, 44002, 'Waterbodies 1. order - state waterway', 'Gewässer I. Ordnung - nach Landesrecht' , '''Gewässer I. Ordnung - nach Landesrecht'' ist ein Gewässer, das der Zuständigkeit des Landes obliegt.');
+INSERT INTO widmung VALUES (1330, 44002, 'Waterbodies 2. order', 'Gewässer II. Ordnung' , '''Gewässer II. Ordnung'' ist ein Gewässer, für das die Unterhaltungsverbände zuständig sind.');
+INSERT INTO widmung VALUES (1340, 44002, 'Waterbodies 3. order', 'Gewässer III. Ordnung' , '''Gewässer III. Ordnung'' ist ein Gewässer, das weder zu den Gewässern I. noch II. Ordnung zählt.');
 
-ALTER TABLE "ver01_l" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm) REFERENCES widmung_traffic(code);
+INSERT INTO widmung VALUES (1310, 44003, 'Waterbodies 1. order - federal waterway', 'Gewässer I. Ordnung - Bundeswasserstraße' , '''Gewässer I. Ordnung - Bundeswasserstraße'' ist ein Gewässer, das der Zuständigkeit des Bundes obliegt.');
+INSERT INTO widmung VALUES (1320, 44003, 'Waterbodies 1. order - state waterway', 'Gewässer I. Ordnung - nach Landesrecht' , '''Gewässer I. Ordnung - nach Landesrecht'' ist ein Gewässer, das der Zuständigkeit des Landes obliegt.');
+INSERT INTO widmung VALUES (1330, 44003, 'Waterbodies 2. order', 'Gewässer II. Ordnung' , '''Gewässer II. Ordnung'' ist ein Gewässer, für das die Unterhaltungsverbände zuständig sind.');
+INSERT INTO widmung VALUES (1340, 44003, 'Waterbodies 3. order', 'Gewässer III. Ordnung' , '''Gewässer III. Ordnung'' ist ein Gewässer, das weder zu den Gewässern I. noch II. Ordnung zählt.');
 
--- Attribute: widmung_waterbodies
-CREATE TABLE widmung_waterbodies (
-                                     code VARCHAR(4) PRIMARY KEY,
-                                     name_en TEXT,
-                                     name_de TEXT,
-                                     definition_de TEXT,
-                                     CONSTRAINT check_column_format CHECK (
-                                         code ~ '^[0-9]{4}$'
-                                         OR LENGTH(code) = 4
-)
-    );
-INSERT INTO widmung_waterbodies VALUES (1310, 'Waterbodies 1. order - federal waterway', 'Gewässer I. Ordnung - Bundeswasserstraße' , '''Gewässer I. Ordnung - Bundeswasserstraße'' ist ein Gewässer, das der Zuständigkeit des Bundes obliegt.');
-INSERT INTO widmung_waterbodies VALUES (1320, 'Waterbodies 1. order - state waterway', 'Gewässer I. Ordnung - nach Landesrecht' , '''Gewässer I. Ordnung - nach Landesrecht'' ist ein Gewässer, das der Zuständigkeit des Landes obliegt.');
-INSERT INTO widmung_waterbodies VALUES (1330, 'Waterbodies 2. order', 'Gewässer II. Ordnung' , '''Gewässer II. Ordnung'' ist ein Gewässer, für das die Unterhaltungsverbände zuständig sind.');
-INSERT INTO widmung_waterbodies VALUES (1340, 'Waterbodies 3. order', 'Gewässer III. Ordnung' , '''Gewässer III. Ordnung'' ist ein Gewässer, das weder zu den Gewässern I. noch II. Ordnung zählt.');
+INSERT INTO widmung VALUES (1310, 44006, 'Waterbodies 1. order - federal waterway', 'Gewässer I. Ordnung - Bundeswasserstraße' , '''Gewässer I. Ordnung - Bundeswasserstraße'' ist ein Gewässer, das der Zuständigkeit des Bundes obliegt.');
+INSERT INTO widmung VALUES (1320, 44006, 'Waterbodies 1. order - state waterway', 'Gewässer I. Ordnung - nach Landesrecht' , '''Gewässer I. Ordnung - nach Landesrecht'' ist ein Gewässer, das der Zuständigkeit des Landes obliegt.');
+INSERT INTO widmung VALUES (1330, 44006, 'Waterbodies 2. order', 'Gewässer II. Ordnung' , '''Gewässer II. Ordnung'' ist ein Gewässer, für das die Unterhaltungsverbände zuständig sind.');
+INSERT INTO widmung VALUES (1340, 44006, 'Waterbodies 3. order', 'Gewässer III. Ordnung' , '''Gewässer III. Ordnung'' ist ein Gewässer, das weder zu den Gewässern I. noch II. Ordnung zählt.');
 
+ALTER TABLE "ver01_l" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm, objart) REFERENCES widmung(code, objart);
 
-ALTER TABLE "gew01_f" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm) REFERENCES widmung_waterbodies(code);
-ALTER TABLE "gew01_l" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm) REFERENCES widmung_waterbodies(code);
+ALTER TABLE "gew01_f" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm, objart) REFERENCES widmung(code, objart);
+ALTER TABLE "gew01_l" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm, objart) REFERENCES widmung(code, objart);
 
 -- Attribute: zustand
 CREATE TABLE zustand (
@@ -580,3 +591,805 @@ ALTER TABLE "sie03_p" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES
 ALTER TABLE "ver06_f" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
 ALTER TABLE "ver06_l" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
 ALTER TABLE "ver06_p" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
+
+
+-- Attribute: sportart
+CREATE TABLE sportart (
+          code VARCHAR(4) PRIMARY KEY,
+          name_en TEXT,
+          name_de TEXT,
+          definition_de TEXT,
+          CONSTRAINT check_column_format CHECK (
+              code ~ '^[0-9]{4}$'
+              OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO sportart VALUES (1010, 'Ball sports', 'Ballsport' , '''Ballsport'' bedeutet, dass ein Spielfeld oder Stadion zur Ausübung des Ballsports genutzt wird.');
+INSERT INTO sportart VALUES (1011, 'Football', 'Fußball' , '''Fußball'' bedeutet, dass ein Spielfeld oder Stadion zum Fußball spielen genutzt wird.');
+INSERT INTO sportart VALUES (1020, 'Athletics', 'Leichtathletik' , '''Leichtathletik'' bedeutet, dass ein Spielfeld oder Stadion zur Ausübung verschiedener Leichtathletikdisziplinen genutzt wird.');
+INSERT INTO sportart VALUES (1030, 'Tennis', 'Tennis' , '''Tennis'' bedeutet, dass ein Spielfeld oder Stadion zum Tennis spielen genutzt wird.');
+INSERT INTO sportart VALUES (1040, 'Horse riding', 'Reiten' , '''Reiten'' bedeutet, dass ein Stadion, ein Spielfeld oder eine Rennbahn zur Ausübung des Reitsports genutzt wird.');
+INSERT INTO sportart VALUES (1050, 'Swimming', 'Schwimmen' , '''Schwimmen'' bedeutet, dass ein Stadion zum Schwimmen genutzt wird.');
+INSERT INTO sportart VALUES (1060, 'Skiing', 'Ski', '''Ski'' bedeutet, dass ein Stadion zur Ausübung des Skisports genutzt wird.');
+INSERT INTO sportart VALUES (1070, 'Ice sports, roller skating', 'Eissport, Rollschuhlaufen' , '''Eissport, Rollschuhlaufen'' bedeutet, dass ein Bauwerk oder eine Anlage zur Ausübung des Eis- oder des Rollschuhsports genutzt wird.');
+INSERT INTO sportart VALUES (1071, 'Ice skating, ice hockey', 'Eislauf, Eishockey' , '''Eislauf, Eishockey'' bedeutet, dass ein Bauwerk oder eine Anlage zur Ausübung des Eissports genutzt wird.');
+INSERT INTO sportart VALUES (1072, 'Rollschuhlaufen', 'Rollschuhlaufen' , '''Rollschuhlaufen'' bedeutet, dass ein Bauwerk oder eine Anlage zur Ausübung des Rollschuhsports genutzt wird.');
+INSERT INTO sportart VALUES (1080, 'Skating', 'Skating' , '''Skating'' bedeutet, dass eine Laufbahn zum Skaten genutzt wird.');
+INSERT INTO sportart VALUES (1090, 'Motorsports', 'Motorrennsport' , '''Motorrennsport'' bedeutet, dass eine Rennbahn zur Ausübung des Motorrennsports genutzt wird.');
+INSERT INTO sportart VALUES (1100, 'Cycling', 'Radsport' , '''Radsport'' bedeutet, dass ein Stadion oder eine Rennbahn zur Ausübung des Radsports genutzt wird.');
+INSERT INTO sportart VALUES (1110, 'Horse racing', 'Pferderennsport' , '''Pferderennsport'' bedeutet, dass eine Rennbahn zur Ausübung des Pferderennsports genutzt wird.');
+INSERT INTO sportart VALUES (1115, 'Dog racing', 'Hunderennsport' , '''Hunderennsport'' bedeutet, dass eine Rennbahn zur Ausübung des Hunderennsports genutzt wird.');
+INSERT INTO sportart VALUES (1120, 'Dog sports', 'Hundesport' , '''Hundesport'' sind Sportanlagen für Hunde, die dem Training, Ausbildung, aber auch dem Wettkampf (keine Hunderennen!) dienen.');
+
+
+-- Attribute: archaeologischertyp
+CREATE TABLE archaeologischertyp (
+                          code VARCHAR(4) PRIMARY KEY ,
+                          name_en TEXT,
+                          name_de TEXT,
+                          definition_de TEXT,
+                          CONSTRAINT check_column_format CHECK (
+                              code ~ '^[0-9]{4}$'
+                              OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO archaeologischertyp VALUES (1000, 'Grave', 'Grab' , '''Grab'' ist eine künstlich geschaffene Bestattungsstätte unter, auf oder über der Erdoberfläche.');
+INSERT INTO archaeologischertyp VALUES (1010, 'Large stone tomb (dolmen, megalithic bed)', 'Großsteingrab (Dolmen, Hünenbett)' , '''Großsteingrab (Dolmen, Hünenbett)'' ist ein Grab mit Steineinbau, d. h. es ist ein aus großen Steinen (z.B. Findlingen) errichteter Grabbau.');
+INSERT INTO archaeologischertyp VALUES (1020, 'Burial mound (barrow)', 'Grabhügel (Hügelgrab)' , '''Grabhügel (Hügelgrab)'' ist ein meist runder oder ovaler Hügel, der über einer ur- oder frühgeschichtlichen Bestattung aus Erde aufgeschüttet oder aus Plaggen aufgeschichtet wurde.');
+INSERT INTO archaeologischertyp VALUES (1100, 'Historic water pipe', 'Historische Wasserleitung' , '''Historische Wasserleitung'' ist ein meist offenes System von Gräben, Kunstgräben und Kanälen, in dem Wasser transportiert wird.');
+INSERT INTO archaeologischertyp VALUES (1110, 'Aqueduct', 'Aquädukt' , '''Aquädukt'' ist ein brückenartiges Steinbauwerk zur Überführung von Freispiegel-Wasserleitungen mit natürlichem Gefälle über Täler oder andere Bodenunebenheiten.');
+INSERT INTO archaeologischertyp VALUES (1200, 'Fortification (rampart, ditch)', 'Befestigung (Wall, Graben)' , '''Befestigung (Wall, Graben)'' ist ein aus Erde aufgeschütteter Grenz-, Schutz- oder Stadtwall. Zu der Befestigung (Wall) zählen auch Limes und Landwehr.');
+INSERT INTO archaeologischertyp VALUES (1210, 'Watchtower (Roman), control centre', 'Wachturm (römisch), Warte', '''Wachtturm (römisch), Warte'' ist ein allein oder in Verbindung mit einem Befestigungssystem (Limes) stehender Beobachtungsturm.');
+INSERT INTO archaeologischertyp VALUES (1300, 'Stone painting', 'Steinmal' , '''Steinmal'' ist eine kultische oder rechtliche Kennzeichnung, bestehend aus einzelnen oder Gruppen von Steinen.');
+INSERT INTO archaeologischertyp VALUES (1400, 'Fortification (castle ruins)', 'Befestigung (Burgruine)' , '''Befestigung (Burgruine)'' ist eine künstliche Anlage zur Sicherung von Leben und Gut.');
+INSERT INTO archaeologischertyp VALUES (1410, 'Castle (fortress, rampart)', 'Burg (Fliehburg, Ringwall)' , '''Burg (Fliehburg, Ringwall)'' ist eine ur- oder frühgeschichtliche runde, ovale oder an Gegebenheiten des Geländes (Böschungskanten) angepasste Befestigungsanlage, die aus einem Erdwall mit oder ohne Holzeinbauten besteht.');
+INSERT INTO archaeologischertyp VALUES (1420, 'Sconce', 'Schanze' , '''Schanze'' ist eine mittelalterliche oder neuzeitliche, in der Regel geschlossene, quadratische, rechteckige oder sternförmige Wallanlage mit Außengraben.');
+INSERT INTO archaeologischertyp VALUES (1430, 'Warehouse', 'Lager' , '''Lager'' ist die Bezeichnung für ein befestigtes Truppenlager in der Römer- oder in der Neuzeit (z.B. bei Belagerungen im 30 jährigen Krieg).');
+INSERT INTO archaeologischertyp VALUES (1500, 'Historic wall', 'Historische Mauer' , '''Historische Mauer'' ist eine Mauer mit kulturgeschichtlicher Bedeutung.');
+INSERT INTO archaeologischertyp VALUES (1510, 'City wall', 'Stadtmauer' , '');
+INSERT INTO archaeologischertyp VALUES (1520, 'Other historic wall', 'Sonstige historische Mauer' , '');
+INSERT INTO archaeologischertyp VALUES (9999, 'Other', 'Sonstiges' , '''Sonstiges'' bedeutet, dass der archäologische Typ bekannt, aber nicht in der Attributwertliste aufgeführt ist');
+
+-- Attribute: abbaugut
+CREATE TABLE abbaugut (
+    code VARCHAR(4),
+    objart VARCHAR(5).
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    PRIMARY KEY (code, objart),
+    CONSTRAINT check_column_format CHECK (
+       code ~ '^[0-9]{4}$'
+       OR LENGTH(code) = 4
+                      )
+    );
+INSERT INTO abbaugut VALUES (1000, 41004, 'Soil', 'Erden, Lockergestein', '''Erden, Lockergestein'' bedeutet, dass feinkörnige Gesteine abgebaut werden.');
+INSERT INTO abbaugut VALUES (1001, 41004, 'Clay', 'Ton', '''Ton'' ist ein Abbaugut, das aus gelblichem bis grauem Lockergestein besteht und durch Verwitterung älterer Gesteine entsteht.');
+INSERT INTO abbaugut VALUES (1003, 41004, 'Kaolin', 'Kaolin', '''Kaolin'' ist ein Abbaugut, das aus weißem, erdigem Gestein, fast reinem Aluminiumsilikat (kieselsaure Tonerde) besteht.');
+INSERT INTO abbaugut VALUES (1007, 41004, 'Lime, lime tuff, chalk', 'Kalk, Kalktuff, Kreide', '''Kalk, Kalktuff, Kreide'' ist ein Abbaugut, das aus erdigem weißen Kalkstein besteht.');
+INSERT INTO abbaugut VALUES (2000, 41004, 'Stones, rock, solid rock', 'Steine, Gestein, Festgestein', '''Steine, Gestein, Festgestein'' bedeutet, dass grobkörnige oder feste Gesteine abgebaut werden.');
+INSERT INTO abbaugut VALUES (2002, 41004, 'Slate, roofing slate', 'Schiefer, Dachschiefer', '''Schiefer, Dachschiefer'' ist ein toniges Abbaugut, das in dünne ebene Platten spaltbar ist.');
+INSERT INTO abbaugut VALUES (2003, 41004, 'Metamorphic slate', 'Metamorpher Schiefer', '''Metamorpher Schiefer'' ist ein Abbaugut, dessen ursprüngliche Zusammensetzung und Struktur durch Wärme und Druck innerhalb der Erdkruste verändert worden ist.');
+INSERT INTO abbaugut VALUES (2005, 41004, 'Limestone', 'Kalkstein', '''Kalkstein'' ist ein Abbaugut, das als weit verbreitetes Sedimentgestein überwiegend aus Calciumcarbonat besteht.');
+INSERT INTO abbaugut VALUES (2006, 41004, 'Dolomite stone', 'Dolomitstein', '''Dolomitstein'' ist ein Abbaugut, das überwiegend aus calcium- und magnesiumhaltigen Mineralien besteht.');
+INSERT INTO abbaugut VALUES (2013, 41004, 'Basalt, diabase', 'Basalt, Diabas', '''Basalt, Diabas'' ist ein Abbaugut, das aus basischem Ergussgestein besteht.');
+INSERT INTO abbaugut VALUES (2021, 41004, 'Talc slate, soapstone', 'Talkschiefer, Speckstein', '''Talkschiefer, Speckstein'' ist ein farbloses bis graugrünes, sich fettig anfühlendes Abbaugut, das aus dem weichen Mineral Talk besteht.');
+INSERT INTO abbaugut VALUES (3000, 41004, 'Ores', 'Erze', '''Erze'' bedeutet, dass die in der Natur vorkommenden, metallhaltigen Mineralien und Mineralgemische abgebaut oder gespeichert werden.');
+INSERT INTO abbaugut VALUES (3001, 41004, 'Iron', 'Eisen', '''Eisen'' wird als Eisenerz abgebaut und durch Verhüttung gewonnen.');
+INSERT INTO abbaugut VALUES (3002, 41004, 'Non-ferrous metal ores', 'Buntmetallerze', 'Buntmetallerze'' ist das Abbaugut, das alle Nichteisenmetallerze als Sammelbegriff umfasst.');
+INSERT INTO abbaugut VALUES (3003, 41004, 'Copper', 'Kupfer', '''Kupfer'' wird als Kupfererz abgebaut und durch Verhüttung gewonnen.');
+INSERT INTO abbaugut VALUES (3005, 41004, 'Zinc', 'Zink', '''Zink'' wird als Zinkerz abgebaut und durch spezielle Verfahren gewonnen.');
+INSERT INTO abbaugut VALUES (3006, 41004, 'Tin', 'Zinn', '''Zinn'' wird als Zinnerz abgebaut und durch spezielle Verfahren gewonnen.');
+INSERT INTO abbaugut VALUES (3007, 41004, 'Bismuth, cobalt, nickel', 'Wismut, Kobalt, Nickel', '''Wismut, Kobalt, Nickel'' werden als Erze abgebaut und durch spezielle Verfahren gewonnen.');
+INSERT INTO abbaugut VALUES (3008, 41004, 'Uranium', 'Uran', '''Uran'' wird als Uranerz abgebaut und durch spezielle Verfahren gewonnen.');
+INSERT INTO abbaugut VALUES (3009, 41004, 'Manganese', 'Mangan', '''Mangan'' wird als Manganerz abgebaut und durch spezielle Verfahren gewonnen.');
+INSERT INTO abbaugut VALUES (3011, 41004, 'Precious metal ores', 'Edelmetallerze', '''Edelmetallerze'' ist das Abbaugut, aus dem Edelmetalle (z. B. Gold, Silber) gewonnen werden.');
+INSERT INTO abbaugut VALUES (4000, 41004, 'Fuels and combustibles', 'Treib- und Brennstoffe', '''Treib- und Brennstoffe'' bedeutet, dass die in der Natur vorkommenden brennbaren organischen und anorganischen Substanzen abgebaut oder gewonnen werden.');
+INSERT INTO abbaugut VALUES (4020, 41004, 'Coal', 'Kohle', '''Kohle'' ist ein Abbaugut, das durch Inkohlung (Umwandlungsprozess pflanzlicher Substanzen) entstanden ist.');
+INSERT INTO abbaugut VALUES (4021, 41004, 'Lignite', 'Braunkohle', '''Braunkohle'' ist ein Abbaugut, das durch einen bestimmten Grad von Inkohlung (Umwandlungsprozess pflanzlicher Substanzen) entstanden ist.');
+INSERT INTO abbaugut VALUES (4022, 41004, 'Hard coal', 'Steinkohle', '''Steinkohle'' ist ein Abbaugut, das durch vollständige Inkohlung (Umwandlungsprozess pflanzlicher Substanzen) entstanden ist.');
+INSERT INTO abbaugut VALUES (4030, 41004, 'Oil shale', 'Ölschiefer', '''Ölschiefer'' ist ein Abbaugut, das aus dunklem, bitumenhaltigem, tonigem Gestein besteht.');
+INSERT INTO abbaugut VALUES (5000, 41004, 'Industrial minerals, salts', 'Industrieminerale, Salze', '''Industrieminerale, Salze'' bedeutet, dass die in der Natur vorkommenden Mineralien abgebaut werden.');
+INSERT INTO abbaugut VALUES (5001, 41004, 'Gypsum stone', 'Gipsstein', '''Gipsstein'' ist ein natürliches Abbaugut.');
+INSERT INTO abbaugut VALUES (5002, 41004, 'Anhydrite stone', 'Anhydritstein', '''Anhydritstein'' ist ein Abbaugut, das aus wasserfreiem Gips besteht.');
+INSERT INTO abbaugut VALUES (5003, 41004, 'Rock salt', 'Steinsalz', '''Steinsalz'' ist ein Abbaugut, das aus Salzstöcken gewonnen wird und aus Natriumchlorid besteht.');
+INSERT INTO abbaugut VALUES (5004, 41004, 'Potassium salt', 'Kalisalz', '''Kalisalz'' ist ein Abbaugut, das aus Salzstöcken gewonnen wird und aus Chloriden und Sulfaten besteht.');
+INSERT INTO abbaugut VALUES (5005, 41004, 'Calcite', 'Kalkspat', '''Kalkspat'' ist ein weißes oder hell gefärbtes Abbaugut (Calciumcarbonat).');
+INSERT INTO abbaugut VALUES (5006, 41004, 'Fluorspar', 'Flussspat', '''Flussspat'' ist ein Abbaugut, das aus Calciumfluorid besteht.');
+INSERT INTO abbaugut VALUES (5007, 41004, 'Barite', 'Schwerspat', '''Schwerspat'' ist ein formenreiches, rhombisches weißes bis farbiges Abbaugut.');
+INSERT INTO abbaugut VALUES (5011, 41004, 'Graphite', 'Graphit', '''Graphit'' ist ein bleigraues, weiches, metallglänzendes Abbaugut, das aus fast reinem Kohlenstoff besteht.');
+INSERT INTO abbaugut VALUES (1000, 41005, 'Soil', 'Erden', '''Erden, Lockergestein'' bedeutet, dass feinkörnige Gesteine abgebaut werden.');
+INSERT INTO abbaugut VALUES (1001, 41005, 'Clay', 'Ton', '''Ton'' ist ein Abbaugut, das aus gelblichem bis grauem Lockergestein besteht und durch Verwitterung älterer Gesteine entsteht.');
+INSERT INTO abbaugut VALUES (1002, 41005, 'Bentonite', 'Bentonit', '''Bentonit'' ist ein tonartiges Abbaugut, das durch Verwitterung vulkanischer Asche (Tuffe) entstanden ist.');
+INSERT INTO abbaugut VALUES (1003, 41005, 'Kaolin', 'Kaolin', '''Kaolin'' ist ein Abbaugut, das aus weißem, erdigem Gestein, fast reinem Aluminiumsilikat (kieselsaure Tonerde) besteht.');
+INSERT INTO abbaugut VALUES (1004, 41005, 'Loam', 'Lehm', '''Lehm'' ist ein Abbaugut, das durch Verwitterung entstanden ist und aus gelb bis braun gefärbtem sandhaltigem Ton besteht.');
+INSERT INTO abbaugut VALUES (1005, 41005, 'Loess, loess loam', 'Löß, Lößlehm', '''Löß, Lößlehm'' ist ein Abbaugut das aus feinsten gelblichen Sedimenten besteht und eine hohe Wasserspeicherfähigkeit aufweist.');
+INSERT INTO abbaugut VALUES (1007, 41005, 'Lime, lime tuff, chalk', 'Kalk, Kalktuff, Kreide', '''Kalk, Kalktuff, Kreide'' ist ein Abbaugut, das aus erdigem weißen Kalkstein besteht.');
+INSERT INTO abbaugut VALUES (1008, 41005, 'Sand', 'Sand', '''Sand'' ist ein Abbaugut, das aus kleinen, losen Mineralkörnern (häufig Quarz) besteht.');
+INSERT INTO abbaugut VALUES (1009, 41005, 'Gravel, gravel sand', 'Kies, Kiessand', '''Kies, Kiessand'' ist ein Abbaugut, das aus vom Wasser rund geschliffenen Gesteinsbrocken besteht.');
+INSERT INTO abbaugut VALUES (1011, 41005, 'Farberden', 'Farberden', '''Farberden'' ist ein Abbaugut, das durch Verwitterung entstanden ist und vorrangig aus eisenhaltigem Gestein besteht.');
+INSERT INTO abbaugut VALUES (1012, 41005, 'Quartz sand', 'Quarzsand', '''Quarzsand'' ist ein Abbaugut, das vorwiegend aus kleinen, losen Quarzkörnern besteht.');
+INSERT INTO abbaugut VALUES (2000, 41005, 'Stones, rock, solid rock', 'Steine, Gestein, Festgestein', '''Steine, Gestein, Festgestein'' bedeutet, dass grobkörnige oder feste Gesteine abgebaut werden.');
+INSERT INTO abbaugut VALUES (2001, 41005, 'Claystone', 'Tonstein', '''Tonstein'' ist ein gelblich bis graues Abbaugut, das überwiegend aus Tonmineralien besteht.');
+INSERT INTO abbaugut VALUES (2002, 41005, 'Slate, roofing slate', 'Schiefer, Dachschiefer', '''Schiefer, Dachschiefer'' ist ein toniges Abbaugut, das in dünne ebene Platten spaltbar ist.');
+INSERT INTO abbaugut VALUES (2003, 41005, 'Metamorphic slate', 'Metamorpher Schiefer', '''Metamorpher Schiefer'' ist ein Abbaugut, dessen ursprüngliche Zusammensetzung und Struktur durch Wärme und Druck innerhalb der Erdkruste verändert worden ist.');
+INSERT INTO abbaugut VALUES (2004, 41005, 'Marlstone', 'Mergelstein', '''Mergelstein'' ist ein Abbaugut, das sich größtenteils aus Ton und Kalk zusammensetzt.');
+INSERT INTO abbaugut VALUES (2005, 41005, 'Limestone', 'Kalkstein', '''Kalkstein'' ist ein Abbaugut, das als weit verbreitetes Sedimentgestein überwiegend aus Calciumcarbonat besteht.');
+INSERT INTO abbaugut VALUES (2006, 41005, 'Dolomite stone', 'Dolomitstein', '''Dolomitstein'' ist ein Abbaugut, das überwiegend aus calcium- und magnesiumhaltigen Mineralien besteht.');
+INSERT INTO abbaugut VALUES (2007, 41005, 'Travertine', 'Travertin', '''Travertin'' ist ein Abbaugut, das aus gelblichen Kiesel- oder Kalktuffen besteht.');
+INSERT INTO abbaugut VALUES (2008, 41005, 'Marble', 'Marmor', '''Marmor'' ist ein Abbaugut, das als rein weißer kristalliner, körniger Kalkstein (Calciumcarbonat) vorkommt.');
+INSERT INTO abbaugut VALUES (2009, 41005, 'Sandstone', 'Sandstein', '''Sandstein'' ist ein Abbaugut, das aus verfestigtem Sedimentgestein besteht.');
+INSERT INTO abbaugut VALUES (2010, 41005, 'Greywacke', 'Grauwacke', '''Grauwacke'' ist ein Abbaugut, das aus tonhaltigem Sandstein besteht und mit Gesteinsbruchstücken angereichert sein kann.');
+INSERT INTO abbaugut VALUES (2012, 41005, 'Gneiss', 'Gneis', '''Gneis'' ist ein metamorphes Abbaugut mit Schieferung, das aus Feldspat, Quarz und Glimmer besteht.');
+INSERT INTO abbaugut VALUES (2013, 41005, 'Basalt, diabase', 'Basalt, Diabas', '''Basalt, Diabas'' ist ein Abbaugut, das aus basischem Ergussgestein besteht.');
+INSERT INTO abbaugut VALUES (2015, 41005, 'Porphyry, quartz porphyry', 'Porphyr, Quarzporphyr', '''Porphyr, Quarzporphyr'' ist ein eruptiv entstandenes Abbaugut, das aus einer dichten Grundmasse und groben Einsprenglingen besteht.');
+INSERT INTO abbaugut VALUES (2016, 41005, 'Granite', 'Granit', '''Granit'' ist ein eruptiv entstandenes Abbaugut, das aus körnigem Feldspat, Quarz, Glimmer besteht.');
+INSERT INTO abbaugut VALUES (2017, 41005, 'Granodiorite', 'Granodiorit', 'Granodiorit'' ist ein hell- bis dunkelgraues Abbaugut. Es ist ein mittelkörniges Tiefengestein mit den Hauptbestandteilen Feldspat, Quarz, Hornblende und Biotit.');
+INSERT INTO abbaugut VALUES (2018, 41005, 'Tuff, pumice stone', 'Tuff-, Bimsstein', '''Tuff-, Bimsstein'' ist ein helles, sehr poröses Abbaugut, das durch rasches Erstarren der Lava entstanden ist.');
+INSERT INTO abbaugut VALUES (2019, 41005, 'Trass', 'Trass', '''Trass'' ist ein Abbaugut, das aus vulkanischem Aschentuff (Bimsstein) besteht.');
+INSERT INTO abbaugut VALUES (2020, 41005, 'Lava slag', 'Lavaschlacke', '''Lavaschlacke'' ist ein Abbaugut, das aus ausgestoßenem, geschmolzenen Vulkangestein besteht.');
+INSERT INTO abbaugut VALUES (2021, 41005, 'Talc slate, soapstone', 'Talkschiefer, Speckstein', '''Talkschiefer, Speckstein'' ist ein farbloses bis graugrünes, sich fettig anfühlendes Abbaugut, das aus dem weichen Mineral Talk besteht.');
+INSERT INTO abbaugut VALUES (4000, 41005, 'Fuels and combustibles', 'Treib- und Brennstoffe', '''Treib- und Brennstoffe'' bedeutet, dass die in der Natur vorkommenden brennbaren organischen und anorganischen Substanzen abgebaut oder gewonnen werden.');
+INSERT INTO abbaugut VALUES (4010, 41005, 'Peat', 'Torf', '''Torf'' ist ein Abbaugut, das aus der unvollkommenen Zersetzung abgestorbener pflanzlicher Substanz unter Luftabschluss in Mooren entstanden ist.');
+INSERT INTO abbaugut VALUES (4020, 41005, 'Coal', 'Kohle', '''Kohle'' ist ein Abbaugut, das durch Inkohlung (Umwandlungsprozess pflanzlicher Substanzen) entstanden ist.');
+INSERT INTO abbaugut VALUES (4021, 41005, 'Lignite', 'Braunkohle', '''Braunkohle'' ist ein Abbaugut, das durch einen bestimmten Grad von Inkohlung (Umwandlungsprozess pflanzlicher Substanzen) entstanden ist.');
+INSERT INTO abbaugut VALUES (4022, 41005, 'Hard coal', 'Steinkohle', '''Steinkohle'' ist ein Abbaugut, das durch vollständige Inkohlung (Umwandlungsprozess pflanzlicher Substanzen) entstanden ist.');
+INSERT INTO abbaugut VALUES (4030, 41005, 'Oil shale', 'Ölschiefer', '''Ölschiefer'' ist ein Abbaugut, das aus dunklem, bitumenhaltigen, tonigen Gestein besteht.');
+INSERT INTO abbaugut VALUES (5000, 41005, 'Industrial minerals, salts', 'Industrieminerale, Salze', '''Industrieminerale, Salze'' bedeutet, dass die in der Natur vorkommenden Mineralien abgebaut werden.');
+INSERT INTO abbaugut VALUES (5001, 41005, 'Gypsum stone', 'Gipsstein', '''Gipsstein'' ist ein natürliches Abbaugut.');
+INSERT INTO abbaugut VALUES (5002, 41005, 'Anhydrite stone', 'Anhydritstein', '''Anhydritstein'' ist ein Abbaugut, das aus wasserfreiem Gips besteht.');
+INSERT INTO abbaugut VALUES (5005, 41005, 'Calcite', 'Kalkspat', '''Kalkspat'' ist ein weißes oder hell gefärbtes Abbaugut (Calciumcarbonat).');
+INSERT INTO abbaugut VALUES (5008, 41005, 'Quartz', 'Quarz', '''Quarz'' ist ein Abbaugut, das aus verschiedenen Gesteinsarten (Granit, Gneis, Sandstein) gewonnen wird.');
+INSERT INTO abbaugut VALUES (5009, 41005, 'Feldspar', 'Feldspat', '''Feldspat'' ist ein weiß bis grauweißes gesteinsbildendes Mineral von blättrigem Bruch, das abgebaut wird.');
+INSERT INTO abbaugut VALUES (5010, 41005, 'Pegmatite sand', 'Pegmatitsand', '''Pegmatitsand'' ist ein Abbaugut, das durch Verwitterung von Granit und Gneis entstanden ist.');
+INSERT INTO abbaugut VALUES (9999, 41005, 'Other', 'Sonstiges', '''Sonstiges'' bedeutet, dass das Abbaugut bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+
+ALTER TABLE "sie02_f" ADD CONSTRAINT agt_fk FOREIGN KEY (agt, objart) REFERENCES konstruktionsmerkmalbauart(code, objart);
+
+-- Attribute: konstruktionsmerkmalbauart
+CREATE TABLE konstruktionsmerkmalbauart (
+                          code VARCHAR(4),
+                          name_en TEXT,
+                          name_de TEXT,
+                          definition_de TEXT,
+                          PRIMARY KEY (code, objart),
+                          CONSTRAINT check_column_format CHECK (
+                              code ~ '^[0-9]{4}$'
+                              OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO konstruktionsmerkmalbauart VALUES (1010, 'Boat lift', 'Schiffshebewerk', '''Schiffshebewerk'' ist ein Bauwerk zum Überwinden einer Fallstufe (in Binnenwasserstraßen und Kanälen) mit Förderung der Schiffe in einem Trog.');
+INSERT INTO konstruktionsmerkmalbauart VALUES (1020, 'Pund lock', 'Kammerschleuse', '''Kammerschleuse'' ist ein Bauwerk zum Überwinden einer Fallstufe, in dem durch Füllen oder Leeren der Schleusenkammer Schiffe gehoben oder gesenkt werden.');
+
+ALTER TABLE "sie04_l" ADD CONSTRAINT kon_fk FOREIGN KEY (kon) REFERENCES konstruktionsmerkmalbauart(code);
+ALTER TABLE "sie04_p" ADD CONSTRAINT kon_fk FOREIGN KEY (kon) REFERENCES konstruktionsmerkmalbauart(code);
+
+-- Attribute: anzahlderstreckengleise
+CREATE TABLE anzahlderstreckengleise (
+            code VARCHAR(4) PRIMARY KEY,
+            name_en TEXT,
+            name_de TEXT,
+            definition_de TEXT,
+            CONSTRAINT check_column_format CHECK (
+                code ~ '^[0-9]{4}$'
+                OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO anzahlderstreckengleise VALUES (1000, 'Single track', 'Eingleisig', '''Eingleisig'' bedeutet, dass für ''Bahnstrecke'' nur ein Gleis für beide Fahrtrichtungen zur Verfügung steht.');
+INSERT INTO anzahlderstreckengleise VALUES (2000, 'Double track', 'Zweigleisig', '''Zweigleisig'' bedeutet, dass für ''Bahnstrecke'' je ein Gleis für eine Fahrtrichtung zur Verfügung steht.');
+
+ALTER TABLE "ver03_l" ADD CONSTRAINT gls_fk FOREIGN KEY (gls) REFERENCES anzahlderstreckengleise(code);
+
+
+-- Attribute: spurweite
+CREATE TABLE spurweite (
+             code VARCHAR(4) PRIMARY KEY ,
+             name_en TEXT,
+             name_de TEXT,
+             definition_de TEXT,
+             PRIMARY KEY (code, objart),
+             CONSTRAINT check_column_format CHECK (
+                 code ~ '^[0-9]{4}$'
+                 OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO spurweite VALUES (1000, 'Standard gauge', 'Normalspur (Regelspur, Vollspur)', '''Normalspur (Regelspur, Vollspur)'' hat eine Spurweite von 1435 mm. Das ist das Innenmaß zwischen den Innenkanten der Schienenköpfe eines Gleises.');
+INSERT INTO spurweite VALUES (2000, 'Narrow gauge', 'Schmalspur', '''Schmalspur'' ist eine Spurweite, die kleiner ist als 1435 mm.');
+INSERT INTO spurweite VALUES (3000, 'Broad gauge', 'Breitspur', '''Breitspur'' ist eine Spurweite, die größer ist als 1435 mm.');
+INSERT INTO spurweite VALUES (9997, 'Attribute not applicable', 'Attribut trifft nicht zu', '''Attribut trifft nicht zu'' bedeutet, dass keiner der in der Werteliste aufgeführten Attributwerte dem vorliegenden Sachverhalt entspricht.');
+
+ALTER TABLE "ver03_l" ADD CONSTRAINT gls_fk FOREIGN KEY (spw) REFERENCES spurweite(code);
+
+-- Attribute: spurweite
+CREATE TABLE verkehrsdienst (
+           code VARCHAR(4) PRIMARY KEY,
+           name_en TEXT,
+           name_de TEXT,
+           definition_de TEXT,
+           CONSTRAINT check_column_format CHECK (
+               code ~ '^[0-9]{4}$'
+               OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO verkehrsdienst VALUES (1000, 'Long distance stop', 'Fernverkehrshalt', '''Fernverkehrshalt'' bedeutet, dass an der Bahnverkehrsanlage von einem Eisenbahnverkehrsunternehmen ein planmäßiger Halt im nationalen oder internationalen Schienenpersonenfernverkehrsdienst erbracht wird.');
+
+ALTER TABLE "ver03_l" ADD CONSTRAINT vkd_fk FOREIGN KEY (vkd) REFERENCES verkehrsdienst(code);
+
+-- Attribute: nutzung
+CREATE TABLE nutzung (
+        code VARCHAR(4),
+        objart VARCHAR(5),
+        name_en TEXT,
+        name_de TEXT,
+        definition_de TEXT,
+        PRIMARY KEY (code, objart),
+        CONSTRAINT check_column_format CHECK (
+            code ~ '^[0-9]{4}$'
+            OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO nutzung VALUES (1000, 31001, 'Civilian', 'Zivil', '''Zivil'' wird für ein Gebäude verwendet, das privaten, öffentlichen oder religiösen Zwecken dient und nicht militärisch genutzt wird.');
+INSERT INTO nutzung VALUES (1100, 31001, 'Private', 'Privat', '''Privat'' bezeichnet ein Gebäude, das wohn- oder privatwirtschaftlichen Zwecken dient.');
+INSERT INTO nutzung VALUES (1200, 31001, 'Public', 'Öffentlich', '''Öffentlich'' bedeutet, dass in einem Gebäude Aufgaben der öffentlichen Hand wahrgenommen werden oder dass das ''Gebäude'' für die Nutzung durch die Allgemeinheit vorgesehen ist.');
+INSERT INTO nutzung VALUES (1300, 31001, 'Religious', 'Religiös', '''Religiös'' bezeichnet ein Gebäude, das religiösen Zwecken dient.');
+INSERT INTO nutzung VALUES (2000, 31001, 'Military', 'Militärisch', '''Militärisch'' bedeutet, dass das ''Gebäude'' von Streitkräften genutzt wird.');
+INSERT INTO nutzung VALUES (1000, 42015, 'Civilian', 'Zivil', '''Zivil'' bedeutet, dass ''Flugverkehr'' privaten oder öffentlichen Zwecken dient und nicht militärisch genutzt wird.');
+INSERT INTO nutzung VALUES (2000, 42015, 'Military', 'Militärisch', '''Militärisch'' bedeutet, dass ''Flugverkehr'' nur von Streitkräften genutzt wird.');
+INSERT INTO nutzung VALUES (3000, 42015, 'Partly civilian, partly military', 'Teils zivil, teils militärisch', '''Teils zivil, teils militärisch'' bedeutet dass ''''Flugverkehr'' sowohl zivil als auch militärisch genutzt wird.');
+INSERT INTO nutzung VALUES (1000, 43002, 'Forestry area', 'Forstwirtschaftsfläche', '''Forstwirtschaftsfläche'' bezeichnet eine Waldfläche, mit oder ohne Bäume, welche forstwirtschaftlich genutzt wird. Hierzu zählen keine Kurzumtriebsplantagen.');
+INSERT INTO nutzung VALUES (2000, 43002, 'Not managed', 'Unbewirtschaftet', '''Unbewirtschaftet'' bezeichnet eine Waldfläche, mit oder ohne Bäume, welche nicht bewirtschaftet bzw. nicht wirtschaftlich genutzt wird. Hierzu können auch Waldflächen unter Freileitungen zählen.');
+INSERT INTO nutzung VALUES (3000, 43002, 'Forest burial area', 'Waldbestattungsfläche', '''Waldbestattungsfläche'' ist eine Fläche im Wald, die zur Bestattung dient oder gedient hat.');
+INSERT INTO nutzung VALUES (1000, 44005, 'Civilian', 'Zivil', '''Zivil'' bedeutet, dass ''Hafenbecken'' privaten oder öffentlichen Zwecken dient und nicht militärisch genutzt wird.');
+INSERT INTO nutzung VALUES (2000, 44005, 'Military', 'Militärisch', '''Militärisch'' bedeutet, dass ''Hafenbecken'' nur von Streitkräften genutzt wird.');
+INSERT INTO nutzung VALUES (3000, 44005, 'Partly civilian, partly military', 'Teils zivil, teils militärisch', '''Teils zivil, teils militärisch'' bedeutet, dass ''Hafenbecken'' sowohl zivil als auch militärisch genutzt wird.');
+INSERT INTO nutzung VALUES (1000, 44006, 'Drinking water', 'Trinkwasser', '''Trinkwasser'' im vorliegenden Sinne bezeichnet Wasser, das für den menschlichen Genuss geeignet ist.');
+INSERT INTO nutzung VALUES (2000, 44006, 'Energy', 'Energie', '''Energie'' weist die Nutzung eines Stehenden Gewässers zur Energiegewinnung aus.');
+INSERT INTO nutzung VALUES (3000, 44006, 'Industrial water', 'Brauchwasser', '''Brauchwasser'' dient spezifischen technischen, gewerblichen, industriellen, landwirtschaftlichen, hauswirtschaftlichen oder ähnlichen Zwecken, ohne dass hierfür Trinkwasserqualität verlangt wird. Hierzu zählen z B. Kesselspeisewasser, Kühlwasser, unterschiedlich aufbereitetes Rohwasser.');
+INSERT INTO nutzung VALUES (1000, 52002, 'Civilian', 'Zivil', '''Zivil'' bedeutet, dass ''Hafen'' privaten oder öffentlichen Zwecken dient und nicht militärisch genutzt wird.');
+INSERT INTO nutzung VALUES (2000, 52002, 'Military', 'Militärisch', '''Militärisch'' bedeutet, dass ''Hafen'' nur von Streitkräften genutzt wird.');
+INSERT INTO nutzung VALUES (3000, 52002, 'Partly civilian, partly military', 'Teils zivil, teils militärisch', '''Teils zivil, teils militärisch'' bedeutet, dass ''Hafen'' sowohl zivil als auch militärisch genutzt wird.');
+
+ALTER TABLE "ver04_f" ADD CONSTRAINT ntz_fk FOREIGN KEY (ntz, objart) REFERENCES verkehrsdienst(code, objart);
+ALTER TABLE "veg02_g" ADD CONSTRAINT ntz_fk FOREIGN KEY (ntz, objart) REFERENCES verkehrsdienst(code, objart);
+
+-- Attribute: oberflaechenmaterial
+CREATE TABLE oberflaechenmaterial (
+                         code VARCHAR(4),
+                         objart VARCHAR(5),
+                         name_en TEXT,
+                         name_de TEXT,
+                         definition_de TEXT,
+                         PRIMARY KEY (code, objart),
+                         CONSTRAINT check_column_format CHECK (
+                             code ~ '^[0-9]{4}$'
+                             OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO oberflaechenmaterial VALUES (1210, 53007, 'Grass, lawn', 'Gras, Rasen', '''Gras, Rasen'' bedeutet, dass die Oberfläche von ''Flugverkehrsanlage'' mit Gras bewachsen ist.');
+INSERT INTO oberflaechenmaterial VALUES (1220, 53007, 'Concrete', 'Beton', '''Beton'' bedeutet, dass die Oberfläche von der ''Objektart'' aus Beton besteht.');
+INSERT INTO oberflaechenmaterial VALUES (1230, 53007, 'Bitumen, Asphalt', 'Bitumen, Asphalt', '''Bitumen, Asphalt'' bedeutet, dass die Oberfläche von der ''Objektart'' aus Bitumen bzw. Asphalt besteht.');
+INSERT INTO oberflaechenmaterial VALUES (1220, 42003, 'Concrete', 'Beton', '''Beton'' bedeutet, dass die Oberfläche von der ''Objektart'' aus Beton besteht.');
+INSERT INTO oberflaechenmaterial VALUES (1230, 42003, 'Bitumen, Asphalt', 'Bitumen, Asphalt', '''Bitumen, Asphalt'' bedeutet, dass die Oberfläche von der ''Objektart'' aus Bitumen bzw. Asphalt besteht.');
+INSERT INTO oberflaechenmaterial VALUES (1240, 42003, 'Plaster', 'Pflaster', '''Pflaster'' bedeutet, dass die Oberfläche von der ''Objektart'' gepflastert ist.');
+INSERT INTO oberflaechenmaterial VALUES (1250, 42003, 'Crushed rock', 'Gestein, zerkleinert', '''Gestein, zerkleinert'' bedeutet, dass die Oberfläche von der ''Objektart'' aus Schotter, Splitt, Sand oder aus einem Gemisch dieser Materialen besteht.');
+INSERT INTO oberflaechenmaterial VALUES (1220, 42005, 'Concrete', 'Beton', '''Beton'' bedeutet, dass die Oberfläche von der ''Objektart'' aus Beton besteht.');
+INSERT INTO oberflaechenmaterial VALUES (1230, 42005, 'Bitumen, Asphalt', 'Bitumen, Asphalt', '''Bitumen, Asphalt'' bedeutet, dass die Oberfläche von der ''Objektart'' aus Bitumen bzw. Asphalt besteht.');
+INSERT INTO oberflaechenmaterial VALUES (1240, 42005, 'Plaster', 'Pflaster', '''Pflaster'' bedeutet, dass die Oberfläche von der ''Objektart'' gepflastert ist.');
+INSERT INTO oberflaechenmaterial VALUES (1250, 42005, 'Crushed rock', 'Gestein, zerkleinert', '''Gestein, zerkleinert'' bedeutet, dass die Oberfläche von der ''Objektart'' aus Schotter, Splitt, Sand oder aus einem Gemisch dieser Materialen besteht.');
+INSERT INTO oberflaechenmaterial VALUES (1010, 43007, 'Rock', 'Fels', '''Fels'' bedeutet, dass die Erdoberfläche aus einer festen Gesteinsmasse besteht.');
+INSERT INTO oberflaechenmaterial VALUES (1020, 43007, 'Stones, gravel', 'Steine, Schotter', '''Steine, Schotter'' bedeutet, dass die Erdoberfläche mit zerkleinertem Gestein unterschiedlicher Größe bedeckt ist.');
+INSERT INTO oberflaechenmaterial VALUES (1030, 43007, 'Scree', 'Geröll', '''Geröll'' bedeutet, dass die Erdoberfläche mit durch fließendes Wasser abgerundeten Gesteinen bedeckt ist.');
+INSERT INTO oberflaechenmaterial VALUES (1040, 43007, 'Sand', 'Sand', '''Sand'' bedeutet, dass die Erdoberfläche mit kleinen, losen Gesteinskörnern bedeckt ist.');
+INSERT INTO oberflaechenmaterial VALUES (1110, 43007, 'Snow', 'Schnee', '''Schnee'' bedeutet, dass die Erdoberfläche für die größte Zeit des Jahres mit Schnee bedeckt ist.');
+INSERT INTO oberflaechenmaterial VALUES (1120, 43007, 'Ice, firn', 'Eis, Firn', '''Eis, Firn'' bedeutet, dass die Erdoberfläche mit altem, grobkörnigem, mehrjährigem Schnee im Hochgebirge bedeckt ist, der unter zunehmendem Druck zu Gletschereis wird.');
+
+ALTER TABLE "ver06_l" ADD CONSTRAINT ofm_fk FOREIGN KEY (ofm, objart) REFERENCES oberflaechenmaterial(code, objart);
+ALTER TABLE "ver06_p" ADD CONSTRAINT ofm_fk FOREIGN KEY (ofm, objart) REFERENCES oberflaechenmaterial(code, objart);
+ALTER TABLE "veg03_f" ADD CONSTRAINT ofm_fk FOREIGN KEY (ofm, objart) REFERENCES oberflaechenmaterial(code, objart);
+
+-- Attribute: art
+CREATE TABLE art (
+    code VARCHAR(4),
+    objart VARCHAR(5),
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    PRIMARY KEY (code, objart),
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$'
+        OR LENGTH(code) = 4
+                 )
+    );
+
+INSERT INTO art VALUES (1000, 14007, 'Sand', 'Geländereduktion', 'Teil der topografischen Reduktion, der die Abweichung der Erdoberfläche von einer horizontalen Platte oder sphärischen Figur berücksichtigt.');
+INSERT INTO art VALUES (2000, 14007, 'Sand', 'Freiluftanomalie', 'Differenz zwischen dem mittels Freiluftreduktion auf das Geoid reduzierten Schwerewert und dem entsprechenden Wert der Normalschwere auf dem Niveauellipsoid.');
+INSERT INTO art VALUES (3000, 14007, 'Sand', 'Faye-Anomalie', 'Freiluftanomalie mit zusätzlich angebrachter Geländereduktion');
+INSERT INTO art VALUES (3100, 14007, 'Sand', 'Schwereanomalie nach Molodenski', 'Schwere im Oberflächenpunkt minus Normalschwere im zugeordneten Telluroidpunkt');
+INSERT INTO art VALUES (4000, 14007, 'Sand', 'Verfeinerte Bougueranomalie', 'Topografische Reduktion erfolgt als Plattenreduktion und Geländereduktion');
+INSERT INTO art VALUES (5000, 14007, 'Sand', 'Einfache Bougueranomalie', 'Topografische Reduktion erfolgt nur als Plattenreduktion');
+INSERT INTO art VALUES (6000, 14007, 'Sand', 'Bougueranomalie im DHSN96 mit Freiluft- und Plattenreduktion', 'Normalschwere im GRS80');
+INSERT INTO art VALUES (9998, 14007, 'Sand', 'Unbekannt', '');
+INSERT INTO art VALUES (1000, 15005, 'Sand', 'Privat', '');
+INSERT INTO art VALUES (2000, 15005, 'Sand', 'Notar', '');
+INSERT INTO art VALUES (3000, 15005, 'Sand', 'Grundbuchamt', '');
+INSERT INTO art VALUES (4000, 15005, 'Sand', 'Finanzamt', '');
+INSERT INTO art VALUES (5000, 15005, 'Sand', 'Bauaufsichtsbehörde', '');
+INSERT INTO art VALUES (6000, 15005, 'Sand', 'Weitere Beteiligte', '');
+INSERT INTO art VALUES (1000, 16001, 'Sand', 'Punktkennung', '');
+INSERT INTO art VALUES (1300, 16001, 'Sand', 'Punktkennung - Grenzpunkt', '');
+INSERT INTO art VALUES (1400, 16001, 'Sand', 'Punktkennung - Besonderer Gebäudepunkt', '');
+INSERT INTO art VALUES (1500, 16001, 'Sand', 'Punktkennung - Besonderer topographischer Punkt', '');
+INSERT INTO art VALUES (1600, 16001, 'Sand', 'Punktkennung - Besonderer Bauwerkspunkt', '');
+INSERT INTO art VALUES (1700, 16001, 'Sand', 'Punktkennung - Aufnahmepunkt', '');
+INSERT INTO art VALUES (1800, 16001, 'Sand', 'Punktkennung - Sicherungspunkt', '');
+INSERT INTO art VALUES (1900, 16001, 'Sand', 'Punktkennung - Sonstiger Vermessungspunkt', '');
+INSERT INTO art VALUES (2000, 16001, 'Sand', 'Punktkennung - Lagefestpunkt', '');
+INSERT INTO art VALUES (2100, 16001, 'Sand', 'Punktkennung - Höhenfestpunkt', '');
+INSERT INTO art VALUES (2200, 16001, 'Sand', 'Punktkennung - Schwerefestpunkt', '');
+INSERT INTO art VALUES (2300, 16001, 'Sand', 'Punktkennung - Referenzstationspunkt', '');
+INSERT INTO art VALUES (3000, 16001, 'Sand', 'Flurstückskennzeichen', 'Eine Reservierung von Folgenummern zu einer Nummer darf sich nur auf aktuelle Flurstücke 11001 beziehen und nicht auf dauerhaft reservierte ausfallende Nummern, die keine aktuellen Flurstücke haben.');
+INSERT INTO art VALUES (4000, 16001, 'Sand', 'FN-Nummer', '');
+INSERT INTO art VALUES (5000, 16001, 'Sand', 'Abmarkungsprotokollnummer', '');
+INSERT INTO art VALUES (6000, 16001, 'Sand', 'Buchungsblattkennzeichen', '');
+INSERT INTO art VALUES (6100, 16001, 'Sand', 'Katasterblatt', '');
+INSERT INTO art VALUES (6200, 16001, 'Sand', 'Pseudoblatt', '');
+INSERT INTO art VALUES (6300, 16001, 'Sand', 'Erwerberblatt', '');
+INSERT INTO art VALUES (6400, 16001, 'Sand', 'Fiktives Blatt', '');
+INSERT INTO art VALUES (1000, 16002, 'Sand', 'Punktkennung - allgemein', '');
+INSERT INTO art VALUES (1100, 16002, 'Sand', 'Punktkennung - Grenzpunkt', '');
+INSERT INTO art VALUES (1200, 16002, 'Sand', 'Punktkennung - Besonderer Gebäudepunkt', '');
+INSERT INTO art VALUES (1300, 16002, 'Sand', 'Punktkennung - Besonderer topographischer Punkt', '');
+INSERT INTO art VALUES (1400, 16002, 'Sand', 'Punktkennung - Aufnahmepunkt', '');
+INSERT INTO art VALUES (1500, 16002, 'Sand', 'Punktkennung - Sicherungspunkt', '');
+INSERT INTO art VALUES (1600, 16002, 'Sand', 'Punktkennung - Sonstiger Vermessungspunkt', '');
+INSERT INTO art VALUES (1700, 16002, 'Sand', 'Punktkennung - Besonderer Bauwerkspunkt', '');
+INSERT INTO art VALUES (1000, 16003, 'Sand', 'Punktkennung - allgemein', '');
+INSERT INTO art VALUES (1100, 16003, 'Sand', 'Punktkennung - Grenzpunkt', '');
+INSERT INTO art VALUES (1200, 16003, 'Sand', 'Punktkennung - Besonderer Gebäudepunkt', '');
+INSERT INTO art VALUES (1300, 16003, 'Sand', 'Punktkennung - Besonderer topographischer Punkt', '');
+INSERT INTO art VALUES (1400, 16003, 'Sand', 'Punktkennung - Aufnahmepunkt', '');
+INSERT INTO art VALUES (1500, 16003, 'Sand', 'Punktkennung - Sicherungspunkt', '');
+INSERT INTO art VALUES (1600, 16003, 'Sand', 'Punktkennung - Sonstiger Vermessungspunkt', '');
+INSERT INTO art VALUES (1700, 16003, 'Sand', 'Punktkennung - Besonderer Bauwerkspunkt', '');
+INSERT INTO art VALUES (1100, 31005, 'Sand', 'First', '');
+INSERT INTO art VALUES (1200, 31005, 'Sand', 'Traufe', '');
+INSERT INTO art VALUES (2100, 31005, 'Sand', 'Eingang', '');
+INSERT INTO art VALUES (2200, 31005, 'Sand', 'Lichtschacht', '');
+INSERT INTO art VALUES (5511, 42015, 'Sand', 'Internationaler Flughafen', '''Internationaler Flughafen'' ist ein Verkehrsflughafen, der im Luftfahrthandbuch als solcher ausgewiesen ist.');
+INSERT INTO art VALUES (5512, 42015, 'Sand', 'Regionalflughafen', '''Regionalflughafen'' ist ein Verkehrsflughafen der gemäß Raumordnungsgesetz als Regionalflughafen eingestuft ist, bzw. als Flughafen, Verkehrsflughafen oder Regionalflughafen im Luftfahrthandbuch ausgewiesen ist.');
+INSERT INTO art VALUES (5513, 42015, 'Sand', 'Sonderflughafen', '''Sonderflughafen'' ist ein Flughafen, der im Luftfahrthandbuch als solcher ausgewiesen ist.');
+INSERT INTO art VALUES (5521, 42015, 'Sand', 'Verkehrslandeplatz', '''Verkehrslandeplatz'' ist ein Flugplatz, der im Luftfahrthandbuch als Flugplatz, Landeplatz oder Verkehrslandeplatz ausgewiesen ist.');
+INSERT INTO art VALUES (5522, 42015, 'Sand', 'Sonderlandeplatz', '''Sonderlandeplatz'' ist ein Flugplatz, der im Luftfahrthandbuch oder in den Bescheiden der zuständigen Luftfahrtbehörden als Sonderlandeplatz ausgewiesen ist.');
+INSERT INTO art VALUES (5530, 42015, 'Sand', 'Hubschrauberlandeplatz', '''Hubschrauberlandeplatz'' ist ein Flugplatz, der im Luftfahrthandbuch, in der Luftfahrtkarte 1:500000 (ICAO) oder aufgrund von Ländervorschriften als solcher ausgewiesen ist.');
+INSERT INTO art VALUES (5550, 42015, 'Sand', 'Segelfluggelände', '''Segelfluggelände'' ist ein Flugplatz, der in der Luftfahrtkarte 1:500000 (ICAO) für den Segelflugsport ausgewiesen ist.');
+INSERT INTO art VALUES (4010, 51008, 'Sand', 'Heilquelle', '');
+INSERT INTO art VALUES (4020, 51008, 'Sand', 'Gasquelle, Mofette', '');
+INSERT INTO art VALUES (1100, 51010, 'Sand', 'Kommunikationseinrichtung', '');
+INSERT INTO art VALUES (1110, 51010, 'Sand', 'Fernsprechhäuschen', '');
+INSERT INTO art VALUES (1120, 51010, 'Sand', 'Briefkasten', '');
+INSERT INTO art VALUES (1130, 51010, 'Sand', 'Notrufeinrichtung', '');
+INSERT INTO art VALUES (1140, 51010, 'Sand', 'Feuermelder', '');
+INSERT INTO art VALUES (1150, 51010, 'Sand', 'Polizeirufsäule', '');
+INSERT INTO art VALUES (1200, 51010, 'Sand', 'Kabelkasten, Schaltkasten', '');
+INSERT INTO art VALUES (1300, 51010, 'Sand', 'Verkehrszeichen', '');
+INSERT INTO art VALUES (1310, 51010, 'Sand', 'Verkehrsampel', '');
+INSERT INTO art VALUES (1320, 51010, 'Sand', 'Freistehende Hinweistafel, -zeichen', '');
+INSERT INTO art VALUES (1330, 51010, 'Sand', 'Wegweiser von besonderer Bedeutung', '');
+INSERT INTO art VALUES (1340, 51010, 'Sand', 'Freistehende Warntafel', '');
+INSERT INTO art VALUES (1350, 51010, 'Sand', 'Bushaltestelle', '');
+INSERT INTO art VALUES (1400, 51010, 'Sand', 'Markierungshinweise, -steine', '');
+INSERT INTO art VALUES (1410, 51010, 'Sand', 'Kilometerstein, -tafel', '''Kilometerstein, -tafel'' ist ein Punkt mit einem festen Wert im Netz der Autobahnen oder Schienenbahnen der in der Örtlichkeit durch eine Markierung (z. B. Kilometerstein) repräsentiert wird.');
+INSERT INTO art VALUES (1420, 51010, 'Sand', 'Ortsdurchfahrtsstein', '');
+INSERT INTO art VALUES (1430, 51010, 'Sand', 'Fischereigrenzstein', '');
+INSERT INTO art VALUES (1500, 51010, 'Sand', 'Bahnübergang, Schranke', '');
+INSERT INTO art VALUES (1510, 51010, 'Sand', 'Tor', '');
+INSERT INTO art VALUES (1600, 51010, 'Sand', 'Laterne, Kandelaber', '');
+INSERT INTO art VALUES (1610, 51010, 'Sand', 'Gaslaterne', '');
+INSERT INTO art VALUES (1620, 51010, 'Sand', 'Laterne, elektrisch', '');
+INSERT INTO art VALUES (1630, 51010, 'Sand', 'Gaskandelaber', '');
+INSERT INTO art VALUES (1640, 51010, 'Sand', 'Kandelaber, elektrisch', '');
+INSERT INTO art VALUES (1650, 51010, 'Sand', 'Hängende Lampe', '');
+INSERT INTO art VALUES (1700, 51010, 'Sand', 'Säule, Werbefläche', '');
+INSERT INTO art VALUES (1710, 51010, 'Sand', 'Leuchtsäule', '');
+INSERT INTO art VALUES (1910, 51010, 'Sand', 'Fahnenmast', '');
+INSERT INTO art VALUES (2100, 51010, 'Sand', 'Straßensinkkasten', '');
+INSERT INTO art VALUES (2200, 51010, 'Sand', 'Müllbox', '');
+INSERT INTO art VALUES (2300, 51010, 'Sand', 'Kehrichtgrube', '');
+INSERT INTO art VALUES (2400, 51010, 'Sand', 'Uhr', '');
+INSERT INTO art VALUES (2500, 51010, 'Sand', 'Richtscheinwerfer', '');
+INSERT INTO art VALUES (2600, 51010, 'Sand', 'Flutlichtmast', '');
+INSERT INTO art VALUES (9999, 51010, 'Other', 'Sonstiges', '''Sonstiges'' bedeutet, dass die Art bekannt, aber in der Attributwertliste nicht aufgeführt ist.');
+INSERT INTO art VALUES (1100, 51011, 'Sand', 'First', '');
+INSERT INTO art VALUES (1200, 51011, 'Sand', 'Traufe', '');
+INSERT INTO art VALUES (2100, 51011, 'Sand', 'Eingang', '');
+INSERT INTO art VALUES (1000, 53002, 'Sand', 'Fahrbahn', '');
+INSERT INTO art VALUES (1010, 53002, 'Sand', 'Fahrbahnbegrenzungslinie', '');
+INSERT INTO art VALUES (1011, 53002, 'Sand', 'Fahrbahnbegrenzungslinie, überdeckt', '');
+INSERT INTO art VALUES (2000, 53002, 'Sand', 'Furt', '''Furt'' ist eine zum Überqueren geeignete Stelle in einem Gewässer.');
+INSERT INTO art VALUES (3000, 53002, 'Sand', 'Autobahnknoten', '''Autobahnknoten'' ist ein höhengleicher oder höhenungleicher Knoten, der sich aus der verkehrlichen Verknüpfung zweier Autobahnen sowie an Anschlussstellen mit dem nachgeordneten Straßennetz ergibt.');
+INSERT INTO art VALUES (3001, 53002, 'Sand', 'Kreuz', '''Kreuz'' ist ein vierarmiger Knotenpunkt in mehreren Ebenen in dem sich zwei Autobahnen kreuzen.');
+INSERT INTO art VALUES (3002, 53002, 'Sand', 'Dreieck', '''Dreieck'' ist eine Einmündung einer Autobahn in eine durchgehende Autobahn.');
+INSERT INTO art VALUES (3003, 53002, 'Sand', 'Anschlussstelle, Anschluss', '''Anschlussstelle, Anschluss'' ist die verkehrliche Verknüpfung der Autobahn mit dem nachgeordneten Straßennetz.');
+INSERT INTO art VALUES (4000, 53002, 'Sand', 'Platz', '''Platz'' ist eine ebene, befestigte oder unbefestigte Fläche.');
+INSERT INTO art VALUES (5330, 53002, 'Sand', 'Raststätte, Autohof', '''Raststätte, Autohof'' ist eine Anlage an Verkehrsstraßen mit Bauwerken und Einrichtungen zur Versorgung und Erholung von Reisenden. Dazu gehören auch Autohöfe gemäß der Verwaltungsvorschriften zur Straßenverkehrsordnung (VwV-StVO).');
+INSERT INTO art VALUES (6000, 53002, 'Sand', 'Busbahnhof', '''Busbahnhof'' ist eine Verkehrsanlage, die als zentraler Verknüpfungspunkt verschiedener Buslinien dient.');
+INSERT INTO art VALUES (9999, 53002, 'Sand', 'Sonstiges', '''Sonstiges'' bedeutet, dass die Art bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+INSERT INTO art VALUES (1103, 53003, 'Sand', 'Fußweg', '''Fußweg'' ist ein Weg, der auf Grund seines Ausbauzustandes nur von Fußgängern zu begehen ist.');
+INSERT INTO art VALUES (1105, 53003, 'Sand', 'Karren- und Ziehweg', 'Karrenweg ist ein Weg im Gebirge, der meist sehr steil ist und nur mit einem Gespann befahren werden kann. Ziehweg ist ein Weg, der der Holzabfuhr im Gebirge dient.');
+INSERT INTO art VALUES (1106, 53003, 'Sand', 'Radweg', '''Radweg'' ist ein Weg, der als besonders gekennzeichneter und abgegrenzter Teil einer Straße oder mit selbständiger Linienführung für den Fahrradverkehr bestimmt ist');
+INSERT INTO art VALUES (1107, 53003, 'Sand', 'Reitweg', '''Reitweg'' ist ein besonders ausgebauter Weg, auf dem ausschließlich das Reiten zugelassen ist.');
+INSERT INTO art VALUES (1108, 53003, 'Sand', 'Wattenweg', '');
+INSERT INTO art VALUES (1109, 53003, 'Sand', '(Kletter-)Steig im Gebirge', '''(Kletter-)Steig im Gebirge'' ist ein stellenweise mit Drahtseilen gesicherter Pfad, der zur Überwindung besonders steiler Stellen mit Leitern versehen sein kann.');
+INSERT INTO art VALUES (1110, 53003, 'Sand', 'Rad- und Fußweg', '''Rad- und Fußweg'' ist ein Weg, der als besonders gekennzeichneter und abgegrenzter Teil einer Straße oder mit selbständiger Linienführung ausschließlich für den Fahrrad- und Fußgängerverkehr bestimmt ist.');
+INSERT INTO art VALUES (1111, 53003, 'Sand', 'Skaterstrecke', '''Skaterstrecke'' ist ein für Skater besonders ausgebauter asphaltierter Weg.');
+INSERT INTO art VALUES (1200, 53006, 'Sand', 'Drehscheibe', '');
+INSERT INTO art VALUES (1310, 53007, 'Sand', 'Startbahn, Landebahn', '''Startbahn, Landebahn'' ist eine Fläche, auf der Flugzeuge starten bzw. landen.');
+INSERT INTO art VALUES (1320, 53007, 'Sand', 'Zurollbahn, Taxiway', '''Zurollbahn, Taxiway'' ist ein Verbindungsweg zwischen den Terminals bzw. dem Vorfeld und der Start- und/oder Landebahn.');
+INSERT INTO art VALUES (1330, 53007, 'Sand', 'Vorfeld', '''Vorfeld'' ist ein Bereich, in dem Flugzeuge abgefertigt und abgestellt werden.');
+INSERT INTO art VALUES (5521, 53007, 'Sand', 'Verkehrslandeplatz', '''Verkehrslandeplatz'' ist ein Flugplatz, der im Luftfahrthandbuch als Flugplatz, Landeplatz oder Verkehrslandeplatz ausgewiesen ist.');
+INSERT INTO art VALUES (5522, 53007, 'Sand', 'Sonderlandeplatz', '''Sonderlandeplatz'' ist ein Flugplatz, der im Luftfahrthandbuch oder in den Bescheiden der zuständigen Luftfahrtbehörden als Sonderlandeplatz ausgewiesen ist.');
+INSERT INTO art VALUES (5530, 53007, 'Sand', 'Hubschrauberlandeplatz', '''Hubschrauberlandeplatz'' ist ein Flugplatz, der im Luftfahrthandbuch, in der Luftfahrtkarte 1:500000 (ICAO) oder aufgrund von Ländervorschriften als solcher ausgewiesen ist.');
+INSERT INTO art VALUES (5550, 53007, 'Sand', 'Segelfluggelände', '''Segelfluggelände'' ist ein Flugplatz, der in der Luftfahrtkarte 1:500000 (ICAO) für den Segelflugsport ausgewiesen ist.');
+INSERT INTO art VALUES (5560, 53007, 'Sand', 'Wasserlandeplatz', '''Wasserlandeplatz'' ist ein Flugplatz, der im Luftfahrthandbuch als Sonderlandeplatz mit einem Start- und Landebahnoberflächentyp "Wasser" ausgewiesen ist.');
+INSERT INTO art VALUES (9998, 53007, 'Sand', 'Nach Quellenlage nicht zu spezifizieren', '''Nach Quellenlage nicht zu spezifizieren'' bedeutet, dass keine Aussage über die Werteart gemacht werden kann.');
+INSERT INTO art VALUES (1410, 53008, 'Sand', 'Bake', '''Bake'' ist ein festgegründetes pfahl- oder gittermastartiges Schifffahrtszeichen mit Kennung durch Form oder Form und Farbe.');
+INSERT INTO art VALUES (1420, 53008, 'Sand', 'Leuchtfeuer', '''Leuchtfeuer'' sind Anlagen, die ein Feuer tragen, das über den ganzen Horizont oder in festgelegten Sektoren oder Richtungen gezeigt wird und die bei Tage als Körperzeichen dienen.');
+INSERT INTO art VALUES (1430, 53008, 'Sand', 'Kilometerstein', '''Kilometerstein'' ist ein Punkt mit einem festen Wert im Netz der Gewässer, der in der Örtlichkeit durch eine Markierung (z.B. Kilometerstein) repräsentiert wird.');
+INSERT INTO art VALUES (1440, 53008, 'Sand', 'Tafel an Gewässern', '');
+INSERT INTO art VALUES (1450, 53008, 'Sand', 'Pricke', '');
+INSERT INTO art VALUES (1460, 53008, 'Sand', 'Anleger', '''Anleger'' ist eine feste oder schwimmende Einrichtung zum Anlegen von Schiffen.');
+INSERT INTO art VALUES (1470, 53008, 'Sand', 'Wasserliegeplatz', '''Wasserliegeplatz'' bezeichnet eine wasserseitige Stelle außerhalb von Hafenbecken, an dem Wasserfahrzeuge vorübergehend oder dauerhaft verankert sind, mit dem Zweck des Güterumschlages (keine Boots-, Strand- oder Landliegeplätze).');
+INSERT INTO art VALUES (9999, 53008, 'Sand', 'Sonstiges', '''Sonstiges'' bedeutet, dass die Art bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+INSERT INTO art VALUES (1610, 55001, 'Sand', 'Quelle', '''Quelle'' ist eine natürliche, örtlich begrenzte Austrittsstelle von Wasser.');
+INSERT INTO art VALUES (1620, 55001, 'Sand', 'Wasserfall', '''Wasserfall'' ist ein senkrechter oder nahezu senkrechter Absturz eines Wasserlaufs, der über eine oder mehrere natürliche Stufen verlaufen kann.');
+INSERT INTO art VALUES (1630, 55001, 'Sand', 'Stromschnelle', '''Stromschnelle'' ist eine Flussstrecke mit höherer Strömungsgeschwindigkeit durch ein besonders starkes Gefälle sowie oft auch geringerer Wassertiefe.');
+INSERT INTO art VALUES (1640, 55001, 'Sand', 'Sandbank', '''Sandbank'' ist eine vegetationslose Sand- oder Kiesablagerung auf dem Meeresboden oder in Flüssen, die durch Brandung oder Strömung aufgebaut wird.');
+INSERT INTO art VALUES (1650, 55001, 'Sand', 'Watt', '''Watt'' ist ein aus Sand oder Schlick bestehender Boden an flachen Gezeitenküsten und Flüssen, der bei Ebbe ganz oder teilweise trocken fällt.');
+INSERT INTO art VALUES (1660, 55001, 'Sand', 'Priel', '''Priel'' ist eine natürliche Rinne im Watt, die auch bei Ebbe Wasser führt.');
+INSERT INTO art VALUES (1700, 55001, 'Sand', 'Bodden, Haff', '''Bodden, Haff ist ein vom offenen Meer durch Landzungen abgetrenntes Küstengewässer an der Ostsee.');
+INSERT INTO art VALUES (9999, 55001, 'Sand', 'Sonstiges', '');
+INSERT INTO art VALUES (1710, 57002, 'Sand', 'Autofährverkehr', '''Autofährverkehr'' ist ein in der Regel nach festem Fahrplan über Flüsse, Seen, Kanäle, Meerengen oder Meeresarme stattfindender Schiffsverkehr zwischen zwei Anlegestellen speziell für Fahrzeuge des Straßenverkehrs.');
+INSERT INTO art VALUES (1720, 57002, 'Sand', 'Eisenbahnfährverkehr', '''Eisenbahnfährverkehr'' ist ein in der Regel nach festem Fahrplan über Flüsse, Seen, Kanäle, Meerengen oder Meeresarme stattfindender Schiffsverkehr zwischen zwei Anlegestellen speziell für Fahrzeuge des Schienenverkehrs.');
+INSERT INTO art VALUES (1730, 57002, 'Sand', 'Personenfährverkehr', '''Personenfährverkehr'' ist ein in der Regel nach festem Fahrplan über Flüsse, Seen, Kanäle, Meerengen oder Meeresarme stattfindender Schiffsverkehr zwischen zwei Anlegestellen für Personenbeförderung.');
+INSERT INTO art VALUES (1740, 57002, 'Sand', 'Linienverkehr', '''Linienverkehr'' ist die auf einer festgelegten Route nach einem festen Fahrplan verkehrende Güter- und Personenschifffahrt.');
+INSERT INTO art VALUES (1910, 61003, 'Sand', 'Hochwasserdeich', '''Hochwasserdeich'' ist ein Deich an einem Fliessgewässer oder im Küstengebiet, der dem Schutz eines Gebietes vor Hochwasser oder gegen Sturmfluten dient.');
+INSERT INTO art VALUES (1920, 61003, 'Sand', 'Hauptdeich, Landesschutzdeich', '''Hauptdeich, Landesschutzdeich'' ist ein Deich der ersten Deichlinie zum Schutz der Küsten- und Inselgebiete gegen Sturmflut.');
+INSERT INTO art VALUES (1940, 61003, 'Sand', 'Überlaufdeich', '''Überlaufdeich'' ist ein Deich vor dem Hauptdeich, der in erster Linie dem Schutz landwirtschaftlich genutzter Flächen gegen leichte Sturmtiden dient und der bei höheren Sturmtiden überströmt wird.');
+INSERT INTO art VALUES (1950, 61003, 'Sand', 'Leitdeich', '''Leitdeich'' ist ein dammartiges Bauwerk im Watt, um strömendes Wasser in bestimmte Richtungen zu lenken und zum Schutz von Wasserläufen im Watt (Außentiefs) vor Versandung.');
+INSERT INTO art VALUES (1960, 61003, 'Sand', 'Polderdeich', '''Polderdeich'' ist ein vor dem Hauptdeich liegender Deich, der landwirtschaftlich nutzbares Land (z. B. Marschland) schützt.');
+INSERT INTO art VALUES (1970, 61003, 'Sand', 'Schlafdeich', '''Schlafdeich'' ist ein ehemaliger Hauptdeich, der infolge einer Vorverlegung der Deichlinie zu einem Binnendeich geworden ist und keine unmittelbare Schutzaufgabe mehr zu erfüllen hat.');
+INSERT INTO art VALUES (1980, 61003, 'Sand', 'Mitteldeich', '''Mitteldeich'' ist ein Deich der 2. Deichlinie, auch an größeren Flüssen. Er soll Überschwemmungen beim Bruch des Deiches der ersten Deichlinie verhindern.');
+INSERT INTO art VALUES (1980, 61003, 'Sand', 'Binnendeich', '''Binnendeich'' ist ein Deich an kleineren Wasserläufen, der Überschwemmungen durch ablaufendes Oberflächenwasser verhindern soll.');
+INSERT INTO art VALUES (1990, 61003, 'Sand', 'Wall', '''Wall'' ist ein meist künstlich aus Erde und Feldsteinen oder Torf errichtetes, langgestrecktes und schmales Landschaftselement, das oft ein- oder beidseitig von Aushubgräben begleitet wird und keinen nennenswerten Bewuchs trägt.');
+INSERT INTO art VALUES (1991, 61003, 'Sand', 'Wallkante, rechts', '');
+INSERT INTO art VALUES (1992, 61003, 'Sand', 'Wallkante, links', '');
+INSERT INTO art VALUES (1993, 61003, 'Sand', 'Wallmitte', '');
+INSERT INTO art VALUES (2000, 61003, 'Sand', 'Knick', '''Knick'' oder auch ''Wallhecke'' ist ein Wall, der mit Sträuchern in Heckenform und einzeln stehenden Bäumen bewachsen ist. Knicks sind landschaftsprägend und können der Grenzmarkierung, Einfriedung und dem Schutz gegen Winderosion dienen.');
+INSERT INTO art VALUES (2001, 61003, 'Sand', 'Knickkante, rechts', '');
+INSERT INTO art VALUES (2002, 61003, 'Sand', 'Knickkante, links', '');
+INSERT INTO art VALUES (2003, 61003, 'Sand', 'Knickmitte', '');
+INSERT INTO art VALUES (2010, 61003, 'Sand', 'Graben mit Wall, rechts', '');
+INSERT INTO art VALUES (2011, 61003, 'Sand', 'Graben mit Wall, links', '');
+INSERT INTO art VALUES (2012, 61003, 'Sand', 'Graben mit Knick, rechts', '');
+INSERT INTO art VALUES (2013, 61003, 'Sand', 'Graben mit Knick, links', '');
+INSERT INTO art VALUES (1000, 62010, 'Sand', 'Unklassifizierte Punkte', '''Unklassifizierte Punkte'' sind nicht spezifizierte Höhenpunkte.');
+INSERT INTO art VALUES (1100, 62010, 'Sand', 'Geländepunkte, allgemein', '''Geländepunkte'' sind nicht näher spezifizierte Höhenpunkte auf dem Gelände als auch in trockengefallenen Gewässer-/Wattflächen.');
+INSERT INTO art VALUES (1110, 62010, 'Sand', 'Feinklassifizierte Geländepunkte', '''Feinklassifizierte Geländepunkte'' sind verifizierte Höhenpunkte auf dem Gelände als auch in trockengefallenen Gewässer-/Wattflächen.');
+INSERT INTO art VALUES (1120, 62010, 'Sand', 'Geländepunkte ohne Keller', '''Geländepunkte ohne Keller'' sind Höhenpunkte auf dem Gelände als auch in trockengefallenen Gewässer-/Wattflächen, die nicht in einem (Keller-)Abgang oder Lichtschacht liegen.');
+INSERT INTO art VALUES (1130, 62010, 'Sand', 'Gewässerpunkte', '''Gewässerpunkte'' sind nicht näher spezifizierte Höhenpunkte auf einem Gewässer.');
+INSERT INTO art VALUES (1200, 62010, 'Sand', 'Nicht-Geländepunkte, allgemein', '''Nicht-Geländepunkte'' sind nicht näher spezifizierte Höhenpunkte, die nicht auf dem Gelände liegen.');
+INSERT INTO art VALUES (1210, 62010, 'Sand', 'Tiefpunkte, Rauschen', '''Tiefpunkte'' sind nicht näher spezifizierte Höhenpunkte, die unterhalb des Geländes liegen und durch Fehlmessungen (Multipath-Effekt) entstanden sind.');
+INSERT INTO art VALUES (1220, 62010, 'Sand', 'Hochpunkte, Rauschen', '''Hochpunkte'' sind nicht näher spezifizierte Höhenpunkte, die kein Oberflächenobjekt beschreiben und durch Fehlmessungen (z. B.: Vögel, Nebel, Wolken, etc.) entstanden sind.');
+INSERT INTO art VALUES (1300, 62010, 'Sand', 'Bauwerkspunkte, allgemein', '''Bauwerkspunkte'' sind nicht näher spezifizierte Höhenpunkte auf einem Bauwerk.');
+INSERT INTO art VALUES (1310, 62010, 'Sand', 'Gebäudepunkte', '''Gebäudepunkte'' sind nicht näher spezifizierte Höhenpunkte auf einem Gebäude.');
+INSERT INTO art VALUES (1315, 62010, 'Sand', 'Gebäudeinstallationspunkte', '''Gebäudeinstallationspunkte'' sind Höhenpunkte, auf einer Gebäudeinstallation (z.B.: Antenne, Schornstein, etc.).');
+INSERT INTO art VALUES (1318, 62010, 'Sand', 'Kellerpunkte', '''Kellerpunkte'' sind Höhenpunkte, die in einem Keller-/Abgang oder Lichtschacht liegen.');
+INSERT INTO art VALUES (1320, 62010, 'Sand', 'Brückenpunkte', '''Brückenpunkte'' sind nicht näher spezifizierte Höhenpunkte auf einem Brückenbauwerk, die die eigentliche Brückenüberführung beschreiben.');
+INSERT INTO art VALUES (1325, 62010, 'Sand', 'Brückenfundamentpunkte', '''Brückenfundamentpunkte'' sind Höhenpunkte, die das Brückenfundament sowie Pfeiler und Widerlager beschreiben.');
+INSERT INTO art VALUES (1330, 62010, 'Sand', 'Wasserbauwerkspunkte', '''Wasserbauwerkspunkte'' sind Höhenpunkte, die ein Wasserbauwerk wie z. B. Buhnen, Parallelwerke, Leitdämme, nicht bewegliche Bauteile von Anlegebrücken, Sperrwerken und Schleusen, Wehre, Leuchtfeuer, etc. beschreiben.');
+INSERT INTO art VALUES (1340, 62010, 'Sand', 'Straßenpunkte', '''Straßenpunkte'' sind nicht näher spezifizierte Höhenpunkte auf einer Straße.');
+INSERT INTO art VALUES (1350, 62010, 'Sand', 'Bahnkörperpunkte', '''Bahnkörperpunkte'' sind nicht näher spezifizierte Höhenpunkte auf einem Bahnkörper (Schotterung).');
+INSERT INTO art VALUES (1400, 62010, 'Sand', 'Vegetationspunkte, allgemein', '''Vegetationspunkte'' sind nicht näher spezifizierte Höhenpunkte auf der Vegetation.');
+INSERT INTO art VALUES (1401, 62010, 'Sand', 'Vegetationspunkte, niedrige Vegetation', '''Vegetationspunkte, niedrige Vegetation'' sind nicht näher spezifizierte Höhenpunkte auf der Vegetation mit einer Höhe bis 1,5 Meter über dem Gelände.');
+INSERT INTO art VALUES (1402, 62010, 'Sand', 'Vegetationspunkte, mittel hohe Vegetation', '''Vegetationspunkte, mittelhohe Vegetation'' sind nicht näher spezifizierte Höhenpunkte auf der Vegetation mit einer Höhe ab 1,5 Meter bis 8 Meter über dem Gelände.');
+INSERT INTO art VALUES (1403, 62010, 'Sand', 'Vegetationspunkte, hohe Vegetation', '''Vegetationspunkte, hohe Vegetation '' sind nicht näher spezifizierte Höhenpunkte auf der Vegetation mit einer Höhe ab 8 Meter über dem Gelände.');
+INSERT INTO art VALUES (1500, 62010, 'Sand', 'Energieversorgungspunkte, allgemein', '''Energieversorgungspunkte'' sind nicht näher spezifizierte Höhenpunkte auf einem Energieversorgungsobjekt.');
+INSERT INTO art VALUES (1501, 62010, 'Sand', 'Leitungsschutzpunkte', '''Leitungsschutzpunkte'' sind Höhenpunkte auf einem Leitungsschutz.');
+INSERT INTO art VALUES (1502, 62010, 'Sand', 'Leitungsdrahtpunkte', '''Leitungsdrahtpunkte'' sind Höhenpunkte auf einem Leitungsdraht.');
+INSERT INTO art VALUES (1503, 62010, 'Sand', 'Fernleitungsmastpunkte', '''Fernleitungsmastpunkte'' sind Höhenpunkte auf einem Fernleitungsmast.');
+INSERT INTO art VALUES (1504, 62010, 'Sand', 'Fernleitungsinfrastrukturpunkte', '''Fernleitungsinfrastrukturpunkte'' sind nicht näher spezifizierte Höhenpunkte auf einem Fernleitungsinfrastrukturobjekt wie z. B. einem Isolator, etc.');
+INSERT INTO art VALUES (1010, 62020, 'Sand', 'Markanter Geländepunkt', '''Markanter Geländepunkt'' ist ein charakteristischer Höhenpunkt an markanten Geländestellen.');
+INSERT INTO art VALUES (1020, 62020, 'Sand', 'Kuppenpunkt', '''Kuppenpunkt'' ist ein charakteristischer Höhenpunkt an der höchsten Stelle einer rundlichen Einzelerhebung.');
+INSERT INTO art VALUES (1030, 62020, 'Sand', 'Kesselpunkt', '''Kesselpunkt'' ist ein charakteristischer Höhenpunkt an der tiefsten Stelle einer rundlichen Vertiefung.');
+INSERT INTO art VALUES (1040, 62020, 'Sand', 'Sattelpunkt', '''Sattelpunkt'' ist ein charakteristischer Höhenpunkt im Schnittpunkt einer Rücken und Muldenlinie.');
+INSERT INTO art VALUES (1100, 62020, 'Sand', 'Besonderer Höhenpunkt', '''Besonderer Höhenpunkt'' ist ein charakteristischer Höhenpunkt.');
+INSERT INTO art VALUES (1110, 62020, 'Sand', 'Höhenpunkt auf Wasserfläche', '''Höhenpunkt auf Wasserfläche'' ist ein charakteristischer Höhenpunkt auf einer Wasserfläche.');
+INSERT INTO art VALUES (1120, 62020, 'Sand', 'Wegepunkt', '''Wegepunkt'' ist ein charakteristischer Höhenpunkt auf einem Weg oder einer Straße.');
+INSERT INTO art VALUES (1210, 62020, 'Sand', 'Strukturiert erfasster Geländepunkt', '''Strukturiert erfasster Geländepunkt'' ist ein Geländepunkt, der nach einem bestimmten Kriterium erfasst wurde.');
+INSERT INTO art VALUES (1220, 62020, 'Sand', 'Gemessener Höhenlinienpunkt', '''Gemessener Höhenlinienpunkt'' ist ein gemessener Höhenpunkt innerhalb einer Höhenlinie.');
+INSERT INTO art VALUES (1230, 62020, 'Sand', 'Dynamisch gemessener Höhenprofilpunkt', '''Dynamisch gemessener Höhenlinienprofilpunkt'' ist ein gemessener Höhenpunkt innerhalb eines Höhenprofils.');
+INSERT INTO art VALUES (1100, 62030, 'Sand', 'Gewässerbegrenzung', '''Gewässerbegrenzung'' ist die Linie, welche ein Gewässer zum Ufer hin abgrenzt.');
+INSERT INTO art VALUES (1200, 62030, 'Sand', 'Geländekante, allgemein', '''Geländekante, allgemein'' ist die einzelne Kante unterschiedlich geneigter Geländeflächen und keine Obergruppe anderer Geländekanten.');
+INSERT INTO art VALUES (1210, 62030, 'Sand', 'Steilrand, Kliffkante', '''Steilrand, Kliffkante'' begrenzt den von der Brandung beständig abgetragenen Steilhang einer Küste.');
+INSERT INTO art VALUES (1220, 62030, 'Sand', 'Oberkante', '''Oberkante'' ist die obere Kante eines ZUSO Böschung, Kliff oder eines Bauwerkes wie z. B. Kai- oder Stützmauer.');
+INSERT INTO art VALUES (1230, 62030, 'Sand', 'Unterkante', '''Unterkante'' ist die untere Kante eines ZUSO Böschung, Kliff oder eines Bauwerkes wie z. B. Kai- oder Stützmauer.');
+INSERT INTO art VALUES (1240, 62030, 'Sand', 'Sonstige Begrenzungskante', '''Sonstige Begrenzungskante'' sind alle Kanten, die nicht anderen Kanten zugeordnet werden können (z. B. Trennschraffe).');
+INSERT INTO art VALUES (1250, 62030, 'Sand', 'Oberkante zugleich Unterkante', '''Oberkante zugleich Unterkante'' beschreibt den Wechsel der Böschungsneigung (Gefällewechsel) innerhalb von ZUSO Böschung, Kliff.');
+INSERT INTO art VALUES (1300, 62030, 'Sand', 'Geripplinie', '''Geripplinie'' ist eine Falllinie, welche zur Erfassung von Rücken und Mulden erforderlich ist.');
+INSERT INTO art VALUES (1310, 62030, 'Sand', 'Muldenlinie', '''Muldenlinie'' ist die tiefste Linie einer Mulde.');
+INSERT INTO art VALUES (1311, 62030, 'Sand', 'Wasserführende Muldenlinie', '''Wasserführende Muldenlinie '' ist die tiefste Linie einer Mulde, die Wasser führt.');
+INSERT INTO art VALUES (1320, 62030, 'Sand', 'Rückenlinie', '''Rückenlinie'' ist die höchste Linie bei lang gestreckten Bergrücken, welche die Wasserscheide bildet.');
+INSERT INTO art VALUES (1400, 62030, 'Sand', 'Bauwerksbegrenzungslinie', '''Bauwerksbegrenzungslinie'' ist die Linie, welche ein Bauwerk zur umliegenden Umgebung hin abgrenzt.');
+INSERT INTO art VALUES (1410, 62030, 'Sand', 'Brückenbegrenzungslinie', '''Brückenbegrenzungslinie'' ist die Linie, welche eine Brücke zur umliegenden Umgebung hin abgrenzt.');
+INSERT INTO art VALUES (1420, 62030, 'Sand', 'Tunnelbegrenzungslinie', '''Tunnelbegrenzungslinie'' ist die Linie, welche ein Tunnelportal zur umliegenden Umgebung hin abgrenzt.');
+INSERT INTO art VALUES (1000, 62040, 'Sand', 'Aussparungsfläche', '''Aussparungsfläche'' ist eine Fläche, die bei der DHM-Bearbeitung nicht berücksichtigt wird.');
+INSERT INTO art VALUES (1010, 62040, 'Sand', 'DGM-Aussparungsfläche', '''DGM-Aussparungsfläche'' ist eine Fläche, die bei der DGM-Bearbeitung nicht berücksichtigt wird.');
+INSERT INTO art VALUES (1020, 62040, 'Sand', 'DOM-Aussparungsfläche', '''DOM-Aussparungsfläche'' ist eine Fläche, die bei der DOM-Bearbeitung nicht berücksichtigt wird.');
+INSERT INTO art VALUES (1030, 62040, 'Sand', 'Kartographische Aussparungsfläche', '''Kartographische Aussparungsfläche'' ist eine Fläche, die bei der kartographischen Bearbeitung nicht berücksichtigt wird.');
+INSERT INTO art VALUES (1040, 62040, 'Sand', 'Brückenbegrenzungsfläche', '''Brückenbegrenzungsfläche'' ist eine Fläche, die bei der Bearbeitung von Brücken-DGM berücksichtigt wird.');
+INSERT INTO art VALUES (1000, 73012, 'Sand', 'Planungsverband', '');
+INSERT INTO art VALUES (2000, 73012, 'Sand', 'Region', '');
+INSERT INTO art VALUES (9999, 73012, 'Other', 'Sonstiges', '');
+INSERT INTO art VALUES (1100, 75001, 'Sand', 'Nettobaublockfläche', '');
+INSERT INTO art VALUES (2000, 75001, 'Sand', 'Bruttobaublockfläche', '');
+INSERT INTO art VALUES (1000, 81005, 'Sand', 'Stichtagsbezogen ohne Historie', '''Stichtagsbezogen ohne Historie'' selektiert die Differenzdaten zwischen letzter erfolgreicher Datenabgabe und Stichzeitpunkt, in der Sekundärdatenbank ist stets nur der aktuelle Stand der Daten verfügbar.');
+INSERT INTO art VALUES (1100, 81005, 'Sand', 'Stichtagsbezogen mit Historie', '''Stichtagsbezogen mit Historie'' selektiert die Differenzdaten zwischen letzter erfolgreicher Datenabgabe und Stichzeitpunkt, in der Sekundärdatenbank werden zumindest temporär auch untergegangene Objekte und Objektversionen vorgehalten.');
+INSERT INTO art VALUES (3000, 81005, 'Sand', 'Fallbezogen ohne Historie', '''Fallbezogen ohne Historie'' selektiert alle Änderungen zwischen letzter erfolgreicher Datenabgabe und Stichzeitpunkt, in der Sekundärdatenbank ist stets nur der aktuelle Stand der Daten verfügbar.');
+INSERT INTO art VALUES (3100, 81005, 'Sand', 'Fallbezogen mit Historie', '''Fallbezogen mit Historie'' selektiert alle Änderungen zwischen letzter erfolgreicher Datenabgabe und Stichzeitpunkt, in der Sekundärdatenbank werden zumindest temporär auch untergegangene Objekte und Objektversionen vorgehalten.');
+INSERT INTO art VALUES (1000, 96007, 'Sand', 'Punktkennung', '');
+INSERT INTO art VALUES (1300, 96007, 'Sand', 'Punktkennung - Grenzpunkt', '');
+INSERT INTO art VALUES (1400, 96007, 'Sand', 'Punktkennung - Besonderer Gebäudepunkt', '');
+INSERT INTO art VALUES (1500, 96007, 'Sand', 'Punktkennung - Besonderer topographischer Punkt', '');
+INSERT INTO art VALUES (1600, 96007, 'Sand', 'Punktkennung - Besonderer Bauwerkspunkt', '');
+INSERT INTO art VALUES (1700, 96007, 'Sand', 'Punktkennung - Aufnahmepunkt', '');
+INSERT INTO art VALUES (1800, 96007, 'Sand', 'Punktkennung - Sicherungspunkt', '');
+INSERT INTO art VALUES (1900, 96007, 'Sand', 'Punktkennung - Sonstiger Vermessungspunkt', '');
+INSERT INTO art VALUES (2000, 96007, 'Sand', 'Punktkennung - Lagefestpunkt', '');
+INSERT INTO art VALUES (2100, 96007, 'Sand', 'Punktkennung - Höhenfestpunkt', '');
+INSERT INTO art VALUES (2200, 96007, 'Sand', 'Punktkennung - Schwerefestpunkt', '');
+INSERT INTO art VALUES (2300, 96007, 'Sand', 'Punktkennung - Referenzstationspunkt', '');
+INSERT INTO art VALUES (3000, 96007, 'Sand', 'Flurstückskennzeichen', 'Eine Reservierung von Folgenummern zu einer Nummer darf sich nur auf aktuelle Flurstücke 11001 beziehen und nicht auf dauerhaft reservierte ausfallende Nummern, die keine aktuellen Flurstücke haben.');
+INSERT INTO art VALUES (4000, 96007, 'Sand', 'FN-Nummer', '');
+INSERT INTO art VALUES (5000, 96007, 'Sand', 'Abmarkungsprotokollnummer', '');
+INSERT INTO art VALUES (6000, 96007, 'Sand', 'Buchungsblattkennzeichen', '');
+INSERT INTO art VALUES (6100, 96007, 'Sand', 'Katasterblatt', '');
+INSERT INTO art VALUES (6200, 96007, 'Sand', 'Pseudoblatt', '');
+INSERT INTO art VALUES (6300, 96007, 'Sand', 'Erwerberblatt', '');
+INSERT INTO art VALUES (6400, 96007, 'Sand', 'Fiktives Blatt', '');
+INSERT INTO art VALUES (1000, 96008, 'Sand', 'Punktkennung', '');
+INSERT INTO art VALUES (1300, 96008, 'Sand', 'Punktkennung - Grenzpunkt', '');
+INSERT INTO art VALUES (1400, 96008, 'Sand', 'Punktkennung - Besonderer Gebäudepunkt', '');
+INSERT INTO art VALUES (1500, 96008, 'Sand', 'Punktkennung - Besonderer topographischer Punkt', '');
+INSERT INTO art VALUES (1600, 96008, 'Sand', 'Punktkennung - Besonderer Bauwerkspunkt', '');
+INSERT INTO art VALUES (1700, 96008, 'Sand', 'Punktkennung - Aufnahmepunkt', '');
+INSERT INTO art VALUES (1800, 96008, 'Sand', 'Punktkennung - Sicherungspunkt', '');
+INSERT INTO art VALUES (1900, 96008, 'Sand', 'Punktkennung - Sonstiger Vermessungspunkt', '');
+INSERT INTO art VALUES (2000, 96008, 'Sand', 'Punktkennung - Lagefestpunkt', '');
+INSERT INTO art VALUES (2100, 96008, 'Sand', 'Punktkennung - Höhenfestpunkt', '');
+INSERT INTO art VALUES (2200, 96008, 'Sand', 'Punktkennung - Schwerefestpunkt', '');
+INSERT INTO art VALUES (2300, 96008, 'Sand', 'Punktkennung - Referenzstationspunkt', '');
+INSERT INTO art VALUES (3000, 96008, 'Sand', 'Flurstückskennzeichen', 'Eine Reservierung von Folgenummern zu einer Nummer darf sich nur auf aktuelle Flurstücke 11001 beziehen und nicht auf dauerhaft reservierte ausfallende Nummern, die keine aktuellen Flurstücke haben.');
+INSERT INTO art VALUES (4000, 96008, 'Sand', 'FN-Nummer', '');
+INSERT INTO art VALUES (5000, 96008, 'Sand', 'Abmarkungsprotokollnummer', '');
+INSERT INTO art VALUES (6000, 96008, 'Sand', 'Buchungsblattkennzeichen', '');
+INSERT INTO art VALUES (6100, 96008, 'Sand', 'Katasterblatt', '');
+INSERT INTO art VALUES (6200, 96008, 'Sand', 'Pseudoblatt', '');
+INSERT INTO art VALUES (6300, 96008, 'Sand', 'Erwerberblatt', '');
+INSERT INTO art VALUES (6400, 96008, 'Sand', 'Fiktives Blatt', '');
+INSERT INTO art VALUES (0050, 08110, 'Sand', 'Änderungsdatensätze an Justizverwaltung', '');
+INSERT INTO art VALUES (0010, 08110, 'Sand', 'Bestandsdatenauszug', 'Der ''Bestandsdatenauszug'' enthält alle Objekte, die aufgrund der Auswertung des Attributes ''Anforderungsmerkmale'' der Prozess-Objektart ''Benutzungsauftrag'' aus den Bestandsdaten selektiert werden.');
+INSERT INTO art VALUES (0060, 08110, 'Sand', 'Bestandsdatenauszug Basis-DLM', '''Bestandsdatenauszug Basis-DLM'' ist ein ''Bestandsdatenauszug'' aus dem Basis-DLM.');
+INSERT INTO art VALUES (0090, 08110, 'Sand', 'Bestandsdatenauszug DHM', '');
+INSERT INTO art VALUES (0063, 08110, 'Sand', 'Bestandsdatenauszug DLM1000', '');
+INSERT INTO art VALUES (0062, 08110, 'Sand', 'Bestandsdatenauszug DLM250', '');
+INSERT INTO art VALUES (0061, 08110, 'Sand', 'Bestandsdatenauszug DLM50', '''Bestandsdatenauszug DLM50'' ist ein ''Bestandsdatenauszug'' aus dem DLM50.');
+INSERT INTO art VALUES (0080, 08110, 'Sand', 'Bestandsdatenauszug DTK10', '');
+INSERT INTO art VALUES (0083, 08110, 'Sand', 'Bestandsdatenauszug DTK100', '');
+INSERT INTO art VALUES (0085, 08110, 'Sand', 'Bestandsdatenauszug DTK1000', '');
+INSERT INTO art VALUES (0081, 08110, 'Sand', 'Bestandsdatenauszug DTK25', '');
+INSERT INTO art VALUES (0084, 08110, 'Sand', 'Bestandsdatenauszug DTK250', '');
+INSERT INTO art VALUES (0082, 08110, 'Sand', 'Bestandsdatenauszug DTK50', '');
+INSERT INTO art VALUES (0086, 08110, 'Sand', 'Bestandsdatenauszug TFIS25', '');
+INSERT INTO art VALUES (0087, 08110, 'Sand', 'Bestandsdatenauszug TFIS50', '');
+INSERT INTO art VALUES (0065, 08110, 'Sand', 'Bestandsdatenauszug - Grunddatenbestand - Basis-DLM', '''Bestandsdatenauszug - Grunddatenbestand - Basis-DLM'' ist ein ''Bestandsdatenauszug'' aus dem Grunddatenbestand des Basis-DLM.');
+INSERT INTO art VALUES (0066, 08110, 'Sand', 'Bestandsdatenauszug - Grunddatenbestand - DLM50', '');
+INSERT INTO art VALUES (0700, 08110, 'Sand', 'Bestandsnachweis', '');
+INSERT INTO art VALUES (0701, 08110, 'Sand', 'Bestandsnachweis - Grunddatenbestand', '');
+INSERT INTO art VALUES (4075, 08110, 'Sand', 'Einzelnachweis Geodätischer Grundnetzpunkt', '');
+INSERT INTO art VALUES (4050, 08110, 'Sand', 'Einzelnachweis Höhenfestpunkt', '');
+INSERT INTO art VALUES (4040, 08110, 'Sand', 'Einzelnachweis Lagefestpunkt', '');
+INSERT INTO art VALUES (4070, 08110, 'Sand', 'Einzelnachweis Referenzstationspunkt', '');
+INSERT INTO art VALUES (4060, 08110, 'Sand', 'Einzelnachweis Schwerefestpunkt', '');
+INSERT INTO art VALUES (1121, 08110, 'Sand', 'Flurstücks-, Bodenschätzungs- und Eigentümerangaben', '');
+INSERT INTO art VALUES (1111, 08110, 'Sand', 'Flurstücks- und Eigentümerangaben (ohne Bodenschätzung)', '');
+INSERT INTO art VALUES (0550, 08110, 'Sand', 'Flurstücks- und Eigentumsnachweis', '');
+INSERT INTO art VALUES (0560, 08110, 'Sand', 'Flurstücks- und Eigentumsnachweis mit Bodenschätzung', '');
+INSERT INTO art VALUES (0561, 08110, 'Sand', 'Flurstücks- und Eigentumsnachweis mit Bodenschätzung - Grunddatenbestand', '');
+INSERT INTO art VALUES (0551, 08110, 'Sand', 'Flurstücks- und Eigentumsnachweis - Grunddatenbestand', '');
+INSERT INTO art VALUES (0510, 08110, 'Sand', 'Flurstücksnachweis', '');
+INSERT INTO art VALUES (0520, 08110, 'Sand', 'Flurstücksnachweis mit Bodenschätzung', '');
+INSERT INTO art VALUES (0521, 08110, 'Sand', 'Flurstücksnachweis mit Bodenschätzung - Grunddatenbestand', '');
+INSERT INTO art VALUES (0511, 08110, 'Sand', 'Flurstücksnachweis - Grunddatenbestand', '');
+INSERT INTO art VALUES (1222, 08110, 'Sand', 'Fortführungsmitteilung an Eigentümer (ohne Eigentümerangaben)', '');
+INSERT INTO art VALUES (1223, 08110, 'Sand', 'Fortführungsmitteilung an Eigentümer (mit Eigentümerangaben)', '');
+INSERT INTO art VALUES (1212, 08110, 'Sand', 'Fortführungsnachweis (ohne Eigentümerangaben)', '');
+INSERT INTO art VALUES (1213, 08110, 'Sand', 'Fortführungsnachweis (mit Eigentümerangaben)', '');
+INSERT INTO art VALUES (1220, 08110, 'Sand', 'Fortführungsmitteilung an Eigentümer', '');
+INSERT INTO art VALUES (1230, 08110, 'Sand', 'Fortführungsmitteilung an Finanzverwaltung', '');
+INSERT INTO art VALUES (1250, 08110, 'Sand', 'Fortführungsmitteilung an Justizverwaltung', '');
+INSERT INTO art VALUES (1210, 08110, 'Sand', 'Fortführungsnachweis bei Fortführung', 'Dieser Benutzungsanlass ist nicht für manuelle Nutzung konzipiert, sondern er wird im Rahmen der Fortführungsverarbeitung automatisiert angestoßen.');
+INSERT INTO art VALUES (1211, 08110, 'Sand', 'Fortführungsnachweis nachträglich angefordert', '');
+INSERT INTO art VALUES (0900, 08110, 'Sand', 'Gebäudenachweis', '');
+INSERT INTO art VALUES (0800, 08110, 'Sand', 'Georeferenzierte Gebäudeadresse', '');
+INSERT INTO art VALUES (0600, 08110, 'Sand', 'Grundstücksnachweis', '');
+INSERT INTO art VALUES (0601, 08110, 'Sand', 'Grundstücksnachweis - Grunddatenbestand', '');
+INSERT INTO art VALUES (0110, 08110, 'Sand', 'Liegenschaftskarte', '');
+INSERT INTO art VALUES (0120, 08110, 'Sand', 'Liegenschaftskarte mit Bodenschätzung', '');
+INSERT INTO art VALUES (1120, 08110, 'Sand', 'Liegenschaftskarte mit Bodenschätzung und Eigentümerangaben', '');
+INSERT INTO art VALUES (0121, 08110, 'Sand', 'Liegenschaftskarte mit Bodenschätzung - Grunddatenbestand', '');
+INSERT INTO art VALUES (1110, 08110, 'Sand', 'Liegenschaftskarte mit Flurstücks- und Eigentümerangaben (ohne Bodenschätzung)', '');
+INSERT INTO art VALUES (1020, 08110, 'Sand', 'Liegenschaftskarte mit Punktnummern', '');
+INSERT INTO art VALUES (1000, 08110, 'Sand', 'Liegenschaftskarte mit Punktnummern und Punktliste', '');
+INSERT INTO art VALUES (0111, 08110, 'Sand', 'Liegenschaftskarte - Grunddatenbestand', '');
+INSERT INTO art VALUES (2300, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen', '');
+INSERT INTO art VALUES (2332, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen - Abmarkungsprotokollnummer', '');
+INSERT INTO art VALUES (2331, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen - Fortführungsnachweisnummer', '');
+INSERT INTO art VALUES (2334, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen - Punktkennung - Folgepunktnummer', '');
+INSERT INTO art VALUES (2333, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen - Punktkennung - Leitpunktnummer', '');
+INSERT INTO art VALUES (2320, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Flurstückskennzeichen', '');
+INSERT INTO art VALUES (2310, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - allgemein', '');
+INSERT INTO art VALUES (2315, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Aufnahmepunkt', '');
+INSERT INTO art VALUES (2318, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Besonderer Bauwerkspunkt', '');
+INSERT INTO art VALUES (2312, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Besonderer Gebäudepunkt', '');
+INSERT INTO art VALUES (2314, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Besonderer topographischer Punkt', '');
+INSERT INTO art VALUES (2311, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Grenzpunkt', '');
+INSERT INTO art VALUES (2316, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Sicherungspunkt', '');
+INSERT INTO art VALUES (2317, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Sonstiger Vermessungspunkt', '');
+INSERT INTO art VALUES (1050, 08110, 'Sand', 'Nachweis der Aufnahmepunkte', '');
+INSERT INTO art VALUES (0040, 08110, 'Sand', 'Nutzerbezogene Bestandsdatenaktualisierung (NBA)', '''Nutzerbezogene Bestandsdatenaktualisierung (NBA)'' dient der Führung von Sekundärdatenbeständen mittels Datenerstausstattung und nachfolgender differenzieller Updates (stichtags- oder fallbezogen). Der Dateninhalt entspricht der festgelegten räumlichen und/oder semantischen Selektion aus dem Gesamtdatenbestand.');
+INSERT INTO art VALUES (0075, 08110, 'Sand', 'Nutzerbezogene Bestandsdatenaktualisierung (NBA) DLM1000', '');
+INSERT INTO art VALUES (0074, 08110, 'Sand', 'Nutzerbezogene Bestandsdatenaktualisierung (NBA) DLM250', '');
+INSERT INTO art VALUES (0070, 08110, 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) Basis-DLM', '''Nutzerbezogene Bestandsdatenaktualisierung (NBA) Basis-DLM'' ist eine ''NBA'' aus dem Basis-DLM.');
+INSERT INTO art VALUES (0071, 08110, 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) DLM50', '');
+INSERT INTO art VALUES (0072, 08110, 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) - Grundatenbestand - Basis-DLM', '''Nutzerbezogene Bestandsdatenaktualisierung (NBA) - Grunddatenbestand - Basis-DLM'' ist eine ''NBA'' aus dem Grunddatenbestand des Basis-DLM.');
+INSERT INTO art VALUES (0073, 08110, 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) - Grunddatenbestand - DLM50', '');
+INSERT INTO art VALUES (1010, 08110, 'Sand', 'Punktliste', '');
+INSERT INTO art VALUES (4035, 08110, 'Sand', 'Punktliste Geodätische Grundnetzpunkte', '');
+INSERT INTO art VALUES (4010, 08110, 'Sand', 'Punktliste Höhenfestpunkte', '');
+INSERT INTO art VALUES (4000, 08110, 'Sand', 'Punktliste Lagefestpunkte', '');
+INSERT INTO art VALUES (4030, 08110, 'Sand', 'Punktliste Referenzstationspunkte', '');
+INSERT INTO art VALUES (4020, 08110, 'Sand', 'Punktliste Schwerefestpunkte', '');
+INSERT INTO art VALUES (2170, 08110, 'Sand', 'Amtliche Flächenstatistik', '');
+INSERT INTO art VALUES (2210, 08110, 'Sand', 'Statistik der Flächen nach dem Bewertungsgesetz (Aggregationseinheit: Gemarkung)', '');
+INSERT INTO art VALUES (2211, 08110, 'Sand', 'Statistik der Flächen nach dem Bewertungsgesetz (Aggregationseinheit: Gemarkung + Stichtag)', 'Der Stichtag wird im Benutzungsauftrag über das ''lebenszeitintervall’ der Gemarkung ausgedrückt und übermittelt.');
+INSERT INTO art VALUES (2400, 08110, 'Sand', 'Vergleichendes Punktnummernverzeichnis', '');
+INSERT INTO art VALUES (2402, 08110, 'Sand', 'VPN sortiert nach endgültigen Punktkennzeichen', '');
+INSERT INTO art VALUES (2401, 08110, 'Sand', 'VPN sortiert nach vorläufigen Punktkennzeichen', '');
+INSERT INTO art VALUES (1000, 08400, 'Sand', 'alleObjekte', 'Diese Werteart bedeutet eine zwingende Themenbildung. Dabei sind alle in der Themendefinition genannten Objektarten Bestandteil des Themas und die Objektarten teilen sich stets die Geometrien.');
+
+ALTER TABLE "ver04_f" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
+ALTER TABLE "ver05_l" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
+ALTER TABLE "ver06_l" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
+ALTER TABLE "ver06_p" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
+ALTER TABLE "gew02_f" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
+ALTER TABLE "gew02_p" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
+ALTER TABLE "rel01_l" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
+ALTER TABLE "rel02_p" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
+
+
+-- Attribute: vegetationsmerkmal
+CREATE TABLE vegetationsmerkmal (
+                     code VARCHAR(4) PRIMARY KEY,
+                     name_en TEXT,
+                     name_de TEXT,
+                     definition_de TEXT,
+                     CONSTRAINT check_column_format CHECK (
+                         code ~ '^[0-9]{4}$'
+                         OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO vegetationsmerkmal VALUES (1010, 'Sand', 'Ackerland', '''Ackerland'' ist eine Fläche für den Anbau von Feldfrüchten (z.B. Getreide, Hülsenfrüchte, Hackfrüchte) und Beerenfrüchten (z.B. Erdbeeren).');
+INSERT INTO vegetationsmerkmal VALUES (1011, 'Sand', 'Streuobstacker', '''Streuobstacker'' beschreibt den Bewuchs einer Ackerfläche mit Obstbäumen.');
+INSERT INTO vegetationsmerkmal VALUES (1012, 'Sand', 'Hopfen', '''Hopfen'' ist eine mit speziellen Vorrichtungen ausgestattete Agrarfläche für den Anbau von Hopfen.');
+INSERT INTO vegetationsmerkmal VALUES (1013, 'Sand', 'Spargel', '''Spargel'' beschreibt den Bewuchs einer Agrarfläche mit Spargelgewächsen.');
+INSERT INTO vegetationsmerkmal VALUES (1014, 'Sand', 'Hanf', '''Hanf'' beschreibt den Bewuchs einer Agrarfläche mit Nutzhanf.');
+INSERT INTO vegetationsmerkmal VALUES (1020, 'Sand', 'Grünland', '''Grünland'' ist eine Grasfläche, die gemäht oder beweidet wird.');
+INSERT INTO vegetationsmerkmal VALUES (1021, 'Sand', 'Streuobstwiese', '''Streuobstwiese'' beschreibt den Bewuchs einer Grünlandfläche mit Obstbäumen.');
+INSERT INTO vegetationsmerkmal VALUES (1022, 'Sand', 'Salzweide', '''Salzweide'' ist eine vom Meer periodisch überflutete Weidefläche, in der eine Salzpflanzenvegetation gedeiht. Dieser Bereich bildet den natürlichen Übergang vom Meer zum Festland.');
+INSERT INTO vegetationsmerkmal VALUES (1030, 'Sand', 'Gartenbauland', '''Gartenbauland'' ist eine Fläche, die dem gewerbsmäßigen Anbau von Gartengewächsen (Gemüse, Obst und Blumen) sowie für die Aufzucht von Kulturpflanzen dient.');
+INSERT INTO vegetationsmerkmal VALUES (1031, 'Sand', 'Baumschule', '''Baumschule'' ist eine Fläche, auf der Holzgewächse aus Samen, Ablegern oder Stecklingen unter mehrmaligem Umpflanzen (Verschulen) gezogen werden.');
+INSERT INTO vegetationsmerkmal VALUES (1040, 'Sand', 'Rebfläche', '''Rebfläche'' ist eine mit speziellen Vorrichtungen ausgestattete Agrarfläche, auf der Weinstöcke angepflanzt sind.');
+INSERT INTO vegetationsmerkmal VALUES (1050, 'Sand', 'Obst- und Nussplantage', '''Obst- und Nussplantage'' ist eine Fläche, die vorwiegend dem Intensivanbau dient und mit Obst-, Nussbäumen oder -sträuchern bepflanzt ist. Im Unterschied zu Streuobst handelt es sich hierbei um gleichmäßige und dichter angelegte Monokulturen.');
+INSERT INTO vegetationsmerkmal VALUES (1051, 'Sand', 'Obst- und Nussbaumplantage', '''Obst- und Nussbaumplantage'' ist eine landwirtschaftliche Fläche, die vorwiegend dem Intensivanbau dient und mit Obst- oder Nussbäumen bepflanzt ist.');
+INSERT INTO vegetationsmerkmal VALUES (1052, 'Sand', 'Obst- und Nussstrauchplantage', '''Obst- und Nussstrauchplantage'' ist eine landwirtschaftliche Fläche, die vorwiegend dem Intensivanbau dient und mit Obst- oder Nusssträuchern bepflanzt ist.');
+INSERT INTO vegetationsmerkmal VALUES (1060, 'Sand', 'Weihnachtsbaumkultur', '''Weihnachtsbaumkultur'' bezeichnet eine landwirtschaftliche Fläche, die vorrangig mit Weihnachtsbäumen bepflanzt ist.');
+INSERT INTO vegetationsmerkmal VALUES (1100, 'Sand', 'Kurzumtriebsplantage', '''Kurzumtriebsplantagen'' sind Flächen, auf denen Baumarten mit dem Ziel baldiger Holzentnahme angepflanzt werden und deren Bestände eine Umtriebszeit von nicht länger als 20 Jahren haben.');
+INSERT INTO vegetationsmerkmal VALUES (1200, 'Sand', 'Brachland', '''Brachland'' ist eine Fläche der Landwirtschaft, die seit längerem nicht mehr zu Produktionszwecken genutzt wird.');
+
+ALTER TABLE "veg01_f" ADD CONSTRAINT veg_fk FOREIGN KEY (veg) REFERENCES vegetationsmerkmal(code);
+
+-- Attribute: bewuchs
+CREATE TABLE bewuchs (
+                                    code VARCHAR(4) PRIMARY KEY,
+                                    name_en TEXT,
+                                    name_de TEXT,
+                                    definition_de TEXT,
+                                    CONSTRAINT check_column_format CHECK (
+                                        code ~ '^[0-9]{4}$'
+                                        OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO bewuchs VALUES (1011, 'Sand', 'Nadelbaum', '''Nadelbaum'' beschreibt die Zugehörigkeit eines einzeln stehenden Baumes zur Gruppe der Nadelhölzer.');
+INSERT INTO bewuchs VALUES (1012, 'Sand', 'Laubbaum', '''Laubbaum'' beschreibt die Zugehörigkeit eines einzeln stehenden Baumes zur Gruppe der Laubhölzer.');
+INSERT INTO bewuchs VALUES (1020, 'Sand', 'Baumbestand', '''Baumbestand'' beschreibt den Bewuchs einer Vegetationsfläche mit Bäumen.');
+INSERT INTO bewuchs VALUES (1021, 'Sand', 'Baumbestand, Laubholz', '''Baumbestand, Laubholz'' beschreibt den Bewuchs einer Vegetationsfläche mit Laubbäumen.');
+INSERT INTO bewuchs VALUES (1022, 'Sand', 'Baumbestand, Nadelholz', '''Baumbestand, Nadelholz'' beschreibt den Bewuchs einer Vegetationsfläche mit Nadelbäumen.');
+INSERT INTO bewuchs VALUES (1023, 'Sand', 'Baumbestand, Laub- und Nadelholz', '''Baumbestand, Laub- und Nadelholz'' beschreibt den Bewuchs einer Vegetationsfläche mit Laub- und Nadelbäumen.');
+INSERT INTO bewuchs VALUES (1100, 'Sand', 'Hecke', '''Hecke'' besteht aus einer Reihe dicht beieinander stehender, meist wildwachsender Sträucher.');
+INSERT INTO bewuchs VALUES (1101, 'Sand', 'Heckenkante, rechts', '');
+INSERT INTO bewuchs VALUES (1102, 'Sand', 'Heckenkante, links', '');
+INSERT INTO bewuchs VALUES (1103, 'Sand', 'Heckenmitte', '');
+INSERT INTO bewuchs VALUES (1210, 'Sand', 'Baumreihe, Laubholz', '''Laubholz'' beschreibt die Zugehörigkeit einer Baumreihe zur Gruppe der Laubhölzer.');
+INSERT INTO bewuchs VALUES (1220, 'Sand', 'Baumreihe, Nadelholz', '''Nadelholz'' beschreibt die Zugehörigkeit einer Baumreihe zur Gruppe der Nadelhölzer.');
+INSERT INTO bewuchs VALUES (1230, 'Sand', 'Baumreihe, Laub- und Nadelholz', '''Laub- und Nadelholz'' beschreibt den Bewuchs einer Baumreihe mit Laub- und Nadelbäumen.');
+INSERT INTO bewuchs VALUES (1250, 'Sand', 'Gehölz', '''Gehölz'' ist eine Fläche, die mit einzelnen Bäumen, Baumgruppen, Büschen, Hecken und Sträuchern bestockt ist.');
+INSERT INTO bewuchs VALUES (1260, 'Sand', 'Gebüsch', '''Gebüsch'' beschreibt den Bewuchs einer Vegetationsfläche mit Holzpflanzen, deren Sprossen sich nahe der Bodenoberfläche verzweigen.');
+INSERT INTO bewuchs VALUES (1300, 'Sand', 'Schneise', '''Schneise'' ist eine künstlich angelegte Waldeinteilungslinie zur dauerhaften Begrenzung forstlicher Wirtschaftsflächen (räumliche Ordnung), die in der Regel geradlinig verläuft.');
+INSERT INTO bewuchs VALUES (1400, 'Sand', 'Röhricht, Schilf', '''Röhricht, Schilf'' beschreibt den Bewuchs einer Vegetations- oder Wasserfläche mit Schilfrohr- und schilfrohrähnlichen Pflanzen.');
+INSERT INTO bewuchs VALUES (1500, 'Sand', 'Gras', '''Gras'' beschreibt den Bewuchs einer Vegetationsfläche mit schlanken, krautigen einkeimblättrigen Blütenpflanzen.');
+INSERT INTO bewuchs VALUES (1510, 'Sand', 'Rain', '');
+INSERT INTO bewuchs VALUES (1600, 'Sand', 'Zierfläche', '');
+INSERT INTO bewuchs VALUES (1700, 'Sand', 'Korbweide', '');
+INSERT INTO bewuchs VALUES (1800, 'Sand', 'Reet', '''Reet'' bezeichnet eine ständig oder zeitweise unter Wasser stehende und mit Reet bewachsene Fläche.');
+INSERT INTO bewuchs VALUES (1900, 'Sand', 'Streuobst', '''Streuobst'' beschreibt den Bewuchs einer Fläche mit Obstbäumen.');
+
+ALTER TABLE "veg04_f" ADD CONSTRAINT bws_fk FOREIGN KEY (bws) REFERENCES bewuchs(code);
+
+
+-- Attribute: schifffahrtskategorie
+CREATE TABLE schifffahrtskategorie (
+                         code VARCHAR(4) PRIMARY KEY,
+                         name_en TEXT,
+                         name_de TEXT,
+                         definition_de TEXT,
+                         CONSTRAINT check_column_format CHECK (
+                             code ~ '^[0-9]{4}$'
+                             OR LENGTH(code) = 4
+)
+    );
+INSERT INTO schifffahrtskategorie VALUES (1000, 'Sand', 'Binnenwasserstraße', '''Binnenwasserstraße'' ist ein oberirdisches Gewässer oder Küstengewässer, das gesetzlich für den Personen- und/oder Güterverkehr mit Schiffen bestimmt ist. Binnengewässer im Küstengebiet sind gegen das Küstengewässer gesetzlich abgegrenzt. Die ''Binnenwasserstraße'' ist ein Gewässer 1. Ordnung.');
+INSERT INTO schifffahrtskategorie VALUES (2000, 'Sand', 'Seewasserstraße', '''Seewasserstraße'' ist ein als Wasserstraße gesetzlich festgelegter Teil eines Küstengewässers. Die ''Seewasserstraße'' ist ein Gewässer 1. Ordnung.');
+INSERT INTO schifffahrtskategorie VALUES (3000, 'Sand', 'Landesgewässer mit Verkehrsordnung', '''Landesgewässer mit Verkehrsordnung'' ist eine Wasserstraße, die keine Binnenwasserstraße ist. Die Schiffbarkeit wird durch eine Landesverkehrsordnung geregelt. Das ''Landesgewässer mit Verkehrsordnung'' ist ein Gewässer 1. Ordnung.');
+
+ALTER TABLE "gew01_f" ADD CONSTRAINT sfk_fk FOREIGN KEY (sfk) REFERENCES schifffahrtskategorie(code);
+ALTER TABLE "gew01_l" ADD CONSTRAINT sfk_fk FOREIGN KEY (sfk) REFERENCES schifffahrtskategorie(code);
+ALTER TABLE "gew03_l" ADD CONSTRAINT sfk_fk FOREIGN KEY (sfk) REFERENCES schifffahrtskategorie(code);
+
+
+-- Attribute:  artdergewaesserstationierungsachse
+CREATE TABLE  artdergewaesserstationierungsachse (
+                                       code VARCHAR(4) PRIMARY KEY,
+                                       name_en TEXT,
+                                       name_de TEXT,
+                                       definition_de TEXT,
+                                       CONSTRAINT check_column_format CHECK (
+                                           code ~ '^[0-9]{4}$'
+                                           OR LENGTH(code) = 4
+)
+    );
+INSERT INTO artdergewaesserstationierungsachse VALUES (1000, 'Sand', 'Gewässerstationierungsachse der WSV', '''Gewässerstationierungsachse der WSV'' ist eine Gewässerachse, deren Geometrie unverändert aus den Unterlagen der Wasser- und Schifffahrtsverwaltung übernommen wurde.');
+INSERT INTO artdergewaesserstationierungsachse VALUES (2000, 'Sand', 'Genäherte Mittellinie in Gewässern', '''Genäherte Mittellinie in Gewässern'' ist eine Gewässerachse, die den Spezifikationen der Richtlinie der ''Gebiets- und Gewässerverschlüsselung'' der Länderarbeitsgemeinschaft Wasser (LAWA) entspricht.');
+INSERT INTO artdergewaesserstationierungsachse VALUES (3001, 'Sand', 'Fiktive Verbindung in Fließgewässern', '''Fiktive Verbindung in Fließgewässern'' ist eine Gewässerachse, die ein einmündendes Gewässer mit der Gewässerachse des aufnehmenden Fließgewässers verbindet.');
+INSERT INTO artdergewaesserstationierungsachse VALUES (3002, 'Sand', 'Fiktive Verbindung in Seen und Teichen', '''Fiktive Verbindung in Seen und Teichen'' ist eine hydrologisch sinnvolle Verbindungslinie in stehenden Gewässern, die für den Aufbau eines geschlossenen topologischen Gewässernetzes benötigt wird.');
+
+ALTER TABLE "gew03_l" ADD CONSTRAINT aga_fk FOREIGN KEY (aga) REFERENCES artdergewaesserstationierungsachse(code);
