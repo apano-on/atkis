@@ -24,6 +24,19 @@
 #    Object Properties
 #################################################################
 
+###  http://example.org/ontologies/atkis#adf
+:adf rdf:type owl:ObjectProperty ;
+    rdfs:domain :Protected
+    rdfs:range :SpecificationType ;
+    rdfs:comment "Specification type"@en ;
+    rdfs:comment "Art Der Festlegung"@de .
+
+###  http://example.org/ontologies/atkis#adm
+:adm rdf:type owl:ObjectProperty ;
+    rdfs:range :AdministrativeFunction ;
+    rdfs:comment "Administrative function"@en ;
+    rdfs:comment "Administrativefunktion"@de .
+
 ###  http://example.org/ontologies/atkis#aga
 :aga rdf:type owl:ObjectProperty ;
     rdfs:domain :WaterLineAxis
@@ -37,6 +50,12 @@
     rdfs:range :MinedMaterial ;
     rdfs:comment "mined material"@en ;
     rdfs:comment "abbaugut"@de .
+
+###  http://example.org/ontologies/atkis#agz
+:agz rdf:type owl:ObjectProperty ;
+    rdfs:range :BoundaryType ;
+    rdfs:comment "Boundary type"@en ;
+    rdfs:comment "Art Der Gebietsgrenze"@de .
 
 ###  http://example.org/ontologies/atkis#art
 :art rdf:type owl:ObjectProperty ;
@@ -105,12 +124,15 @@
 
 
 ###  http://example.org/ontologies/atkis#hatDirektUnderpass
-:hatDirektUnderpass rdf:type owl:ObjectProperty .
+:hasDirectlyUnder rdf:type owl:ObjectProperty ;
+    rdfs:comment "Has direct under pass"@en ;
+    rdfs:comment "hatDirektUnten"@de ;
+    rdfs:domain :Vertic .
 
 
 ###  http://example.org/ontologies/atkis#intersectsWith
 :intersectsWith rdf:type owl:ObjectProperty ;
-                rdfs:comment "land, water, location that intersects within another location" .
+                rdfs:comment "land, water, location that intersects within another location"@en .
 
 
 ###  http://example.org/ontologies/atkis#isBuildingType
@@ -127,6 +149,13 @@
     rdfs:range :WaterNavigationLock ;
     rdfs:comment "Design Feature"@en ;
     rdfs:comment "Konstruktionsmerkmal Bauart"@de .
+
+###  http://example.org/ontologies/atkis#kon
+:kon rdf:type owl:ObjectProperty ;
+    rdfs:domain :Geographical ;
+    rdfs:range :LandscapeType ;
+    rdfs:comment "Landscape Type"@en ;
+    rdfs:comment "Landschaftstyp"@de .
 
 ###  http://example.org/ontologies/atkis#nrb
 :nrb rdf:type owl:ObjectProperty ;
@@ -146,7 +175,7 @@
      rdfs:comment "Oberflaechenmaterial"@de ;
      rdfs:range :SurfaceMaterial .
 
-###  http://example.org/ontologies/atkis#sfk
+###  http://example.org/ontologies/atkis#spo
 :spo rdf:type owl:ObjectProperty ;
      rdfs:range :NavigationCategory ;
      rdfs:comment "navigation category e.g. inland waterway, see route etc."@en ;
@@ -218,8 +247,51 @@
      rdfs:subPropertyOf owl:topDataProperty ;
      rdfs:comment "Designation"@en ;
      skos:example "Traffic code, highway code; e.g. E6" ;
-     rdfs:comment "bezeichnung"@de .
+     rdfs:comment "bezeichnung"@de ;
+     rdfs:range xsd:string .
 
+
+###  http://example.org/ontologies/atkis#bez_nat
+:bez_nat rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf owl:topDataProperty ;
+     rdfs:comment "Country designation"@en ;
+     rdfs:comment "Bezeichnung Nationalstaat"@de ;
+     rdfs:range xsd:string .
+
+###  http://example.org/ontologies/atkis#bez_lan
+:bez_lan rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf owl:topDataProperty ;
+     rdfs:comment "State designation"@en ;
+     rdfs:comment "Bezeichnung Land"@de ;
+     rdfs:range xsd:string .
+
+###  http://example.org/ontologies/atkis#bez_rbz
+:bez_rbz rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf owl:topDataProperty ;
+     rdfs:comment "District designation"@en ;
+     rdfs:comment "Bezeichnung Regierungsbezirk"@de ;
+     rdfs:range xsd:string .
+
+###  http://example.org/ontologies/atkis#bez_krs
+:bez_krs rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf owl:topDataProperty ;
+     rdfs:comment "Circle designation"@en ;
+     rdfs:comment "Bezeichnung Kreis"@de ;
+     rdfs:range xsd:string .
+
+###  http://example.org/ontologies/atkis#bez_vwg
+:bez_vwg rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf owl:topDataProperty ;
+     rdfs:comment "Township esignation"@en ;
+     rdfs:comment "Bezeichnung Verwaltungsgemeinschaft"@de ;
+     rdfs:range xsd:string .
+
+###  http://example.org/ontologies/atkis#bez_gem
+:bez_gem rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf owl:topDataProperty ;
+     rdfs:comment "Municipality esignation"@en ;
+     rdfs:comment "Bezeichnung Gemeinde"@de ;
+     rdfs:range xsd:string .
 
 ###  http://example.org/ontologies/atkis#bound
 :bound rdf:type owl:DatatypeProperty .
@@ -295,6 +367,12 @@
      rdfs:domain :RoadTraffic ;
      rdfs:range xsd:boolean .
 
+###  http://example.org/ontologies/atkis#gwk
+:gwk rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf owl:topDataProperty ;
+     rdfs:comment "'Watercourse code' is the coding of 'watercourse' assigned by the specialist administration."@en ;
+     rdfs:comment "'Gewässerkennzahl' ist die von der Fachverwaltung vergebene Verschlüsselung von 'Wasserlauf'."@de ;
+     rdfs:range xsd:string .
 
 ###  http://example.org/ontologies/atkis#hdu_x
 :hdu_x rdf:type owl:DatatypeProperty ;
@@ -303,6 +381,27 @@
        rdfs:comment "Hat Direkt Unten Existiert"@de ;
        rdfs:domain :RoadTraffic ;
        rdfs:range xsd:boolean .
+
+###  http://example.org/ontologies/atkis#hhl
+:hhl rdf:type owl:DatatypeProperty ;
+     rdfs:comment "Height from highline"@en ;
+     rdfs:comment "Hoehe Von Hoehenlinie"@de ;
+     rdfs:domain :ReliefForm ;
+     rdfs:range xsd:decimal .
+
+###  http://example.org/ontologies/atkis#hho
+:hho rdf:type owl:DatatypeProperty ;
+     rdfs:comment "Object height"@en ;
+     rdfs:comment "objekthoehe"@de ;
+     rdfs:range xsd:decimal .
+
+###  http://example.org/ontologies/atkis#hho
+:hoehe rdf:type owl:DatatypeProperty ;
+     rdfs:comment "Height"@en ;
+     rdfs:comment "hoehe"@de ;
+     rdfs:range xsd:decimal ;
+     rdfs:subPropertyOf uom:length ;
+     uom:unit uom:metre .
 
 ###  http://example.org/ontologies/atkis#hyd
 :hyd rdf:type owl:DatatypeProperty ;
@@ -385,6 +484,28 @@
      rdfs:comment "regional language"@en ;
      rdfs:comment "Regional Sprache"@de .
 
+
+###  http://example.org/ontologies/atkis#gwk
+:sch rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf owl:topDataProperty ;
+     rdfs:comment "Catalogue entry abbreviation"@en ;
+     rdfs:comment "Schluessel Gesamt"@de ;
+     rdfs:range xsd:string .
+
+###  http://example.org/ontologies/atkis#sgn
+:sgn rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf owl:topDataProperty ;
+     rdfs:comment "'Nummer des Schutzgebietes' ist die amtlich festgelegte Verschlüsselung von 'Schutzgebiet nach Natur-, Umwelt- oder Bodenschutzrecht'."@de ;
+     rdfs:comment "'Number of the protected area' is the officially defined code for 'protected area under nature, environmental or soil protection law'."@en ;
+     rdfs:range xsd:integer .
+
+###  http://example.org/ontologies/atkis#skz
+:skz rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf owl:topDataProperty ;
+     rdfs:comment "'Sea code' is the code assigned by the responsible specialist agency."@en ;
+     rdfs:comment "'Seekennzahl' ist die von der zuständigen Fachstelle vergebene Verschlüsselung."@de ;
+     rdfs:range xsd:string .
+
 ###  http://example.org/ontologies/atkis#wsg
 :wsg rdf:type owl:DatatypeProperty ;
      rdfs:comment "Water level in standing water"@en ;
@@ -418,6 +539,11 @@
 ###  http://example.org/ontologies/atkis#AdministrativeCommunityArea
 :AdministrativeCommunityArea rdf:type owl:Class ;
                              rdfs:subClassOf :Administrative .
+
+
+###  http://example.org/ontologies/atkis#GroundCover
+:AdministrativeFunction rdf:type owl:Class ;
+             rdfs:comment "Administrativefunktion"@de .
 
 
 ###  http://example.org/ontologies/atkis#Agricultural
@@ -460,6 +586,9 @@
 :Bog rdf:type owl:Class ;
      rdfs:subClassOf :VegetationArea .
 
+###  http://example.org/ontologies/atkis#EntityCondition
+:BoundaryType rdf:type owl:Class ;
+            rdfs:comment "Art Der Gebietsgrenze"@de .
 
 ###  http://example.org/ontologies/atkis#Building
 :Building rdf:type owl:Class ;
@@ -565,6 +694,11 @@
 ###  http://example.org/ontologies/atkis#Landscape
 :Landscape rdf:type owl:Class ;
            rdfs:subClassOf :Geographical .
+
+
+###  http://example.org/ontologies/atkis#LandscapeType
+:LandscapeType rdf:type owl:Class ;
+            rdfs:comment "Landschaftstyp"@de .
 
 
 ###  http://example.org/ontologies/atkis#Location
@@ -744,6 +878,10 @@ ReliefForms and MeasurementData for the relief""" .
 
 ###  http://example.org/ontologies/atkis#SpecialTrafficImportance
 :SpecialTrafficImportance rdf:type owl:Class .
+
+###  http://example.org/ontologies/atkis#SpecificationType
+:SpecificationType rdf:type owl:Class ;
+            rdfs:comment "Art Der Festlegung"@de .
 
 ###  http://example.org/ontologies/atkis#SpecificType
 :SpecificType rdf:type owl:Class .

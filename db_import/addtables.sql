@@ -1393,3 +1393,226 @@ INSERT INTO artdergewaesserstationierungsachse VALUES (3001, 'Sand', 'Fiktive Ve
 INSERT INTO artdergewaesserstationierungsachse VALUES (3002, 'Sand', 'Fiktive Verbindung in Seen und Teichen', '''Fiktive Verbindung in Seen und Teichen'' ist eine hydrologisch sinnvolle Verbindungslinie in stehenden Gewässern, die für den Aufbau eines geschlossenen topologischen Gewässernetzes benötigt wird.');
 
 ALTER TABLE "gew03_l" ADD CONSTRAINT aga_fk FOREIGN KEY (aga) REFERENCES artdergewaesserstationierungsachse(code);
+
+-- Attribute:  landschaftstyp
+CREATE TABLE  landschaftstyp (
+                                                     code VARCHAR(4) PRIMARY KEY,
+                                                     name_en TEXT,
+                                                     name_de TEXT,
+                                                     definition_de TEXT,
+                                                     CONSTRAINT check_column_format CHECK (
+                                                         code ~ '^[0-9]{4}$'
+                                                         OR LENGTH(code) = 4
+)
+    );
+INSERT INTO landschaftstyp VALUES (1100, 'Sand', 'Gebirge, Bergland, Hügelland', '''Gebirge, Bergland, Hügelland'' bezeichnet eine zusammenhängende größere Erhebung der Erdoberfläche. Es besteht aus einzelnen Bergen und Hochflächen, die durch Täler und Senken gegliedert sind.');
+INSERT INTO landschaftstyp VALUES (1200, 'Sand', 'Berg, Berge', '''Berg, Berge'' bezeichnet eine über die Umgebung deutlich herausragende Geländeerhebung, einzeln oder als Teil eines Gebirges.');
+INSERT INTO landschaftstyp VALUES (1300, 'Sand', 'Becken, Senke', '''Becken, Senke'' bezeichnet ein gegenüber der Umgebung tiefer liegendes Land.');
+INSERT INTO landschaftstyp VALUES (1400, 'Sand', 'Tal, Niederung', '''Tal, Niederung'' bezeichnet im Bergland einen langgestreckten oder gewundenen, unterschiedlich tiefen und breiten Einschnitt im Gelände mit gleichsinnig gerichtetem Gefälle einschließlich des dazu gehörigen Talraumes, im Flachland eine offene Hohlform. Ferner zählen hierzu auch (talähnliche) Talungen und glaziale Rinnen, die beide kein gleichsinniges Gefälle aufweisen.');
+INSERT INTO landschaftstyp VALUES (1500, 'Sand', '(Tief-) Ebene, Flachland', '''(Tief-) Ebene, Flachland'' ist ein Teil der Erdoberfläche mit geringen Höhenunterschieden in einer Höhenlage bis 200- 300 m über NHN.');
+INSERT INTO landschaftstyp VALUES (1600, 'Sand', 'Plateau, Hochfläche', '''Plateau, Hochfläche'', bezeichnet einen Teil der Erdoberfläche mit fehlenden oder kaum wahrnehmbaren Höhenunterschieden in einer Höhenlage ab etwa 200-300 m über NHN.');
+INSERT INTO landschaftstyp VALUES (1700, 'Sand', 'Mündungsgebiet', '''Mündungsgebiet'' bezeichnet die typische, durch Ablagerung von Schwebestoffen entstandene Landschaft im Bereich der Mündung eines fließenden Gewässers in ein anderes Binnengewässer oder in ein Meer.');
+INSERT INTO landschaftstyp VALUES (1800, 'Sand', 'Dünenlandschaft', '''Dünenlandschaft'' ist eine, vom Wind gebildete, durch Sandanhäufungen geprägte Landschaft.');
+INSERT INTO landschaftstyp VALUES (1900, 'Sand', 'Wald-, Heidelandschaft', '''Wald-, Heidelandschaft'' ist eine größere zusammenhängende, mit Bäumen bestandene Fläche (Wald) einschließlich darin befindlicher Lichtungen. Hierzu gehören viele ehemalige Heiden, die heute vorwiegend ökonomisch genutzte monokulturartige Forste mit meist Fichten- oder Kiefernbeständen bilden.');
+INSERT INTO landschaftstyp VALUES (2000, 'Sand', 'Inselgruppe', '''Inselgruppe'' ist eine Gruppe mehrerer nahe beieinander liegender Inseln geologisch gleicher Entstehung.');
+INSERT INTO landschaftstyp VALUES (2100, 'Sand', 'Seenlandschaft', '''Seenlandschaft'' ist eine durch zahlreiche, nahe beieinander liegende Binnenseen geprägte Landschaft.');
+INSERT INTO landschaftstyp VALUES (2200, 'Sand', 'Siedlungs-, Wirtschaftslandschaft', '''Siedlungs-, Wirtschaftslandschaft'' ist eine durch Siedlungsverdichtung oder spezielle Wirtschaftsorientierung geprägte Landschaft.');
+INSERT INTO landschaftstyp VALUES (2300, 'Sand', 'Moorlandschaft', '''Moorlandschaft'' ist eine durch heutige und ehemalige Moore gekennzeichnete Landschaft.');
+INSERT INTO landschaftstyp VALUES (2400, 'Sand', 'Heidelandschaft', '''Heidelandschaft'' ist eine waldfreie Landschaft der unteren Höhenstufen, die von einer mehr oder weniger lockeren Zwergstrauchformation geprägt wird.');
+INSERT INTO landschaftstyp VALUES (2500, 'Sand', 'Küstenlandschaft', '''Küstenlandschaft'' enthält jene auf dem Festland gelegenen Gebiete, die dem Meer abgerungen worden sind (Polder, Marschen), deren Entstehung dem Meer zu verdanken ist (Nehrungen, Haken) oder deren Küste durch das Meer geformt wird (Steilküste, Strände, Halbinseln).');
+
+
+ALTER TABLE "geb02_f" ADD CONSTRAINT ltp_fk FOREIGN KEY (ltp) REFERENCES landschaftstyp(code);
+
+
+-- Attribute:  artderfestlegung
+CREATE TABLE  artderfestlegung (
+                                 code VARCHAR(4) PRIMARY KEY,
+                                 name_en TEXT,
+                                 name_de TEXT,
+                                 definition_de TEXT,
+                                 CONSTRAINT check_column_format CHECK (
+                                     code ~ '^[0-9]{4}$'
+                                     OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO artderfestlegung VALUES (1610, 'Sand', 'Schutzfläche nach Europarecht', '');
+INSERT INTO artderfestlegung VALUES (1611, 'Sand', 'Flora-Fauna-Habitat-Gebiet', '''Flora-Fauna-Habitat-Gebiet'' ist ein Schutzgebiet von gemeinschaftlicher Bedeutung im Sinne der Richtlinie 92/43/EWG des Rates der Europäischen Wirtschaftsgemeinschaft zur Erhaltung der natürlichen Lebensräume sowie der wildlebenden Pflanzen und Tiere.');
+INSERT INTO artderfestlegung VALUES (1612, 'Sand', 'Vogelschutzgebiet', '''Vogelschutzgebiet'' ist ein besonderes Schutzgebiet (Special Protected Area, SPA) im Sinne Artikel 4 Abs. 1 der Richtlinie 79/409/EWG des Rates der Europäischen Wirtschaftsgemeinschaft über die Erhaltung der wildlebenden Vogelarten (Vogelschutzrichtlinie).');
+INSERT INTO artderfestlegung VALUES (1615, 'Sand', 'Nationales Naturmonument', '''Nationales Naturmonument'' ist ein rechtsverbindlich festgesetztes Gebiet von herausragender Bedeutung (Bundesnaturschutzgesetz §24 Abs.4).');
+INSERT INTO artderfestlegung VALUES (1620, 'Sand', 'Schutzflächen nach Landesnaturschutzgesetz', '');
+INSERT INTO artderfestlegung VALUES (1621, 'Sand', 'Naturschutzgebiet', '''Naturschutzgebiet'' ist ein rechtsverbindlich festgesetztes Gebiet, in dem ein besonderer Schutz von Natur und Landschaft in ihrer Ganzheit oder in einzelnen Teilen zur Erhaltung von Lebensgemeinschaften oder Biotopen bestimmter wildlebender Tier- und Pflanzenarten, aus wissenschaftlichen, naturgeschichtlichen oder landeskundlichen Gründen oder wegen ihrer Seltenheit, besonderen Eigenart oder hervorragenden Schönheit erforderlich ist.');
+INSERT INTO artderfestlegung VALUES (1622, 'Sand', 'Geschützter Landschaftsbestandteil', '''Geschützter Landschaftsbestandteil'' ist ein rechtsverbindlich festgesetzter Teil von Natur und Landschaft, dessen besonderer Schutz zur Sicherstellung der Leistungsfähigkeit des Naturhaushalts, zur Belebung, Gliederung oder Pflege des Orts- und Landschaftsbildes oder zur Abwehr schädlicher Einwirkungen erforderlich ist.');
+INSERT INTO artderfestlegung VALUES (1623, 'Sand', 'Landschaftsschutzgebiet', '''Landschaftsschutzgebiet'' ist ein rechtsverbindlich festgesetztes Gebiet, in dem ein besonderer Schutz von Natur und Landschaft zur Erhaltung oder Wiederherstellung der Leistungsfähigkeit des Naturhaushalts oder der Nutzungsfähigkeit der Naturgüter, wegen der Vielfalt, Eigenart oder Schönheit des Landschaftsbildes oder wegen der besonderen Bedeutung für die Erholung erforderlich ist.');
+INSERT INTO artderfestlegung VALUES (1624, 'Sand', 'Naturpark', '''Naturpark'' ist ein einheitlich zu entwickelndes und zu pflegendes Gebiet, das großräumig ist, überwiegend Landschaftsschutzgebiet oder Naturschutzgebiet ist, sich wegen seiner landschaftlichen Voraussetzungen für die Erholung besonders eignet und nach den Grundsätzen und Zielen der Raumordnung und der Landesplanung für die Erholung oder den Fremdenverkehr vorgesehen ist.');
+INSERT INTO artderfestlegung VALUES (1630, 'Sand', 'RainBundesbodenschutzgesetz', '');
+INSERT INTO artderfestlegung VALUES (1631, 'Sand', 'Verdachtsfläche auf schädliche Bodenveränderung', '');
+INSERT INTO artderfestlegung VALUES (1632, 'Sand', 'Schädliche Bodenveränderung', '');
+INSERT INTO artderfestlegung VALUES (1633, 'Sand', 'Altlastenverdächtige Fläche', '');
+INSERT INTO artderfestlegung VALUES (1634, 'Sand', 'Altlast', '');
+INSERT INTO artderfestlegung VALUES (1635, 'Sand', 'Gesicherte Altlast', '');
+INSERT INTO artderfestlegung VALUES (1636, 'Sand', 'Gesicherte schädliche Bodenveränderung', '');
+INSERT INTO artderfestlegung VALUES (1640, 'Sand', 'Bundesimmisionsschutzgesetz', '');
+INSERT INTO artderfestlegung VALUES (1641, 'Sand', 'Belastungsgebiet', '');
+INSERT INTO artderfestlegung VALUES (1642, 'Sand', 'Schutzbedürftiges Gebiet', '');
+INSERT INTO artderfestlegung VALUES (1643, 'Sand', 'Gefährdetes Gebiet', '');
+INSERT INTO artderfestlegung VALUES (1650, 'Sand', 'Naturschutzgesetz', '');
+INSERT INTO artderfestlegung VALUES (1651, 'Sand', 'Besonders geschütztes Biotop', '');
+INSERT INTO artderfestlegung VALUES (1652, 'Sand', 'Besonders geschütztes Feuchtgrünland', '');
+INSERT INTO artderfestlegung VALUES (1653, 'Sand', 'Naturdenkmal', '''Naturdenkmal'' ist eine rechtsverbindlich festgesetzte Einzelschöpfung der Natur, deren besonderer Schutz erforderlich ist (z.B. Baum).');
+INSERT INTO artderfestlegung VALUES (1654, 'Sand', 'Einstweilige Sicherstellung, Veränderungssperre', '');
+INSERT INTO artderfestlegung VALUES (1655, 'Sand', 'Vorkaufsrecht', '');
+INSERT INTO artderfestlegung VALUES (1656, 'Sand', 'Ausgleichs- oder Kompensationsfläche', '');
+INSERT INTO artderfestlegung VALUES (1660, 'Sand', 'Bodenschutzgesetz', '');
+INSERT INTO artderfestlegung VALUES (1661, 'Sand', 'Dauerbeobachtungsflächen', '');
+INSERT INTO artderfestlegung VALUES (1662, 'Sand', 'Bodenschutzgebiet', '');
+INSERT INTO artderfestlegung VALUES (1644, 'Sand', 'Abstandszone, Störfallbetrieb', '');
+INSERT INTO artderfestlegung VALUES (4100, 'Sand', 'Luftverkehrsgesetz', '');
+INSERT INTO artderfestlegung VALUES (4110, 'Sand', 'Bauschutzbereich', '');
+INSERT INTO artderfestlegung VALUES (4120, 'Sand', 'Beschränkter Bauschutzbereich', '');
+INSERT INTO artderfestlegung VALUES (4200, 'Sand', 'Bundeskleingartengesetz', '');
+INSERT INTO artderfestlegung VALUES (4210, 'Sand', 'Dauerkleingarten', '');
+INSERT INTO artderfestlegung VALUES (4300, 'Sand', 'Berggesetz', '');
+INSERT INTO artderfestlegung VALUES (4301, 'Sand', 'Bodenbewegungsgebiet', '''Bodenbewegungsgebiet'' ist ein Gebiet, in dem sich die oberen Erdschichten auf Grund verschiedener Einflüsse (z.B. geologische Kräfte, Bergbau) lage- oder höhenmäßig verändern.');
+INSERT INTO artderfestlegung VALUES (4302, 'Sand', 'Bruchfeld', '''Bruchfeld'' ist ein durch Bergbau unterhöhltes Gebiet, das teilweise bereits eingebrochen ist oder sich in Absenkung befindet.');
+INSERT INTO artderfestlegung VALUES (4310, 'Sand', 'Baubeschränkung', '');
+INSERT INTO artderfestlegung VALUES (4400, 'Sand', 'Reichsheimstättengesetz', '');
+INSERT INTO artderfestlegung VALUES (4410, 'Sand', 'Reichsheimstätte', '');
+INSERT INTO artderfestlegung VALUES (4500, 'Sand', 'Schutzbereichsgesetz', '');
+INSERT INTO artderfestlegung VALUES (4510, 'Sand', 'Schutzbereich', '');
+INSERT INTO artderfestlegung VALUES (4600, 'Sand', 'Eisenbahnneuordnungsgesetz', '');
+INSERT INTO artderfestlegung VALUES (4610, 'Sand', 'Übergabebescheidverfahren', '');
+INSERT INTO artderfestlegung VALUES (4710, 'Sand', 'Baubeschränkungen durch Richtfunkverbindungen', '');
+INSERT INTO artderfestlegung VALUES (4720, 'Sand', 'Truppenübungsplatz, Standortübungsplatz', '''Truppenübungsplatz, Standortübungsplatz'' ist ein Gelände zur militärischen Ausbildung.');
+INSERT INTO artderfestlegung VALUES (4730, 'Sand', 'Militärbrache', '''Militärbrache'' ist eine ehemals militärisch genutzte Fläche, die aktuell nicht mehr militärisch genutzt wird.');
+INSERT INTO artderfestlegung VALUES (4800, 'Sand', 'Vermessungs- und Katasterrecht', '');
+INSERT INTO artderfestlegung VALUES (4810, 'Sand', 'Schutzfläche Festpunkt', '');
+INSERT INTO artderfestlegung VALUES (4811, 'Sand', 'Schutzfläche Festpunkt, 1 m Radius', '');
+INSERT INTO artderfestlegung VALUES (4812, 'Sand', 'Schutzfläche Festpunkt, 2 m Radius', '')
+INSERT INTO artderfestlegung VALUES (4813, 'Sand', 'Schutzfläche Festpunkt, 5 m Radius', '');
+INSERT INTO artderfestlegung VALUES (4814, 'Sand', 'Schutzfläche Festpunkt, 10 m Radius', '')
+INSERT INTO artderfestlegung VALUES (4815, 'Sand', 'Schutzfläche Festpunkt, 30 m Radius', '');
+INSERT INTO artderfestlegung VALUES (4820, 'Sand', 'Marksteinschutzfläche', '');
+INSERT INTO artderfestlegung VALUES (4830, 'Sand', 'Liegenschaftskatastererneuerung', '');
+INSERT INTO artderfestlegung VALUES (4900, 'Sand', 'Fischereirecht', '');
+INSERT INTO artderfestlegung VALUES (5100, 'Sand', 'Jagdkataster', '');
+INSERT INTO artderfestlegung VALUES (5200, 'Sand', 'Landesgrundbesitzkataster', '');
+INSERT INTO artderfestlegung VALUES (5300, 'Sand', 'Bombenblindgängerverdacht', '');
+INSERT INTO artderfestlegung VALUES (5400, 'Sand', 'Rieselfeld', '''Rieselfeld'' ist eine Fläche, auf der organisch verunreinigtes Wasser zum Zwecke der biologischen Reinigung verrieselt wird.');
+INSERT INTO artderfestlegung VALUES (5500, 'Sand', 'Sicherungsstreifen', '');
+INSERT INTO artderfestlegung VALUES (5600, 'Sand', 'Grenzbereinigung', '');
+INSERT INTO artderfestlegung VALUES (5700, 'Sand', 'Hochwasserdeich', '''Hochwasserdeich'' ist die Eigenschaft (Widmung) eines Deiches, die durch die obere Deichbehörde festgelegt wird.');
+INSERT INTO artderfestlegung VALUES (5710, 'Sand', 'Hauptdeich, 1. Deichlinie', '''Hauptdeich, 1. Deichlinie'' ist die Eigenschaft (Widmung) eines Deiches, die durch die obere Deichbehörde festgelegt wird.');
+INSERT INTO artderfestlegung VALUES (5720, 'Sand', '2. Deichlinie', '''2. Deichlinie'' ist die Eigenschaft (Widmung) eines Deiches, die durch die obere Deichbehörde festgelegt wird.');
+INSERT INTO artderfestlegung VALUES (6000, 'Sand', 'Beregnungsverband', '');
+INSERT INTO artderfestlegung VALUES (7000, 'Sand', 'Weinlage', '');
+INSERT INTO artderfestlegung VALUES (7100, 'Sand', 'Weinbausteillage', '');
+INSERT INTO artderfestlegung VALUES (7200, 'Sand', 'Weinbergsrolle', '');
+INSERT INTO artderfestlegung VALUES (7300, 'Sand', 'Weinbausteilstlage', '');
+INSERT INTO artderfestlegung VALUES (8000, 'Sand', 'Benachteiligtes landwirtschaftliches Gebiet', '');
+INSERT INTO artderfestlegung VALUES (9100, 'Sand', 'Mitverwendung Hochwasserschutz, Oberirdische Anlagen', '');
+INSERT INTO artderfestlegung VALUES (9200, 'Sand', 'Mitverwendung Hochwasserschutz, Unterirdische Anlagen', '');
+INSERT INTO artderfestlegung VALUES (9300, 'Sand', 'Hafennutzungsgebiet', '');
+INSERT INTO artderfestlegung VALUES (9400, 'Sand', 'Hafenerweiterungsgebiet', '');
+INSERT INTO artderfestlegung VALUES (9450, 'Sand', 'Hafenbecken', '''Hafenbecken'' ist ein rechtlich definierter Teil eines Gewässers, in dem Schiffe be- und entladen werden');
+INSERT INTO artderfestlegung VALUES (9500, 'Sand', 'Bohrung verfüllt', '');
+INSERT INTO artderfestlegung VALUES (9600, 'Sand', 'Zollgrenze', '');
+INSERT INTO artderfestlegung VALUES (9700, 'Sand', 'Belastung nach §7 Abs. 2 GBO', '');
+INSERT INTO artderfestlegung VALUES (9999, 'Sand', 'Sonstiges', '''Sonstiges'' bedeutet, dass ''Art der Festlegung'' bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+INSERT INTO artderfestlegung VALUES (4100, 'Sand', 'Luftverkehrsgesetz', '');
+
+ALTER TABLE "geb03_f" ADD CONSTRAINT adf_fk FOREIGN KEY (adf) REFERENCES artderfestlegung(code);
+
+-- Attribute:  administrativefunktion
+CREATE TABLE  administrativefunktion (
+                                   code VARCHAR(4) PRIMARY KEY,
+                                   name_en TEXT,
+                                   name_de TEXT,
+                                   definition_de TEXT,
+                                   CONSTRAINT check_column_format CHECK (
+                                       code ~ '^[0-9]{4}$'
+                                       OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO administrativefunktion VALUES (1001, 'Sand', 'Bundesrepublik', '''Bundesrepublik'' ist die Bezeichnung Deutschlands und ist aus der Gesamtheit der deutschen Länder (Gliedstaaten) gebildet.');
+INSERT INTO administrativefunktion VALUES (2001, 'Sand', 'Land', '''Land'' ist ein teilsouveräner Gliedstaat der Bundesrepublik Deutschland.');
+INSERT INTO administrativefunktion VALUES (2002, 'Sand', 'Freistaat', '''Freistaat'' ist ein teilsouveräner Gliedstaat der Bundesrepublik Deutschland (historisch gewachsene Bezeichnung für Land).');
+INSERT INTO administrativefunktion VALUES (2003, 'Sand', 'Freie und Hansestadt', '''Freie und Hansestadt'' ist eine historisch gewachsene Bezeichnung.');
+INSERT INTO administrativefunktion VALUES (3001, 'Sand', 'Regierungsbezirk', '''Regierungsbezirk'' ist ein Verwaltungsbezirk innerhalb eines Landes, welcher mehrere Stadt- und Landkreise umfasst.');
+INSERT INTO administrativefunktion VALUES (3002, 'Sand', 'Freie Hansestadt', '''Freie Hansestadt'' ist eine historisch gewachsene Bezeichnung.');
+INSERT INTO administrativefunktion VALUES (3003, 'Sand', 'Bezirk', '''Bezirk'' ist ein abgegrenztes Gebiet einer Stadt.');
+INSERT INTO administrativefunktion VALUES (3004, 'Sand', 'Stadt (Bremerhaven)', '''Stadt (Bremerhaven)'' ist die Bezeichnung der kreisfreien Stadt Bremerhaven.');
+INSERT INTO administrativefunktion VALUES (3005, 'Sand', 'Regierungsvertretung', '''Regierungsvertretung'' ist eine Bezeichung von Referaten des Niedersächsischen Ministeriums für Inneres und Sport.');
+INSERT INTO administrativefunktion VALUES (4001, 'Sand', 'Kreis', '''Kreis'' ist eine mehrere Gemeinden bzw. Städte umfassende kommunale Verwaltungseinheit.');
+INSERT INTO administrativefunktion VALUES (4002, 'Sand', 'Landkreis', '''Landkreis'' ist eine mehrere Gemeinden bzw. Städte umfassende kommunale Verwaltungseinheit.');
+INSERT INTO administrativefunktion VALUES (4003, 'Sand', 'Kreisfreie Stadt', '''Kreisfreie Stadt'' ist eine kommunale Verwaltungseinheit, die keinem ''Kreis'' oder ''Landkreis'' angehört.');
+INSERT INTO administrativefunktion VALUES (4007, 'Sand', 'Ursprünglich gemeindefreies Gebiet', '');
+INSERT INTO administrativefunktion VALUES (4008, 'Sand', 'Ortsteil', '''Ortsteil'' ist ein räumlich abgegrenzter Bereich einer Gemeinde.');
+INSERT INTO administrativefunktion VALUES (4009, 'Sand', 'Region', '');
+INSERT INTO administrativefunktion VALUES (5001, 'Sand', 'Verbandsgemeinde', '''Verbandsgemeinde'' ist eine kommunale Verwaltungskooperation zwischen Gemeinden.');
+INSERT INTO administrativefunktion VALUES (5002, 'Sand', 'Verbandsfreie Gemeinde', '''Verbandsfreie Gemeinde'' ist eine kreisangehörige Gebietskörperschaft, die keiner ''Verbandsgemeinde'' angehört.');
+INSERT INTO administrativefunktion VALUES (5003, 'Sand', 'Verwaltungsverband', '''Verwaltungsverband'' ist eine kommunale Verwaltungskooperation zwischen Gemeinden.');
+INSERT INTO administrativefunktion VALUES (5004, 'Sand', 'Große kreisangehörige Stadt', '''Große kreisangehörige Stadt'' ist eine kreisangehörige Stadt, die bestimmte Verwaltungsfunktionen vom Landkreis/Kreis übernimmt. Hinweis: Unterscheidung zu 6013 ''Große kreisangehoerige Stadt'' aufgrund länderspezifischer Anforderungen.');
+INSERT INTO administrativefunktion VALUES (5006, 'Sand', 'Verwaltungsgemeinschaft', '''Verwaltungsgemeinschaft'' ist eine kommunale Verwaltungskooperation zwischen Gemeinden.');
+INSERT INTO administrativefunktion VALUES (5007, 'Sand', 'Amt', '''Amt'' ist eine kommunale Verwaltungskooperation zwischen Gemeinden.');
+INSERT INTO administrativefunktion VALUES (5008, 'Sand', 'Samtgemeinde', '''Samtgemeinde'' ist eine kommunale Verwaltungskooperation zwischen Gemeinden.');
+INSERT INTO administrativefunktion VALUES (5009, 'Sand', 'Gemeindeverwaltungsverband', '''Gemeindeverwaltungsverband'' ist eine kommunale Verwaltungskooperation zwischen Gemeinden.');
+INSERT INTO administrativefunktion VALUES (5012, 'Sand', 'Gemeinde, die sich einer erfüllenden Gemeinde bedient', '''Gemeinde, die sich einer erfüllenden Gemeinde bedient'' ist eine Gemeinde, die Verwaltungsfunktionen von einer anderen Gemeinde erfüllen lässt.');
+INSERT INTO administrativefunktion VALUES (5013, 'Sand', 'Erfüllende Gemeinde', '''Erfüllende Gemeinde'' ist eine Gemeinde, die Verwaltungsfunktionen für andere Gemeinden erfüllt.');
+INSERT INTO administrativefunktion VALUES (5014, 'Sand', 'Einheitsgemeinde', '''Einheitsgemeinde'' ist die Bezeichnung für eine bestimmte länderspezifische Form eines kommunalen Gemeindetyps in Deutschland.');
+INSERT INTO administrativefunktion VALUES (6001, 'Sand', 'Gemeinde', '''Gemeinde'' ist unterste selbständige Verwaltungseinheit.');
+INSERT INTO administrativefunktion VALUES (6002, 'Sand', 'Ortsgemeinde', '''Ortsgemeinde'' ist eine Gemeinde, die einer Verbandsgemeinde angehört.');
+INSERT INTO administrativefunktion VALUES (6003, 'Sand', 'Stadt', '''Stadt'' ist eine Gemeinde, die den Titel Stadt trägt.');
+INSERT INTO administrativefunktion VALUES (6004, 'Sand', 'Kreisangehörige Stadt', '''Kreisangehörige Stadt'' ist eine Stadt, die einem Landkreis/Kreis angehört.');
+INSERT INTO administrativefunktion VALUES (6005, 'Sand', 'Große Kreisstadt', '''Große Kreisstadt'' ist eine kreisangehörige Stadt, die bestimmte Verwaltungsfunktionen vom Landkreis/Kreis übernimmt.');
+INSERT INTO administrativefunktion VALUES (6006, 'Sand', 'Amtsangehörige Stadt', '''Amtsangehörige Stadt'' ist eine kreisangehörige Stadt, die einem Amt angehört.');
+INSERT INTO administrativefunktion VALUES (6007, 'Sand', 'Amtsangehörige Landgemeinde', '''Amtsangehörige Landgemeinde‘ ist eine kreisangehörige Gemeinde, die einem Amt angehört.');
+INSERT INTO administrativefunktion VALUES (6008, 'Sand', 'Amtsangehörige Gemeinde', '''Amtsangehörige Gemeinde'' ist eine kreisangehörige Gemeinde, die einem Amt angehört.');
+INSERT INTO administrativefunktion VALUES (6009, 'Sand', 'Kreisangehörige Gemeinde', '''Kreisangehörige Gemeinde'' ist eine Gemeinde, die einem Landkreis/Kreis angehört.');
+INSERT INTO administrativefunktion VALUES (6010, 'Sand', 'Mitgliedsgemeinde einer Verwaltungsgemeinschaft', '''Mitgliedsgemeinde einer Verwaltungsgemeinschaft'' ist eine kreisangehörige Gemeinde bzw. Stadt, die einer Verwaltungsgemeinschaft angehört.');
+INSERT INTO administrativefunktion VALUES (6011, 'Sand', 'Mitgliedsgemeinde', '''Mitgliedsgemeinde'' ist eine ''Gemeinde'', die Teil einer Verwaltungskooperation ist.');
+INSERT INTO administrativefunktion VALUES (6012, 'Sand', 'Markt', '''Markt'' ist eine kreisangehörige Gemeinde, die den Titel Markt trägt.');
+INSERT INTO administrativefunktion VALUES (6013, 'Sand', 'Große kreisangehoerige Stadt', '''Große kreisangehoerige Stadt'' ist eine kreisangehörige Stadt, die bestimmte Verwaltungsfunktionen vom Landkreis/Kreis übernimmt. Hinweis: Unterscheidung zu 5004 ''Große kreisangehörige Stadt'' aufgrund länderspezifischer Anforderungen.');
+INSERT INTO administrativefunktion VALUES (6014, 'Sand', 'Kreisangehörige Gemeinde, die die Bezeichnung Stadt führt', '''Kreisangehörige Gemeinde, die die Bezeichnung Stadt führt'' ist eine Gemeinde, die den Titel Stadt führt und einem Landkreis/Kreis angehört.');
+INSERT INTO administrativefunktion VALUES (6015, 'Sand', 'Gemeindefreies Gebiet', '''Gemeindefreies Gebiet'' ist ein Gebiet, das zu keiner Gemeinde gehört.');
+INSERT INTO administrativefunktion VALUES (6016, 'Sand', 'Gemeindefreier Bezirk', '');
+INSERT INTO administrativefunktion VALUES (6017, 'Sand', 'Landeshauptstadt', '');
+INSERT INTO administrativefunktion VALUES (6018, 'Sand', 'Bergstadt', '');
+INSERT INTO administrativefunktion VALUES (6019, 'Sand', 'Hansestadt', '');
+INSERT INTO administrativefunktion VALUES (6020, 'Sand', 'Inselgemeinde', '');
+INSERT INTO administrativefunktion VALUES (6021, 'Sand', 'Flecken', '');
+INSERT INTO administrativefunktion VALUES (7001, 'Sand', 'Gemeindeteil', '''Gemeindeteil'' ist ein räumlich abgetrennter Bereich einer Gemeinde.');
+INSERT INTO administrativefunktion VALUES (7003, 'Sand', 'Gemarkung', '''Gemarkung'' ist eine Flächeneinheit des Katasters.');
+INSERT INTO administrativefunktion VALUES (7004, 'Sand', 'Stadtteil', '''Stadtteil'' ist ein räumlich abgetrennter Bereich einer Stadt.');
+INSERT INTO administrativefunktion VALUES (7005, 'Sand', 'Stadtbezirk', '''Stadtbezirk'' ist ein abgegrenztes Gebiet einer Stadt.');
+INSERT INTO administrativefunktion VALUES (7007, 'Sand', 'Ortsteil (Gemeinde)', '''Ortsteil'' ist ein räumlich abgetrennter Bereich einer Gemeinde.');
+INSERT INTO administrativefunktion VALUES (8001, 'Sand', 'Kondominium', '''Kondominium'' ist ein Gebiet, welches unter der gemeinsamen Verwaltung mehrerer Staaten steht.');
+
+ALTER TABLE "geb01_f" ADD CONSTRAINT adm_fk FOREIGN KEY (adm) REFERENCES administrativefunktion(code);
+
+
+-- Attribute:  artdergebietsgrenze
+CREATE TABLE  artdergebietsgrenze (
+                                         code VARCHAR(4) PRIMARY KEY,
+                                         name_en TEXT,
+                                         name_de TEXT,
+                                         definition_de TEXT,
+                                         CONSTRAINT check_column_format CHECK (
+                                             code ~ '^[0-9]{4}$'
+                                             OR LENGTH(code) = 4
+)
+    );
+
+INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze eines Staates', '''Grenze eines Staates'' ist eine politische Grenze zwischen Staaten zur Sicherung der territorialen Integrität und der exakten Definition des räumlichen Geltungsbereichs staatlicher Rechtsordnungen.');
+INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze der Bundesrepublik Deutschland', '''Grenze der Bundesrepublik Deutschland'' begrenzt das Gebiet der Bundesrepublik Deutschland.');
+INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze des Bundeslandes', '''Grenze des Bundeslandes'' begrenzt das Gebiet einer Verwaltungseinheit auf der Bundeslandebene.');
+INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze des Regierungsbezirks', '''Grenze des Regierungsbezirks'' begrenzt das Gebiet einer Verwaltungseinheit auf der Regierungsbezirksebene.');
+INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze des Kreises / Kreisfreien Stadt / Region', '''Grenze des Kreises / Kreisfreien Stadt / Region'' begrenzt das Gebiet einer Verwaltungseinheit auf der Kreisebene bzw. der kreisfreien Stadt.');
+INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze der Verwaltungsgemeinschaft', '''Grenze der Verwaltungsgemeinschaft'' begrenzt das Gebiet einer Verwaltungseinheit auf der Verwaltungsgemeinschaftsebene.');
+INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze der Gemeinde', '''Grenze der Gemeinde'' begrenzt ein kommunales Gebiet auf der Gemeindeebene.');
+INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze des Gemeindeteils', '''Grenze des Gemeindeteils'' begrenzt das Gebiet einer Verwaltungseinheit auf der Gemeindeteilebene.');
+INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze eines Kondominiums', '''Grenze eines Kondominiums'' begrenzt ein Gebiet, das unter gemeinsamer Verwaltung von zwei oder mehreren Staaten steht.');
+
+ALTER TABLE "geb01_l" ADD CONSTRAINT agz_fk FOREIGN KEY (agz) REFERENCES artdergebietsgrenze(code);
