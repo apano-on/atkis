@@ -355,21 +355,32 @@ INSERT INTO widmung VALUES (1320, 44006, 'Waterbodies 1. order - state waterway'
 INSERT INTO widmung VALUES (1330, 44006, 'Waterbodies 2. order', 'Gewässer II. Ordnung' , '''Gewässer II. Ordnung'' ist ein Gewässer, für das die Unterhaltungsverbände zuständig sind.');
 INSERT INTO widmung VALUES (1340, 44006, 'Waterbodies 3. order', 'Gewässer III. Ordnung' , '''Gewässer III. Ordnung'' ist ein Gewässer, das weder zu den Gewässern I. noch II. Ordnung zählt.');
 
-ALTER TABLE "ver01_l" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm, objart) REFERENCES widmung(code, objart);
-
-ALTER TABLE "gew01_f" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm, objart) REFERENCES widmung(code, objart);
-ALTER TABLE "gew01_l" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm, objart) REFERENCES widmung(code, objart);
+-- Via the relation istTeilVon the objects of REOs AX_Strassenachse (42003) refer to the ZUSOs
+-- of the feature type AX_Strasse (42002). The concrete attribution is defined by the attributes
+-- OBJART_Z and OBJID_Z. The attributes of the ZUSO are attached to all related REOs.
+-- Hence we use objart_z instead of objart for the foreign key.
+ALTER TABLE "ver01_l" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm, objart_z) REFERENCES widmung(code, objart);
+-- Via the relation istTeilVon the objects of REOs AX_Fliessgewaesser (44001) refer to the
+-- ZUSOs of the feature type AX_Wasserlauf (44002) or AX_Kanal (44003). The concrete
+-- attribution is defined by the attributes OBJART_Z and OBJID_Z. The attributes of the ZUSO
+-- are attached to all related REOs.
+-- Hence we use objart_z instead of objart for the foreign key.
+ALTER TABLE "gew01_f" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm, objart_z) REFERENCES widmung(code, objart);
+-- Via the relation istTeilVon the objects of REOs AX_Gewaesserachse (44004) refer to the
+-- ZUSOs of the feature type AX_Wasserlauf (44002) or AX_Kanal (44003). The concrete
+-- attribution is defined by the attributes OBJART_Z and OBJID_Z. The attributes of the ZUSO
+-- are attached to all related REOs.
+-- Hence we use objart_z instead of objart for the foreign key.
+ALTER TABLE "gew01_l" ADD CONSTRAINT widmung_fk FOREIGN KEY (wdm, objart_z) REFERENCES widmung(code, objart);
 
 -- Attribute: zustand
 CREATE TABLE zustand (
-                         code VARCHAR(4) PRIMARY KEY,
-                         name_en TEXT,
-                         name_de TEXT,
-                         definition_de TEXT,
-                         CONSTRAINT check_column_format CHECK (
-                             code ~ '^[0-9]{4}$'
-                             OR LENGTH(code) = 4
-)
+    code VARCHAR(4) PRIMARY KEY,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$' OR LENGTH(code) = 4 )
     );
 INSERT INTO zustand VALUES (1000, 'Officially established', 'Amtlich festgestellt' , '''Amtlich festgestellt'' bedeutet, dass der Zustand für eine dem Natur-, Umwelt- oder Bodenschutzrecht unterliegende Fläche durch eine Verwaltungsstelle festgelegt wird.');
 INSERT INTO zustand VALUES (1100, 'In provisional state', 'In behelfsmäßigem Zustand' , '''In behelfsmäßigem Zustand'' bedeutet, dass das Gebäude nur eingeschränkt bewohnt oder genutzt werden kann.');
@@ -622,17 +633,16 @@ INSERT INTO sportart VALUES (1110, 'Horse racing', 'Pferderennsport' , '''Pferde
 INSERT INTO sportart VALUES (1115, 'Dog racing', 'Hunderennsport' , '''Hunderennsport'' bedeutet, dass eine Rennbahn zur Ausübung des Hunderennsports genutzt wird.');
 INSERT INTO sportart VALUES (1120, 'Dog sports', 'Hundesport' , '''Hundesport'' sind Sportanlagen für Hunde, die dem Training, Ausbildung, aber auch dem Wettkampf (keine Hunderennen!) dienen.');
 
+ALTER TABLE "sie03_p" ADD CONSTRAINT spo_fk FOREIGN KEY (spo) REFERENCES sportart(code);
 
 -- Attribute: archaeologischertyp
 CREATE TABLE archaeologischertyp (
-                          code VARCHAR(4) PRIMARY KEY ,
-                          name_en TEXT,
-                          name_de TEXT,
-                          definition_de TEXT,
-                          CONSTRAINT check_column_format CHECK (
-                              code ~ '^[0-9]{4}$'
-                              OR LENGTH(code) = 4
-)
+    code VARCHAR(4) PRIMARY KEY,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$' OR LENGTH(code) = 4)
     );
 
 INSERT INTO archaeologischertyp VALUES (1000, 'Grave', 'Grab' , '''Grab'' ist eine künstlich geschaffene Bestattungsstätte unter, auf oder über der Erdoberfläche.');
@@ -652,10 +662,12 @@ INSERT INTO archaeologischertyp VALUES (1510, 'City wall', 'Stadtmauer' , '');
 INSERT INTO archaeologischertyp VALUES (1520, 'Other historic wall', 'Sonstige historische Mauer' , '');
 INSERT INTO archaeologischertyp VALUES (9999, 'Other', 'Sonstiges' , '''Sonstiges'' bedeutet, dass der archäologische Typ bekannt, aber nicht in der Attributwertliste aufgeführt ist');
 
+ALTER TABLE "sie03_p" ADD CONSTRAINT atp_fk FOREIGN KEY (atp) REFERENCES archaeologischertyp(code);
+
 -- Attribute: abbaugut
 CREATE TABLE abbaugut (
     code VARCHAR(4),
-    objart VARCHAR(5).
+    objart VARCHAR(5),
     name_en TEXT,
     name_de TEXT,
     definition_de TEXT,
@@ -746,19 +758,16 @@ INSERT INTO abbaugut VALUES (5009, 41005, 'Feldspar', 'Feldspat', '''Feldspat'' 
 INSERT INTO abbaugut VALUES (5010, 41005, 'Pegmatite sand', 'Pegmatitsand', '''Pegmatitsand'' ist ein Abbaugut, das durch Verwitterung von Granit und Gneis entstanden ist.');
 INSERT INTO abbaugut VALUES (9999, 41005, 'Other', 'Sonstiges', '''Sonstiges'' bedeutet, dass das Abbaugut bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
 
-ALTER TABLE "sie02_f" ADD CONSTRAINT agt_fk FOREIGN KEY (agt, objart) REFERENCES konstruktionsmerkmalbauart(code, objart);
+ALTER TABLE "sie02_f" ADD CONSTRAINT agt_fk FOREIGN KEY (agt, objart) REFERENCES abbaugut(code, objart);
 
 -- Attribute: konstruktionsmerkmalbauart
 CREATE TABLE konstruktionsmerkmalbauart (
-                          code VARCHAR(4),
-                          name_en TEXT,
-                          name_de TEXT,
-                          definition_de TEXT,
-                          PRIMARY KEY (code, objart),
-                          CONSTRAINT check_column_format CHECK (
-                              code ~ '^[0-9]{4}$'
-                              OR LENGTH(code) = 4
-)
+    code VARCHAR(4) PRIMARY KEY ,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+    code ~ '^[0-9]{4}$' OR LENGTH(code) = 4)
     );
 
 INSERT INTO konstruktionsmerkmalbauart VALUES (1010, 'Boat lift', 'Schiffshebewerk', '''Schiffshebewerk'' ist ein Bauwerk zum Überwinden einer Fallstufe (in Binnenwasserstraßen und Kanälen) mit Förderung der Schiffe in einem Trog.');
@@ -787,15 +796,12 @@ ALTER TABLE "ver03_l" ADD CONSTRAINT gls_fk FOREIGN KEY (gls) REFERENCES anzahld
 
 -- Attribute: spurweite
 CREATE TABLE spurweite (
-             code VARCHAR(4) PRIMARY KEY ,
-             name_en TEXT,
-             name_de TEXT,
-             definition_de TEXT,
-             PRIMARY KEY (code, objart),
-             CONSTRAINT check_column_format CHECK (
-                 code ~ '^[0-9]{4}$'
-                 OR LENGTH(code) = 4
-)
+    code VARCHAR(4) PRIMARY KEY,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$' OR LENGTH(code) = 4 )
     );
 
 INSERT INTO spurweite VALUES (1000, 'Standard gauge', 'Normalspur (Regelspur, Vollspur)', '''Normalspur (Regelspur, Vollspur)'' hat eine Spurweite von 1435 mm. Das ist das Innenmaß zwischen den Innenkanten der Schienenköpfe eines Gleises.');
@@ -803,7 +809,7 @@ INSERT INTO spurweite VALUES (2000, 'Narrow gauge', 'Schmalspur', '''Schmalspur'
 INSERT INTO spurweite VALUES (3000, 'Broad gauge', 'Breitspur', '''Breitspur'' ist eine Spurweite, die größer ist als 1435 mm.');
 INSERT INTO spurweite VALUES (9997, 'Attribute not applicable', 'Attribut trifft nicht zu', '''Attribut trifft nicht zu'' bedeutet, dass keiner der in der Werteliste aufgeführten Attributwerte dem vorliegenden Sachverhalt entspricht.');
 
-ALTER TABLE "ver03_l" ADD CONSTRAINT gls_fk FOREIGN KEY (spw) REFERENCES spurweite(code);
+ALTER TABLE "ver03_l" ADD CONSTRAINT spw_fk FOREIGN KEY (spw) REFERENCES spurweite(code);
 
 -- Attribute: spurweite
 CREATE TABLE verkehrsdienst (
@@ -856,21 +862,19 @@ INSERT INTO nutzung VALUES (1000, 52002, 'Civilian', 'Zivil', '''Zivil'' bedeute
 INSERT INTO nutzung VALUES (2000, 52002, 'Military', 'Militärisch', '''Militärisch'' bedeutet, dass ''Hafen'' nur von Streitkräften genutzt wird.');
 INSERT INTO nutzung VALUES (3000, 52002, 'Partly civilian, partly military', 'Teils zivil, teils militärisch', '''Teils zivil, teils militärisch'' bedeutet, dass ''Hafen'' sowohl zivil als auch militärisch genutzt wird.');
 
-ALTER TABLE "ver04_f" ADD CONSTRAINT ntz_fk FOREIGN KEY (ntz, objart) REFERENCES verkehrsdienst(code, objart);
-ALTER TABLE "veg02_g" ADD CONSTRAINT ntz_fk FOREIGN KEY (ntz, objart) REFERENCES verkehrsdienst(code, objart);
+ALTER TABLE "ver04_f" ADD CONSTRAINT ntz_fk FOREIGN KEY (ntz, objart) REFERENCES nutzung(code, objart);
+ALTER TABLE "veg02_f" ADD CONSTRAINT ntz_fk FOREIGN KEY (ntz, objart) REFERENCES nutzung(code, objart);
 
 -- Attribute: oberflaechenmaterial
 CREATE TABLE oberflaechenmaterial (
-                         code VARCHAR(4),
-                         objart VARCHAR(5),
-                         name_en TEXT,
-                         name_de TEXT,
-                         definition_de TEXT,
-                         PRIMARY KEY (code, objart),
-                         CONSTRAINT check_column_format CHECK (
-                             code ~ '^[0-9]{4}$'
-                             OR LENGTH(code) = 4
-)
+    code VARCHAR(4),
+    objart VARCHAR(5),
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    PRIMARY KEY (code, objart),
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$' OR LENGTH(code) = 4 )
     );
 
 INSERT INTO oberflaechenmaterial VALUES (1210, 53007, 'Grass, lawn', 'Gras, Rasen', '''Gras, Rasen'' bedeutet, dass die Oberfläche von ''Flugverkehrsanlage'' mit Gras bewachsen ist.');
@@ -1062,11 +1066,11 @@ INSERT INTO art VALUES (1730, 57002, 'Sand', 'Personenfährverkehr', '''Personen
 INSERT INTO art VALUES (1740, 57002, 'Sand', 'Linienverkehr', '''Linienverkehr'' ist die auf einer festgelegten Route nach einem festen Fahrplan verkehrende Güter- und Personenschifffahrt.');
 INSERT INTO art VALUES (1910, 61003, 'Sand', 'Hochwasserdeich', '''Hochwasserdeich'' ist ein Deich an einem Fliessgewässer oder im Küstengebiet, der dem Schutz eines Gebietes vor Hochwasser oder gegen Sturmfluten dient.');
 INSERT INTO art VALUES (1920, 61003, 'Sand', 'Hauptdeich, Landesschutzdeich', '''Hauptdeich, Landesschutzdeich'' ist ein Deich der ersten Deichlinie zum Schutz der Küsten- und Inselgebiete gegen Sturmflut.');
-INSERT INTO art VALUES (1940, 61003, 'Sand', 'Überlaufdeich', '''Überlaufdeich'' ist ein Deich vor dem Hauptdeich, der in erster Linie dem Schutz landwirtschaftlich genutzter Flächen gegen leichte Sturmtiden dient und der bei höheren Sturmtiden überströmt wird.');
-INSERT INTO art VALUES (1950, 61003, 'Sand', 'Leitdeich', '''Leitdeich'' ist ein dammartiges Bauwerk im Watt, um strömendes Wasser in bestimmte Richtungen zu lenken und zum Schutz von Wasserläufen im Watt (Außentiefs) vor Versandung.');
-INSERT INTO art VALUES (1960, 61003, 'Sand', 'Polderdeich', '''Polderdeich'' ist ein vor dem Hauptdeich liegender Deich, der landwirtschaftlich nutzbares Land (z. B. Marschland) schützt.');
-INSERT INTO art VALUES (1970, 61003, 'Sand', 'Schlafdeich', '''Schlafdeich'' ist ein ehemaliger Hauptdeich, der infolge einer Vorverlegung der Deichlinie zu einem Binnendeich geworden ist und keine unmittelbare Schutzaufgabe mehr zu erfüllen hat.');
-INSERT INTO art VALUES (1980, 61003, 'Sand', 'Mitteldeich', '''Mitteldeich'' ist ein Deich der 2. Deichlinie, auch an größeren Flüssen. Er soll Überschwemmungen beim Bruch des Deiches der ersten Deichlinie verhindern.');
+INSERT INTO art VALUES (1930, 61003, 'Sand', 'Überlaufdeich', '''Überlaufdeich'' ist ein Deich vor dem Hauptdeich, der in erster Linie dem Schutz landwirtschaftlich genutzter Flächen gegen leichte Sturmtiden dient und der bei höheren Sturmtiden überströmt wird.');
+INSERT INTO art VALUES (1940, 61003, 'Sand', 'Leitdeich', '''Leitdeich'' ist ein dammartiges Bauwerk im Watt, um strömendes Wasser in bestimmte Richtungen zu lenken und zum Schutz von Wasserläufen im Watt (Außentiefs) vor Versandung.');
+INSERT INTO art VALUES (1950, 61003, 'Sand', 'Polderdeich', '''Polderdeich'' ist ein vor dem Hauptdeich liegender Deich, der landwirtschaftlich nutzbares Land (z. B. Marschland) schützt.');
+INSERT INTO art VALUES (1960, 61003, 'Sand', 'Schlafdeich', '''Schlafdeich'' ist ein ehemaliger Hauptdeich, der infolge einer Vorverlegung der Deichlinie zu einem Binnendeich geworden ist und keine unmittelbare Schutzaufgabe mehr zu erfüllen hat.');
+INSERT INTO art VALUES (1970, 61003, 'Sand', 'Mitteldeich', '''Mitteldeich'' ist ein Deich der 2. Deichlinie, auch an größeren Flüssen. Er soll Überschwemmungen beim Bruch des Deiches der ersten Deichlinie verhindern.');
 INSERT INTO art VALUES (1980, 61003, 'Sand', 'Binnendeich', '''Binnendeich'' ist ein Deich an kleineren Wasserläufen, der Überschwemmungen durch ablaufendes Oberflächenwasser verhindern soll.');
 INSERT INTO art VALUES (1990, 61003, 'Sand', 'Wall', '''Wall'' ist ein meist künstlich aus Erde und Feldsteinen oder Torf errichtetes, langgestrecktes und schmales Landschaftselement, das oft ein- oder beidseitig von Aushubgräben begleitet wird und keinen nennenswerten Bewuchs trägt.');
 INSERT INTO art VALUES (1991, 61003, 'Sand', 'Wallkante, rechts', '');
@@ -1184,99 +1188,101 @@ INSERT INTO art VALUES (6100, 96008, 'Sand', 'Katasterblatt', '');
 INSERT INTO art VALUES (6200, 96008, 'Sand', 'Pseudoblatt', '');
 INSERT INTO art VALUES (6300, 96008, 'Sand', 'Erwerberblatt', '');
 INSERT INTO art VALUES (6400, 96008, 'Sand', 'Fiktives Blatt', '');
-INSERT INTO art VALUES (0050, 08110, 'Sand', 'Änderungsdatensätze an Justizverwaltung', '');
-INSERT INTO art VALUES (0010, 08110, 'Sand', 'Bestandsdatenauszug', 'Der ''Bestandsdatenauszug'' enthält alle Objekte, die aufgrund der Auswertung des Attributes ''Anforderungsmerkmale'' der Prozess-Objektart ''Benutzungsauftrag'' aus den Bestandsdaten selektiert werden.');
-INSERT INTO art VALUES (0060, 08110, 'Sand', 'Bestandsdatenauszug Basis-DLM', '''Bestandsdatenauszug Basis-DLM'' ist ein ''Bestandsdatenauszug'' aus dem Basis-DLM.');
-INSERT INTO art VALUES (0090, 08110, 'Sand', 'Bestandsdatenauszug DHM', '');
-INSERT INTO art VALUES (0063, 08110, 'Sand', 'Bestandsdatenauszug DLM1000', '');
-INSERT INTO art VALUES (0062, 08110, 'Sand', 'Bestandsdatenauszug DLM250', '');
-INSERT INTO art VALUES (0061, 08110, 'Sand', 'Bestandsdatenauszug DLM50', '''Bestandsdatenauszug DLM50'' ist ein ''Bestandsdatenauszug'' aus dem DLM50.');
-INSERT INTO art VALUES (0080, 08110, 'Sand', 'Bestandsdatenauszug DTK10', '');
-INSERT INTO art VALUES (0083, 08110, 'Sand', 'Bestandsdatenauszug DTK100', '');
-INSERT INTO art VALUES (0085, 08110, 'Sand', 'Bestandsdatenauszug DTK1000', '');
-INSERT INTO art VALUES (0081, 08110, 'Sand', 'Bestandsdatenauszug DTK25', '');
-INSERT INTO art VALUES (0084, 08110, 'Sand', 'Bestandsdatenauszug DTK250', '');
-INSERT INTO art VALUES (0082, 08110, 'Sand', 'Bestandsdatenauszug DTK50', '');
-INSERT INTO art VALUES (0086, 08110, 'Sand', 'Bestandsdatenauszug TFIS25', '');
-INSERT INTO art VALUES (0087, 08110, 'Sand', 'Bestandsdatenauszug TFIS50', '');
-INSERT INTO art VALUES (0065, 08110, 'Sand', 'Bestandsdatenauszug - Grunddatenbestand - Basis-DLM', '''Bestandsdatenauszug - Grunddatenbestand - Basis-DLM'' ist ein ''Bestandsdatenauszug'' aus dem Grunddatenbestand des Basis-DLM.');
-INSERT INTO art VALUES (0066, 08110, 'Sand', 'Bestandsdatenauszug - Grunddatenbestand - DLM50', '');
-INSERT INTO art VALUES (0700, 08110, 'Sand', 'Bestandsnachweis', '');
-INSERT INTO art VALUES (0701, 08110, 'Sand', 'Bestandsnachweis - Grunddatenbestand', '');
-INSERT INTO art VALUES (4075, 08110, 'Sand', 'Einzelnachweis Geodätischer Grundnetzpunkt', '');
-INSERT INTO art VALUES (4050, 08110, 'Sand', 'Einzelnachweis Höhenfestpunkt', '');
-INSERT INTO art VALUES (4040, 08110, 'Sand', 'Einzelnachweis Lagefestpunkt', '');
-INSERT INTO art VALUES (4070, 08110, 'Sand', 'Einzelnachweis Referenzstationspunkt', '');
-INSERT INTO art VALUES (4060, 08110, 'Sand', 'Einzelnachweis Schwerefestpunkt', '');
-INSERT INTO art VALUES (1121, 08110, 'Sand', 'Flurstücks-, Bodenschätzungs- und Eigentümerangaben', '');
-INSERT INTO art VALUES (1111, 08110, 'Sand', 'Flurstücks- und Eigentümerangaben (ohne Bodenschätzung)', '');
-INSERT INTO art VALUES (0550, 08110, 'Sand', 'Flurstücks- und Eigentumsnachweis', '');
-INSERT INTO art VALUES (0560, 08110, 'Sand', 'Flurstücks- und Eigentumsnachweis mit Bodenschätzung', '');
-INSERT INTO art VALUES (0561, 08110, 'Sand', 'Flurstücks- und Eigentumsnachweis mit Bodenschätzung - Grunddatenbestand', '');
-INSERT INTO art VALUES (0551, 08110, 'Sand', 'Flurstücks- und Eigentumsnachweis - Grunddatenbestand', '');
-INSERT INTO art VALUES (0510, 08110, 'Sand', 'Flurstücksnachweis', '');
-INSERT INTO art VALUES (0520, 08110, 'Sand', 'Flurstücksnachweis mit Bodenschätzung', '');
-INSERT INTO art VALUES (0521, 08110, 'Sand', 'Flurstücksnachweis mit Bodenschätzung - Grunddatenbestand', '');
-INSERT INTO art VALUES (0511, 08110, 'Sand', 'Flurstücksnachweis - Grunddatenbestand', '');
-INSERT INTO art VALUES (1222, 08110, 'Sand', 'Fortführungsmitteilung an Eigentümer (ohne Eigentümerangaben)', '');
-INSERT INTO art VALUES (1223, 08110, 'Sand', 'Fortführungsmitteilung an Eigentümer (mit Eigentümerangaben)', '');
-INSERT INTO art VALUES (1212, 08110, 'Sand', 'Fortführungsnachweis (ohne Eigentümerangaben)', '');
-INSERT INTO art VALUES (1213, 08110, 'Sand', 'Fortführungsnachweis (mit Eigentümerangaben)', '');
-INSERT INTO art VALUES (1220, 08110, 'Sand', 'Fortführungsmitteilung an Eigentümer', '');
-INSERT INTO art VALUES (1230, 08110, 'Sand', 'Fortführungsmitteilung an Finanzverwaltung', '');
-INSERT INTO art VALUES (1250, 08110, 'Sand', 'Fortführungsmitteilung an Justizverwaltung', '');
-INSERT INTO art VALUES (1210, 08110, 'Sand', 'Fortführungsnachweis bei Fortführung', 'Dieser Benutzungsanlass ist nicht für manuelle Nutzung konzipiert, sondern er wird im Rahmen der Fortführungsverarbeitung automatisiert angestoßen.');
-INSERT INTO art VALUES (1211, 08110, 'Sand', 'Fortführungsnachweis nachträglich angefordert', '');
-INSERT INTO art VALUES (0900, 08110, 'Sand', 'Gebäudenachweis', '');
-INSERT INTO art VALUES (0800, 08110, 'Sand', 'Georeferenzierte Gebäudeadresse', '');
-INSERT INTO art VALUES (0600, 08110, 'Sand', 'Grundstücksnachweis', '');
-INSERT INTO art VALUES (0601, 08110, 'Sand', 'Grundstücksnachweis - Grunddatenbestand', '');
-INSERT INTO art VALUES (0110, 08110, 'Sand', 'Liegenschaftskarte', '');
-INSERT INTO art VALUES (0120, 08110, 'Sand', 'Liegenschaftskarte mit Bodenschätzung', '');
-INSERT INTO art VALUES (1120, 08110, 'Sand', 'Liegenschaftskarte mit Bodenschätzung und Eigentümerangaben', '');
-INSERT INTO art VALUES (0121, 08110, 'Sand', 'Liegenschaftskarte mit Bodenschätzung - Grunddatenbestand', '');
-INSERT INTO art VALUES (1110, 08110, 'Sand', 'Liegenschaftskarte mit Flurstücks- und Eigentümerangaben (ohne Bodenschätzung)', '');
-INSERT INTO art VALUES (1020, 08110, 'Sand', 'Liegenschaftskarte mit Punktnummern', '');
-INSERT INTO art VALUES (1000, 08110, 'Sand', 'Liegenschaftskarte mit Punktnummern und Punktliste', '');
-INSERT INTO art VALUES (0111, 08110, 'Sand', 'Liegenschaftskarte - Grunddatenbestand', '');
-INSERT INTO art VALUES (2300, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen', '');
-INSERT INTO art VALUES (2332, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen - Abmarkungsprotokollnummer', '');
-INSERT INTO art VALUES (2331, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen - Fortführungsnachweisnummer', '');
-INSERT INTO art VALUES (2334, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen - Punktkennung - Folgepunktnummer', '');
-INSERT INTO art VALUES (2333, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen - Punktkennung - Leitpunktnummer', '');
-INSERT INTO art VALUES (2320, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Flurstückskennzeichen', '');
-INSERT INTO art VALUES (2310, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - allgemein', '');
-INSERT INTO art VALUES (2315, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Aufnahmepunkt', '');
-INSERT INTO art VALUES (2318, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Besonderer Bauwerkspunkt', '');
-INSERT INTO art VALUES (2312, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Besonderer Gebäudepunkt', '');
-INSERT INTO art VALUES (2314, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Besonderer topographischer Punkt', '');
-INSERT INTO art VALUES (2311, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Grenzpunkt', '');
-INSERT INTO art VALUES (2316, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Sicherungspunkt', '');
-INSERT INTO art VALUES (2317, 08110, 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Sonstiger Vermessungspunkt', '');
-INSERT INTO art VALUES (1050, 08110, 'Sand', 'Nachweis der Aufnahmepunkte', '');
-INSERT INTO art VALUES (0040, 08110, 'Sand', 'Nutzerbezogene Bestandsdatenaktualisierung (NBA)', '''Nutzerbezogene Bestandsdatenaktualisierung (NBA)'' dient der Führung von Sekundärdatenbeständen mittels Datenerstausstattung und nachfolgender differenzieller Updates (stichtags- oder fallbezogen). Der Dateninhalt entspricht der festgelegten räumlichen und/oder semantischen Selektion aus dem Gesamtdatenbestand.');
-INSERT INTO art VALUES (0075, 08110, 'Sand', 'Nutzerbezogene Bestandsdatenaktualisierung (NBA) DLM1000', '');
-INSERT INTO art VALUES (0074, 08110, 'Sand', 'Nutzerbezogene Bestandsdatenaktualisierung (NBA) DLM250', '');
-INSERT INTO art VALUES (0070, 08110, 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) Basis-DLM', '''Nutzerbezogene Bestandsdatenaktualisierung (NBA) Basis-DLM'' ist eine ''NBA'' aus dem Basis-DLM.');
-INSERT INTO art VALUES (0071, 08110, 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) DLM50', '');
-INSERT INTO art VALUES (0072, 08110, 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) - Grundatenbestand - Basis-DLM', '''Nutzerbezogene Bestandsdatenaktualisierung (NBA) - Grunddatenbestand - Basis-DLM'' ist eine ''NBA'' aus dem Grunddatenbestand des Basis-DLM.');
-INSERT INTO art VALUES (0073, 08110, 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) - Grunddatenbestand - DLM50', '');
-INSERT INTO art VALUES (1010, 08110, 'Sand', 'Punktliste', '');
-INSERT INTO art VALUES (4035, 08110, 'Sand', 'Punktliste Geodätische Grundnetzpunkte', '');
-INSERT INTO art VALUES (4010, 08110, 'Sand', 'Punktliste Höhenfestpunkte', '');
-INSERT INTO art VALUES (4000, 08110, 'Sand', 'Punktliste Lagefestpunkte', '');
-INSERT INTO art VALUES (4030, 08110, 'Sand', 'Punktliste Referenzstationspunkte', '');
-INSERT INTO art VALUES (4020, 08110, 'Sand', 'Punktliste Schwerefestpunkte', '');
-INSERT INTO art VALUES (2170, 08110, 'Sand', 'Amtliche Flächenstatistik', '');
-INSERT INTO art VALUES (2210, 08110, 'Sand', 'Statistik der Flächen nach dem Bewertungsgesetz (Aggregationseinheit: Gemarkung)', '');
-INSERT INTO art VALUES (2211, 08110, 'Sand', 'Statistik der Flächen nach dem Bewertungsgesetz (Aggregationseinheit: Gemarkung + Stichtag)', 'Der Stichtag wird im Benutzungsauftrag über das ''lebenszeitintervall’ der Gemarkung ausgedrückt und übermittelt.');
-INSERT INTO art VALUES (2400, 08110, 'Sand', 'Vergleichendes Punktnummernverzeichnis', '');
-INSERT INTO art VALUES (2402, 08110, 'Sand', 'VPN sortiert nach endgültigen Punktkennzeichen', '');
-INSERT INTO art VALUES (2401, 08110, 'Sand', 'VPN sortiert nach vorläufigen Punktkennzeichen', '');
-INSERT INTO art VALUES (1000, 08400, 'Sand', 'alleObjekte', 'Diese Werteart bedeutet eine zwingende Themenbildung. Dabei sind alle in der Themendefinition genannten Objektarten Bestandteil des Themas und die Objektarten teilen sich stets die Geometrien.');
+INSERT INTO art VALUES ('0050', '08110', 'Sand', 'Änderungsdatensätze an Justizverwaltung', '');
+INSERT INTO art VALUES ('0010', '08110', 'Sand', 'Bestandsdatenauszug', 'Der ''Bestandsdatenauszug'' enthält alle Objekte, die aufgrund der Auswertung des Attributes ''Anforderungsmerkmale'' der Prozess-Objektart ''Benutzungsauftrag'' aus den Bestandsdaten selektiert werden.');
+INSERT INTO art VALUES ('0060', '08110', 'Sand', 'Bestandsdatenauszug Basis-DLM', '''Bestandsdatenauszug Basis-DLM'' ist ein ''Bestandsdatenauszug'' aus dem Basis-DLM.');
+INSERT INTO art VALUES ('0090', '08110', 'Sand', 'Bestandsdatenauszug DHM', '');
+INSERT INTO art VALUES ('0063', '08110', 'Sand', 'Bestandsdatenauszug DLM1000', '');
+INSERT INTO art VALUES ('0062', '08110', 'Sand', 'Bestandsdatenauszug DLM250', '');
+INSERT INTO art VALUES ('0061', '08110', 'Sand', 'Bestandsdatenauszug DLM50', '''Bestandsdatenauszug DLM50'' ist ein ''Bestandsdatenauszug'' aus dem DLM50.');
+INSERT INTO art VALUES ('0080', '08110', 'Sand', 'Bestandsdatenauszug DTK10', '');
+INSERT INTO art VALUES ('0083', '08110', 'Sand', 'Bestandsdatenauszug DTK100', '');
+INSERT INTO art VALUES ('0085', '08110', 'Sand', 'Bestandsdatenauszug DTK1000', '');
+INSERT INTO art VALUES ('0081', '08110', 'Sand', 'Bestandsdatenauszug DTK25', '');
+INSERT INTO art VALUES ('0084', '08110', 'Sand', 'Bestandsdatenauszug DTK250', '');
+INSERT INTO art VALUES ('0082', '08110', 'Sand', 'Bestandsdatenauszug DTK50', '');
+INSERT INTO art VALUES ('0086', '08110', 'Sand', 'Bestandsdatenauszug TFIS25', '');
+INSERT INTO art VALUES ('0087', '08110', 'Sand', 'Bestandsdatenauszug TFIS50', '');
+INSERT INTO art VALUES ('0065', '08110', 'Sand', 'Bestandsdatenauszug - Grunddatenbestand - Basis-DLM', '''Bestandsdatenauszug - Grunddatenbestand - Basis-DLM'' ist ein ''Bestandsdatenauszug'' aus dem Grunddatenbestand des Basis-DLM.');
+INSERT INTO art VALUES ('0066', '08110', 'Sand', 'Bestandsdatenauszug - Grunddatenbestand - DLM50', '');
+INSERT INTO art VALUES ('0700', '08110', 'Sand', 'Bestandsnachweis', '');
+INSERT INTO art VALUES ('0701', '08110', 'Sand', 'Bestandsnachweis - Grunddatenbestand', '');
+INSERT INTO art VALUES (4075, '08110', 'Sand', 'Einzelnachweis Geodätischer Grundnetzpunkt', '');
+INSERT INTO art VALUES (4050, '08110', 'Sand', 'Einzelnachweis Höhenfestpunkt', '');
+INSERT INTO art VALUES (4040, '08110', 'Sand', 'Einzelnachweis Lagefestpunkt', '');
+INSERT INTO art VALUES (4070, '08110', 'Sand', 'Einzelnachweis Referenzstationspunkt', '');
+INSERT INTO art VALUES (4060, '08110', 'Sand', 'Einzelnachweis Schwerefestpunkt', '');
+INSERT INTO art VALUES (1121, '08110', 'Sand', 'Flurstücks-, Bodenschätzungs- und Eigentümerangaben', '');
+INSERT INTO art VALUES (1111, '08110', 'Sand', 'Flurstücks- und Eigentümerangaben (ohne Bodenschätzung)', '');
+INSERT INTO art VALUES ('0550', '08110', 'Sand', 'Flurstücks- und Eigentumsnachweis', '');
+INSERT INTO art VALUES ('0560', '08110', 'Sand', 'Flurstücks- und Eigentumsnachweis mit Bodenschätzung', '');
+INSERT INTO art VALUES ('0561', '08110', 'Sand', 'Flurstücks- und Eigentumsnachweis mit Bodenschätzung - Grunddatenbestand', '');
+INSERT INTO art VALUES ('0551', '08110', 'Sand', 'Flurstücks- und Eigentumsnachweis - Grunddatenbestand', '');
+INSERT INTO art VALUES ('0510', '08110', 'Sand', 'Flurstücksnachweis', '');
+INSERT INTO art VALUES ('0520', '08110', 'Sand', 'Flurstücksnachweis mit Bodenschätzung', '');
+INSERT INTO art VALUES ('0521', '08110', 'Sand', 'Flurstücksnachweis mit Bodenschätzung - Grunddatenbestand', '');
+INSERT INTO art VALUES ('0511', '08110', 'Sand', 'Flurstücksnachweis - Grunddatenbestand', '');
+INSERT INTO art VALUES (1222, '08110', 'Sand', 'Fortführungsmitteilung an Eigentümer (ohne Eigentümerangaben)', '');
+INSERT INTO art VALUES (1223, '08110', 'Sand', 'Fortführungsmitteilung an Eigentümer (mit Eigentümerangaben)', '');
+INSERT INTO art VALUES (1212, '08110', 'Sand', 'Fortführungsnachweis (ohne Eigentümerangaben)', '');
+INSERT INTO art VALUES (1213, '08110', 'Sand', 'Fortführungsnachweis (mit Eigentümerangaben)', '');
+INSERT INTO art VALUES (1220, '08110', 'Sand', 'Fortführungsmitteilung an Eigentümer', '');
+INSERT INTO art VALUES (1230, '08110', 'Sand', 'Fortführungsmitteilung an Finanzverwaltung', '');
+INSERT INTO art VALUES (1250, '08110', 'Sand', 'Fortführungsmitteilung an Justizverwaltung', '');
+INSERT INTO art VALUES (1210, '08110', 'Sand', 'Fortführungsnachweis bei Fortführung', 'Dieser Benutzungsanlass ist nicht für manuelle Nutzung konzipiert, sondern er wird im Rahmen der Fortführungsverarbeitung automatisiert angestoßen.');
+INSERT INTO art VALUES (1211, '08110', 'Sand', 'Fortführungsnachweis nachträglich angefordert', '');
+INSERT INTO art VALUES ('0900', '08110', 'Sand', 'Gebäudenachweis', '');
+INSERT INTO art VALUES ('0800', '08110', 'Sand', 'Georeferenzierte Gebäudeadresse', '');
+INSERT INTO art VALUES ('0600', '08110', 'Sand', 'Grundstücksnachweis', '');
+INSERT INTO art VALUES ('0601', '08110', 'Sand', 'Grundstücksnachweis - Grunddatenbestand', '');
+INSERT INTO art VALUES ('0110', '08110', 'Sand', 'Liegenschaftskarte', '');
+INSERT INTO art VALUES ('0120', '08110', 'Sand', 'Liegenschaftskarte mit Bodenschätzung', '');
+INSERT INTO art VALUES (1120, '08110', 'Sand', 'Liegenschaftskarte mit Bodenschätzung und Eigentümerangaben', '');
+INSERT INTO art VALUES ('0121', '08110', 'Sand', 'Liegenschaftskarte mit Bodenschätzung - Grunddatenbestand', '');
+INSERT INTO art VALUES (1110, '08110', 'Sand', 'Liegenschaftskarte mit Flurstücks- und Eigentümerangaben (ohne Bodenschätzung)', '');
+INSERT INTO art VALUES (1020, '08110', 'Sand', 'Liegenschaftskarte mit Punktnummern', '');
+INSERT INTO art VALUES (1000, '08110', 'Sand', 'Liegenschaftskarte mit Punktnummern und Punktliste', '');
+INSERT INTO art VALUES ('0111', '08110', 'Sand', 'Liegenschaftskarte - Grunddatenbestand', '');
+INSERT INTO art VALUES (2300, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen', '');
+INSERT INTO art VALUES (2332, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen - Abmarkungsprotokollnummer', '');
+INSERT INTO art VALUES (2331, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen - Fortführungsnachweisnummer', '');
+INSERT INTO art VALUES (2334, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen - Punktkennung - Folgepunktnummer', '');
+INSERT INTO art VALUES (2333, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen - Punktkennung - Leitpunktnummer', '');
+INSERT INTO art VALUES (2320, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen: Flurstückskennzeichen', '');
+INSERT INTO art VALUES (2310, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - allgemein', '');
+INSERT INTO art VALUES (2315, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Aufnahmepunkt', '');
+INSERT INTO art VALUES (2318, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Besonderer Bauwerkspunkt', '');
+INSERT INTO art VALUES (2312, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Besonderer Gebäudepunkt', '');
+INSERT INTO art VALUES (2314, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Besonderer topographischer Punkt', '');
+INSERT INTO art VALUES (2311, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Grenzpunkt', '');
+INSERT INTO art VALUES (2316, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Sicherungspunkt', '');
+INSERT INTO art VALUES (2317, '08110', 'Sand', 'Liste der reservierten Fachkennzeichen: Punktkennung - Sonstiger Vermessungspunkt', '');
+INSERT INTO art VALUES (1050, '08110', 'Sand', 'Nachweis der Aufnahmepunkte', '');
+INSERT INTO art VALUES ('0040', '08110', 'Sand', 'Nutzerbezogene Bestandsdatenaktualisierung (NBA)', '''Nutzerbezogene Bestandsdatenaktualisierung (NBA)'' dient der Führung von Sekundärdatenbeständen mittels Datenerstausstattung und nachfolgender differenzieller Updates (stichtags- oder fallbezogen). Der Dateninhalt entspricht der festgelegten räumlichen und/oder semantischen Selektion aus dem Gesamtdatenbestand.');
+INSERT INTO art VALUES ('0075', '08110', 'Sand', 'Nutzerbezogene Bestandsdatenaktualisierung (NBA) DLM1000', '');
+INSERT INTO art VALUES ('0074', '08110', 'Sand', 'Nutzerbezogene Bestandsdatenaktualisierung (NBA) DLM250', '');
+INSERT INTO art VALUES ('0070', '08110', 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) Basis-DLM', '''Nutzerbezogene Bestandsdatenaktualisierung (NBA) Basis-DLM'' ist eine ''NBA'' aus dem Basis-DLM.');
+INSERT INTO art VALUES ('0071', '08110', 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) DLM50', '');
+INSERT INTO art VALUES ('0072', '08110', 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) - Grundatenbestand - Basis-DLM', '''Nutzerbezogene Bestandsdatenaktualisierung (NBA) - Grunddatenbestand - Basis-DLM'' ist eine ''NBA'' aus dem Grunddatenbestand des Basis-DLM.');
+INSERT INTO art VALUES ('0073', '08110', 'Sand', 'Nutzerbezogener Bestandsdatenaktualisierung (NBA) - Grunddatenbestand - DLM50', '');
+INSERT INTO art VALUES (1010, '08110', 'Sand', 'Punktliste', '');
+INSERT INTO art VALUES (4035, '08110', 'Sand', 'Punktliste Geodätische Grundnetzpunkte', '');
+INSERT INTO art VALUES (4010, '08110', 'Sand', 'Punktliste Höhenfestpunkte', '');
+INSERT INTO art VALUES (4000, '08110', 'Sand', 'Punktliste Lagefestpunkte', '');
+INSERT INTO art VALUES (4030, '08110', 'Sand', 'Punktliste Referenzstationspunkte', '');
+INSERT INTO art VALUES (4020, '08110', 'Sand', 'Punktliste Schwerefestpunkte', '');
+INSERT INTO art VALUES (2170, '08110', 'Sand', 'Amtliche Flächenstatistik', '');
+INSERT INTO art VALUES (2210, '08110', 'Sand', 'Statistik der Flächen nach dem Bewertungsgesetz (Aggregationseinheit: Gemarkung)', '');
+INSERT INTO art VALUES (2211, '08110', 'Sand', 'Statistik der Flächen nach dem Bewertungsgesetz (Aggregationseinheit: Gemarkung + Stichtag)', 'Der Stichtag wird im Benutzungsauftrag über das ''lebenszeitintervall’ der Gemarkung ausgedrückt und übermittelt.');
+INSERT INTO art VALUES (2400, '08110', 'Sand', 'Vergleichendes Punktnummernverzeichnis', '');
+INSERT INTO art VALUES (2402, '08110', 'Sand', 'VPN sortiert nach endgültigen Punktkennzeichen', '');
+INSERT INTO art VALUES (2401, '08110', 'Sand', 'VPN sortiert nach vorläufigen Punktkennzeichen', '');
+INSERT INTO art VALUES (1000, '08400', 'Sand', 'alleObjekte', 'Diese Werteart bedeutet eine zwingende Themenbildung. Dabei sind alle in der Themendefinition genannten Objektarten Bestandteil des Themas und die Objektarten teilen sich stets die Geometrien.');
 
 ALTER TABLE "ver04_f" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
-ALTER TABLE "ver05_l" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
+-- 1710#1730 present for art in ver05_l
+-- TODO: Fix data quality issue or drop value?
+--ALTER TABLE "ver05_l" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
 ALTER TABLE "ver06_l" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
 ALTER TABLE "ver06_p" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
 ALTER TABLE "gew02_f" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
@@ -1287,14 +1293,12 @@ ALTER TABLE "rel02_p" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES
 
 -- Attribute: vegetationsmerkmal
 CREATE TABLE vegetationsmerkmal (
-                     code VARCHAR(4) PRIMARY KEY,
-                     name_en TEXT,
-                     name_de TEXT,
-                     definition_de TEXT,
-                     CONSTRAINT check_column_format CHECK (
-                         code ~ '^[0-9]{4}$'
-                         OR LENGTH(code) = 4
-)
+    code VARCHAR(4) PRIMARY KEY,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$' OR LENGTH(code) = 4 )
     );
 
 INSERT INTO vegetationsmerkmal VALUES (1010, 'Sand', 'Ackerland', '''Ackerland'' ist eine Fläche für den Anbau von Feldfrüchten (z.B. Getreide, Hülsenfrüchte, Hackfrüchte) und Beerenfrüchten (z.B. Erdbeeren).');
@@ -1319,14 +1323,12 @@ ALTER TABLE "veg01_f" ADD CONSTRAINT veg_fk FOREIGN KEY (veg) REFERENCES vegetat
 
 -- Attribute: bewuchs
 CREATE TABLE bewuchs (
-                                    code VARCHAR(4) PRIMARY KEY,
-                                    name_en TEXT,
-                                    name_de TEXT,
-                                    definition_de TEXT,
-                                    CONSTRAINT check_column_format CHECK (
-                                        code ~ '^[0-9]{4}$'
-                                        OR LENGTH(code) = 4
-)
+    code VARCHAR(4) PRIMARY KEY,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$' OR LENGTH(code) = 4 )
     );
 
 INSERT INTO bewuchs VALUES (1011, 'Sand', 'Nadelbaum', '''Nadelbaum'' beschreibt die Zugehörigkeit eines einzeln stehenden Baumes zur Gruppe der Nadelhölzer.');
@@ -1358,14 +1360,12 @@ ALTER TABLE "veg04_f" ADD CONSTRAINT bws_fk FOREIGN KEY (bws) REFERENCES bewuchs
 
 -- Attribute: schifffahrtskategorie
 CREATE TABLE schifffahrtskategorie (
-                         code VARCHAR(4) PRIMARY KEY,
-                         name_en TEXT,
-                         name_de TEXT,
-                         definition_de TEXT,
-                         CONSTRAINT check_column_format CHECK (
-                             code ~ '^[0-9]{4}$'
-                             OR LENGTH(code) = 4
-)
+    code VARCHAR(4) PRIMARY KEY,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$' OR LENGTH(code) = 4 )
     );
 INSERT INTO schifffahrtskategorie VALUES (1000, 'Sand', 'Binnenwasserstraße', '''Binnenwasserstraße'' ist ein oberirdisches Gewässer oder Küstengewässer, das gesetzlich für den Personen- und/oder Güterverkehr mit Schiffen bestimmt ist. Binnengewässer im Küstengebiet sind gegen das Küstengewässer gesetzlich abgegrenzt. Die ''Binnenwasserstraße'' ist ein Gewässer 1. Ordnung.');
 INSERT INTO schifffahrtskategorie VALUES (2000, 'Sand', 'Seewasserstraße', '''Seewasserstraße'' ist ein als Wasserstraße gesetzlich festgelegter Teil eines Küstengewässers. Die ''Seewasserstraße'' ist ein Gewässer 1. Ordnung.');
@@ -1378,14 +1378,12 @@ ALTER TABLE "gew03_l" ADD CONSTRAINT sfk_fk FOREIGN KEY (sfk) REFERENCES schifff
 
 -- Attribute:  artdergewaesserstationierungsachse
 CREATE TABLE  artdergewaesserstationierungsachse (
-                                       code VARCHAR(4) PRIMARY KEY,
-                                       name_en TEXT,
-                                       name_de TEXT,
-                                       definition_de TEXT,
-                                       CONSTRAINT check_column_format CHECK (
-                                           code ~ '^[0-9]{4}$'
-                                           OR LENGTH(code) = 4
-)
+    code VARCHAR(4) PRIMARY KEY,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$' OR LENGTH(code) = 4 )
     );
 INSERT INTO artdergewaesserstationierungsachse VALUES (1000, 'Sand', 'Gewässerstationierungsachse der WSV', '''Gewässerstationierungsachse der WSV'' ist eine Gewässerachse, deren Geometrie unverändert aus den Unterlagen der Wasser- und Schifffahrtsverwaltung übernommen wurde.');
 INSERT INTO artdergewaesserstationierungsachse VALUES (2000, 'Sand', 'Genäherte Mittellinie in Gewässern', '''Genäherte Mittellinie in Gewässern'' ist eine Gewässerachse, die den Spezifikationen der Richtlinie der ''Gebiets- und Gewässerverschlüsselung'' der Länderarbeitsgemeinschaft Wasser (LAWA) entspricht.');
@@ -1396,14 +1394,12 @@ ALTER TABLE "gew03_l" ADD CONSTRAINT aga_fk FOREIGN KEY (aga) REFERENCES artderg
 
 -- Attribute:  landschaftstyp
 CREATE TABLE  landschaftstyp (
-                                                     code VARCHAR(4) PRIMARY KEY,
-                                                     name_en TEXT,
-                                                     name_de TEXT,
-                                                     definition_de TEXT,
-                                                     CONSTRAINT check_column_format CHECK (
-                                                         code ~ '^[0-9]{4}$'
-                                                         OR LENGTH(code) = 4
-)
+    code VARCHAR(4) PRIMARY KEY,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$' OR LENGTH(code) = 4 )
     );
 INSERT INTO landschaftstyp VALUES (1100, 'Sand', 'Gebirge, Bergland, Hügelland', '''Gebirge, Bergland, Hügelland'' bezeichnet eine zusammenhängende größere Erhebung der Erdoberfläche. Es besteht aus einzelnen Bergen und Hochflächen, die durch Täler und Senken gegliedert sind.');
 INSERT INTO landschaftstyp VALUES (1200, 'Sand', 'Berg, Berge', '''Berg, Berge'' bezeichnet eine über die Umgebung deutlich herausragende Geländeerhebung, einzeln oder als Teil eines Gebirges.');
@@ -1420,20 +1416,20 @@ INSERT INTO landschaftstyp VALUES (2200, 'Sand', 'Siedlungs-, Wirtschaftslandsch
 INSERT INTO landschaftstyp VALUES (2300, 'Sand', 'Moorlandschaft', '''Moorlandschaft'' ist eine durch heutige und ehemalige Moore gekennzeichnete Landschaft.');
 INSERT INTO landschaftstyp VALUES (2400, 'Sand', 'Heidelandschaft', '''Heidelandschaft'' ist eine waldfreie Landschaft der unteren Höhenstufen, die von einer mehr oder weniger lockeren Zwergstrauchformation geprägt wird.');
 INSERT INTO landschaftstyp VALUES (2500, 'Sand', 'Küstenlandschaft', '''Küstenlandschaft'' enthält jene auf dem Festland gelegenen Gebiete, die dem Meer abgerungen worden sind (Polder, Marschen), deren Entstehung dem Meer zu verdanken ist (Nehrungen, Haken) oder deren Küste durch das Meer geformt wird (Steilküste, Strände, Halbinseln).');
-
+-- NOTE: Attribute with key 2600 no longer part of the official ATKIS catalogue, hence it should be removed in the future
+INSERT INTO landschaftstyp VALUES (2600, 'Sand', 'Historische Landschaft', '''Historische Landschaft'' bedeutet, dass eine Landschaft auf ein administratives Territorium zurückzuführen ist, das (meist) in den Grenzen um 1792 dargestellt ist. Historische Landschaften liegen oft im Gebiet von mehreren Landschaftstypen.');
 
 ALTER TABLE "geb02_f" ADD CONSTRAINT ltp_fk FOREIGN KEY (ltp) REFERENCES landschaftstyp(code);
 
 
 -- Attribute:  artderfestlegung
 CREATE TABLE  artderfestlegung (
-                                 code VARCHAR(4) PRIMARY KEY,
-                                 name_en TEXT,
-                                 name_de TEXT,
-                                 definition_de TEXT,
-                                 CONSTRAINT check_column_format CHECK (
-                                     code ~ '^[0-9]{4}$'
-                                     OR LENGTH(code) = 4
+    code VARCHAR(4) PRIMARY KEY,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$' OR LENGTH(code) = 4
 )
     );
 
@@ -1468,6 +1464,9 @@ INSERT INTO artderfestlegung VALUES (1660, 'Sand', 'Bodenschutzgesetz', '');
 INSERT INTO artderfestlegung VALUES (1661, 'Sand', 'Dauerbeobachtungsflächen', '');
 INSERT INTO artderfestlegung VALUES (1662, 'Sand', 'Bodenschutzgebiet', '');
 INSERT INTO artderfestlegung VALUES (1644, 'Sand', 'Abstandszone, Störfallbetrieb', '');
+INSERT INTO artderfestlegung VALUES (1670, 'Sand', 'Nationalpark', '''Nationalpark'' ist ein rechtsverbindlich festgesetztes einheitlich zu schützendes Gebiet, das großräumig und von besonderer Eigenart ist, im überwiegenden Teil die Voraussetzungen eines Naturschutzgebietes erfüllt und sich in einem vom Menschen nicht oder nur wenig beeinflussten Zustand befindet.');
+INSERT INTO artderfestlegung VALUES (1680, 'Sand', 'Lärmschutzbereich', '');
+INSERT INTO artderfestlegung VALUES (1690, 'Sand', 'Biosphärenreservat', '''Biosphärenreservat'' ist ein rechtsverbindlich festgesetztes einheitlich zu schützendes und zu entwickelndes Gebiet, das 1. großräumig und für bestimmte Landschaftstypen charakteristisch ist, 2. in wesentlichen Teilen seines Gebietes die Voraussetzungen eines Naturschutzgebietes, im Übrigen überwiegend eines Landschaftsschutzgebietes erfüllt, 3. vornehmlich der Erhaltung, Entwicklung oder Wiederherstellung einer durch hergebrachte vielfältige Nutzung geprägten Landschaft und der darin historisch gewachsenen Arten- und Biotopvielfalt, einschließlich Wild- und frühere Kulturformen wirtschaftlich genutzter oder nutzbarer Tier- und Pflanzenarten dient und 4. beispielhaft der Entwicklung und Erprobung von Naturgütern besonders schonenden Wirtschaftsweise dient.');
 INSERT INTO artderfestlegung VALUES (4100, 'Sand', 'Luftverkehrsgesetz', '');
 INSERT INTO artderfestlegung VALUES (4110, 'Sand', 'Bauschutzbereich', '');
 INSERT INTO artderfestlegung VALUES (4120, 'Sand', 'Beschränkter Bauschutzbereich', '');
@@ -1489,9 +1488,9 @@ INSERT INTO artderfestlegung VALUES (4730, 'Sand', 'Militärbrache', '''Militär
 INSERT INTO artderfestlegung VALUES (4800, 'Sand', 'Vermessungs- und Katasterrecht', '');
 INSERT INTO artderfestlegung VALUES (4810, 'Sand', 'Schutzfläche Festpunkt', '');
 INSERT INTO artderfestlegung VALUES (4811, 'Sand', 'Schutzfläche Festpunkt, 1 m Radius', '');
-INSERT INTO artderfestlegung VALUES (4812, 'Sand', 'Schutzfläche Festpunkt, 2 m Radius', '')
+INSERT INTO artderfestlegung VALUES (4812, 'Sand', 'Schutzfläche Festpunkt, 2 m Radius', '');
 INSERT INTO artderfestlegung VALUES (4813, 'Sand', 'Schutzfläche Festpunkt, 5 m Radius', '');
-INSERT INTO artderfestlegung VALUES (4814, 'Sand', 'Schutzfläche Festpunkt, 10 m Radius', '')
+INSERT INTO artderfestlegung VALUES (4814, 'Sand', 'Schutzfläche Festpunkt, 10 m Radius', '');
 INSERT INTO artderfestlegung VALUES (4815, 'Sand', 'Schutzfläche Festpunkt, 30 m Radius', '');
 INSERT INTO artderfestlegung VALUES (4820, 'Sand', 'Marksteinschutzfläche', '');
 INSERT INTO artderfestlegung VALUES (4830, 'Sand', 'Liegenschaftskatastererneuerung', '');
@@ -1520,20 +1519,17 @@ INSERT INTO artderfestlegung VALUES (9500, 'Sand', 'Bohrung verfüllt', '');
 INSERT INTO artderfestlegung VALUES (9600, 'Sand', 'Zollgrenze', '');
 INSERT INTO artderfestlegung VALUES (9700, 'Sand', 'Belastung nach §7 Abs. 2 GBO', '');
 INSERT INTO artderfestlegung VALUES (9999, 'Sand', 'Sonstiges', '''Sonstiges'' bedeutet, dass ''Art der Festlegung'' bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
-INSERT INTO artderfestlegung VALUES (4100, 'Sand', 'Luftverkehrsgesetz', '');
 
 ALTER TABLE "geb03_f" ADD CONSTRAINT adf_fk FOREIGN KEY (adf) REFERENCES artderfestlegung(code);
 
 -- Attribute:  administrativefunktion
 CREATE TABLE  administrativefunktion (
-                                   code VARCHAR(4) PRIMARY KEY,
-                                   name_en TEXT,
-                                   name_de TEXT,
-                                   definition_de TEXT,
-                                   CONSTRAINT check_column_format CHECK (
-                                       code ~ '^[0-9]{4}$'
-                                       OR LENGTH(code) = 4
-)
+    code VARCHAR(4) PRIMARY KEY,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+        code ~ '^[0-9]{4}$' OR LENGTH(code) = 4 )
     );
 
 INSERT INTO administrativefunktion VALUES (1001, 'Sand', 'Bundesrepublik', '''Bundesrepublik'' ist die Bezeichnung Deutschlands und ist aus der Gesamtheit der deutschen Länder (Gliedstaaten) gebildet.');
@@ -1595,24 +1591,23 @@ ALTER TABLE "geb01_f" ADD CONSTRAINT adm_fk FOREIGN KEY (adm) REFERENCES adminis
 
 -- Attribute:  artdergebietsgrenze
 CREATE TABLE  artdergebietsgrenze (
-                                         code VARCHAR(4) PRIMARY KEY,
-                                         name_en TEXT,
-                                         name_de TEXT,
-                                         definition_de TEXT,
-                                         CONSTRAINT check_column_format CHECK (
-                                             code ~ '^[0-9]{4}$'
-                                             OR LENGTH(code) = 4
-)
+    code VARCHAR(4) PRIMARY KEY,
+    name_en TEXT,
+    name_de TEXT,
+    definition_de TEXT,
+    CONSTRAINT check_column_format CHECK (
+    code ~ '^[0-9]{4}$' OR LENGTH(code) = 4 )
     );
 
-INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze eines Staates', '''Grenze eines Staates'' ist eine politische Grenze zwischen Staaten zur Sicherung der territorialen Integrität und der exakten Definition des räumlichen Geltungsbereichs staatlicher Rechtsordnungen.');
-INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze der Bundesrepublik Deutschland', '''Grenze der Bundesrepublik Deutschland'' begrenzt das Gebiet der Bundesrepublik Deutschland.');
-INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze des Bundeslandes', '''Grenze des Bundeslandes'' begrenzt das Gebiet einer Verwaltungseinheit auf der Bundeslandebene.');
-INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze des Regierungsbezirks', '''Grenze des Regierungsbezirks'' begrenzt das Gebiet einer Verwaltungseinheit auf der Regierungsbezirksebene.');
-INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze des Kreises / Kreisfreien Stadt / Region', '''Grenze des Kreises / Kreisfreien Stadt / Region'' begrenzt das Gebiet einer Verwaltungseinheit auf der Kreisebene bzw. der kreisfreien Stadt.');
-INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze der Verwaltungsgemeinschaft', '''Grenze der Verwaltungsgemeinschaft'' begrenzt das Gebiet einer Verwaltungseinheit auf der Verwaltungsgemeinschaftsebene.');
-INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze der Gemeinde', '''Grenze der Gemeinde'' begrenzt ein kommunales Gebiet auf der Gemeindeebene.');
-INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze des Gemeindeteils', '''Grenze des Gemeindeteils'' begrenzt das Gebiet einer Verwaltungseinheit auf der Gemeindeteilebene.');
-INSERT INTO artdergebietsgrenze VALUES (6021, 'Sand', 'Grenze eines Kondominiums', '''Grenze eines Kondominiums'' begrenzt ein Gebiet, das unter gemeinsamer Verwaltung von zwei oder mehreren Staaten steht.');
+INSERT INTO artdergebietsgrenze VALUES (7100, 'Sand', 'Grenze eines Staates', '''Grenze eines Staates'' ist eine politische Grenze zwischen Staaten zur Sicherung der territorialen Integrität und der exakten Definition des räumlichen Geltungsbereichs staatlicher Rechtsordnungen.');
+INSERT INTO artdergebietsgrenze VALUES (7101, 'Sand', 'Grenze der Bundesrepublik Deutschland', '''Grenze der Bundesrepublik Deutschland'' begrenzt das Gebiet der Bundesrepublik Deutschland.');
+INSERT INTO artdergebietsgrenze VALUES (7102, 'Sand', 'Grenze des Bundeslandes', '''Grenze des Bundeslandes'' begrenzt das Gebiet einer Verwaltungseinheit auf der Bundeslandebene.');
+INSERT INTO artdergebietsgrenze VALUES (7103, 'Sand', 'Grenze des Regierungsbezirks', '''Grenze des Regierungsbezirks'' begrenzt das Gebiet einer Verwaltungseinheit auf der Regierungsbezirksebene.');
+INSERT INTO artdergebietsgrenze VALUES (7104, 'Sand', 'Grenze des Kreises / Kreisfreien Stadt / Region', '''Grenze des Kreises / Kreisfreien Stadt / Region'' begrenzt das Gebiet einer Verwaltungseinheit auf der Kreisebene bzw. der kreisfreien Stadt.');
+INSERT INTO artdergebietsgrenze VALUES (7105, 'Sand', 'Grenze der Verwaltungsgemeinschaft', '''Grenze der Verwaltungsgemeinschaft'' begrenzt das Gebiet einer Verwaltungseinheit auf der Verwaltungsgemeinschaftsebene.');
+INSERT INTO artdergebietsgrenze VALUES (7106, 'Sand', 'Grenze der Gemeinde', '''Grenze der Gemeinde'' begrenzt ein kommunales Gebiet auf der Gemeindeebene.');
+INSERT INTO artdergebietsgrenze VALUES (7107, 'Sand', 'Grenze des Gemeindeteils', '''Grenze des Gemeindeteils'' begrenzt das Gebiet einer Verwaltungseinheit auf der Gemeindeteilebene.');
+INSERT INTO artdergebietsgrenze VALUES (7108, 'Sand', 'Grenze eines Kondominiums', '''Grenze eines Kondominiums'' begrenzt ein Gebiet, das unter gemeinsamer Verwaltung von zwei oder mehreren Staaten steht.');
 
-ALTER TABLE "geb01_l" ADD CONSTRAINT agz_fk FOREIGN KEY (agz) REFERENCES artdergebietsgrenze(code);
+-- TODO: Cannot add primary keys due to values like 7104#7105#7106 in the table
+--ALTER TABLE "geb01_l" ADD CONSTRAINT agz_fk FOREIGN KEY (agz) REFERENCES artdergebietsgrenze(code);

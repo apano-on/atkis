@@ -35,4 +35,6 @@ echo "All SHP files imported successfully!"
 sleep 3
 
 echo "Materialize tables with ehInside/within relations"
+echo "Update missing values from 9998/9999 to NULL"
+echo "Add tables from OK AAA-Anwendungsschema 7.1.2 (ATKIS-Basis-DLM) - the ATKIS application schema"
 psql -h atkisdb -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f addtables.sql
