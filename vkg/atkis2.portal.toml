@@ -347,3 +347,182 @@ FILTER(LANG(?function) = "en")
 FILTER(STR(?function)='Transmission tower, radio tower, telecommunications tower')
 }
 """
+
+
+[[tabGroups]]
+name="Settlement"
+
+[[tabGroups.tabs]]
+name="SIE01: site, named location"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="SIE02: Areas dominated by buildings"
+query = """
+# Q2: Find all radio/telecom towers in the dataset
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * WHERE {
+?x a :AreaDominatedByBuilding .
+?x rdfs:label ?name .
+?x :fkt ?function .
+  ?x :zus [ rdfs:label ?usageName ] .
+#?bwf rdfs:label ?function .
+FILTER(LANG(?usageName) = "en")
+FILTER(STR(?usageName)!='Out of service, shut down, abandoned')
+}
+LIMIT 100
+"""
+
+[[tabGroups.tabs]]
+name="SIE03: buildings and other facilities"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="SIE04: special facilities at settlement areas"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="SIE05: buildings"
+query = """
+
+"""
+
+[[tabGroups]]
+name="Traffic"
+
+[[tabGroups.tabs]]
+name="VER01: road traffic"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="VER02: paths"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="VER03: railway traffic"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="VER04: air traffic"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="VER05: shipping traffic"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="VER06: transport buildings and facilities"
+query = """
+
+"""
+
+[[tabGroups]]
+name="Vegetation"
+
+[[tabGroups.tabs]]
+name="VEG01: agricultural area"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="VEG02: forestry use"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="VEG03: vegetation areas"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="VEG03: characteristic of vegetation"
+query = """
+
+"""
+
+[[tabGroups]]
+name="Water bodies"
+
+[[tabGroups.tabs]]
+name="GEW01: water bodies"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="GEW02: special characteristics of water bodies"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="GEW03: axis of water line"
+query = """
+
+"""
+
+[[tabGroups]]
+name="Areas"
+
+[[tabGroups.tabs]]
+name="GEB01: administrative areas"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="GEW02: geographical areas"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="GEW03: protected areas"
+query = """
+
+"""
+
+[[tabGroups]]
+name="Relief"
+
+[[tabGroups.tabs]]
+name="REL01: relief forms"
+query = """
+
+"""
+
+[[tabGroups.tabs]]
+name="REL02: measurement data 3D"
+query = """
+
+"""
+
+[[tabGroups]]
+name="Vertical relation"
+
+[[tabGroups.tabs]]
+name="HDU01: relation"
+query = """
+
+"""

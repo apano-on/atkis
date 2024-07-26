@@ -101,6 +101,12 @@
 ###  http://example.org/ontologies/atkis#existsIn
 :existsIn rdf:type owl:ObjectProperty .
 
+###  http://example.org/ontologies/atkis#fkt
+:fkt rdf:type owl:ObjectProperty ;
+        rdfs:label "function"@en ;
+        rdfs:label "Funktion"@de ;
+        rdfs:range :Function .
+
 ###  http://example.org/ontologies/atkis#gfk
 :gfk rdf:type owl:ObjectProperty ;
      rdfs:comment """categorisation of buildings defined by gfk values. e.g. gfk 2072 = youth hostel"""@en .
@@ -338,11 +344,6 @@
         rdfs:label "end"@en ;
         rdfs:label "Ende"@de ;
         rdfs:range xsd:dateTime .
-
-###  http://example.org/ontologies/atkis#fkt
-:fkt rdf:type owl:DatatypeProperty ;
-        rdfs:label "function"@en ;
-        rdfs:label "Funktion"@de .
 
 ###  http://example.org/ontologies/atkis#elk
 :flr rdf:type owl:DatatypeProperty ;
@@ -652,6 +653,9 @@
 :Forestry rdf:type owl:Class ;
           rdfs:subClassOf :Vegetation .
 
+###  http://example.org/ontologies/atkis#Function
+:Function rdf:type owl:Class ;
+            rdfs:comment "Funktion"@de .
 
 ###  http://example.org/ontologies/atkis#Geographical
 :Geographical rdf:type owl:Class ;
