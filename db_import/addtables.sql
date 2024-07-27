@@ -40,6 +40,17 @@ SET bro = CASE
               ELSE bro
     END;
 
+UPDATE sie03_f
+SET hho = CASE
+              WHEN hho = -9999 THEN NULL
+              ELSE hho
+    END;
+
+UPDATE sie05_p
+SET hho = CASE
+              WHEN hho = -9998 THEN NULL
+              ELSE hho
+    END;
 
 -- Source: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/binarywriterservlet?imgUid=78f7a5be-17ae-4819-393b-216067bef8a0&uBasVariant=11111111-1111-1111-1111-111111111111#_C11007-_A11007_46283
 -- FROM: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/, OK AAA-Anwendungsschema 7.1.2 (HTML)
@@ -319,7 +330,7 @@ INSERT INTO besondereverkehrsbedeutung VALUES (2002, 'Residential traffic', 'Anl
 ALTER TABLE "ver01_l" ADD CONSTRAINT besondereverkehrsbedeutung_fk FOREIGN KEY (bvb) REFERENCES besondereverkehrsbedeutung(code);
 
 
--- Attribute: widmung_traffic
+-- Attribute: widmung
 CREATE TABLE widmung (
                      code VARCHAR(4),
                      objart VARCHAR(5),
@@ -1750,8 +1761,8 @@ INSERT INTO funktion VALUES (4450, 41008, '', 'Wochenendplatz', '''Wochenendplat
 INSERT INTO funktion VALUES (4460, 41008, '', 'Garten', '''Garten'' sind Flächen, die nicht im unmittelbaren Zusammenhang mit Wohnbauflächen stehen und nicht dem Bundeskleingartengesetz unterliegen. Der Garten dient, im Gegensatz zum Vorgarten oder Ziergarten, hauptsächlich der Erzeugung von Nutzpflanzen, wie z.B. Kräutern, Obst und Gemüse als Nahrungsmittel zum privaten Gebrauch.');
 INSERT INTO funktion VALUES (4470, 41008, '', 'Spielplatz, Bolzplatz', '''Spielplatz, Bolzplatz'' ist ein Platz an dem körperliche oder geistige Tätigkeit aus eigenem Antrieb ohne Zweckbestimmung ausgeübt wird.');
 INSERT INTO funktion VALUES (9999, 41008, 'Other', 'Sonstiges', '''Sonstiges'' bedeutet, dass die Funktion der Sport-, Freizeit- und Erholungsfläche bekannt, diese aber nicht in der Werteliste aufgeführt ist.');
-INSERT INTO funktion VALUES (5211, 42008, '', 'Hauptwirtschaftsweg', '''Hauptwirtschaftsweg'' ist ein Weg mit fester Fahrbahndecke zur Erschließung eines oder mehrerer Grundstücke, der für den Kraftverkehr zu jeder Jahreszeit befahrbar ist. Dazu gehören auch Lkw-befahrbare Wege im Wald, die dem forstwirtschaftlichen Holztransport zu jeder Zeit dienen.');
-INSERT INTO funktion VALUES (5212, 42008, '', 'Wirtschaftsweg', '''Wirtschaftsweg'' ist ein leicht- oder unbefestigter Weg zur Erschließung land- und forstwirtschaftlicher Flächen.');
+INSERT INTO funktion VALUES (5211, 42008, 'Main agricultural road', 'Hauptwirtschaftsweg', '''Hauptwirtschaftsweg'' ist ein Weg mit fester Fahrbahndecke zur Erschließung eines oder mehrerer Grundstücke, der für den Kraftverkehr zu jeder Jahreszeit befahrbar ist. Dazu gehören auch Lkw-befahrbare Wege im Wald, die dem forstwirtschaftlichen Holztransport zu jeder Zeit dienen.');
+INSERT INTO funktion VALUES (5212, 42008, 'Agricultural road', 'Wirtschaftsweg', '''Wirtschaftsweg'' ist ein leicht- oder unbefestigter Weg zur Erschließung land- und forstwirtschaftlicher Flächen.');
 INSERT INTO funktion VALUES (5240, 42008, '', 'Radweg', '''Radweg'' ist ein Weg, der als besonders gekennzeichneter und abgegrenzter Teil einer Straße oder mit selbständiger Linienführung für den Fahrradverkehr bestimmt ist.');
 INSERT INTO funktion VALUES (5250, 42008, '', 'Rad- und Fußweg', '''Rad- und Fußweg'' ist ein Weg, der als besonders gekennzeichneter und abgegrenzter Teil einer Straße oder mit selbständiger Linienführung ausschließlich für den Fahrrad- und Fußgängerverkehr bestimmt ist.');
 INSERT INTO funktion VALUES (1000, 43007, '', 'Vegetationslose Fläche', '''Vegetationslose Fläche'' ist eine Fläche ohne nennenswerten Bewuchs aufgrund besonderer Bodenbeschaffenheit.');

@@ -355,44 +355,136 @@ name="Settlement"
 [[tabGroups.tabs]]
 name="SIE01: site, named location"
 query = """
-
-"""
-
-[[tabGroups.tabs]]
-name="SIE02: Areas dominated by buildings"
-query = """
-# Q2: Find all radio/telecom towers in the dataset
+# SIE01: Find locations likely to be close to Denmark
 PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT * WHERE {
-?x a :AreaDominatedByBuilding .
+?x a :Settlement .
 ?x rdfs:label ?name .
-?x :fkt ?function .
-  ?x :zus [ rdfs:label ?usageName ] .
-#?bwf rdfs:label ?function .
-FILTER(LANG(?usageName) = "en")
-FILTER(STR(?usageName)!='Out of service, shut down, abandoned')
+?x :rgs ?secondName .
+# Based on second name usage of Danish alphabet these locations are near the border with Denmark
+  FILTER(CONTAINS(?secondName, "å") || CONTAINS(?secondName, "ø"))
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
 }
 LIMIT 100
 """
 
 [[tabGroups.tabs]]
+name="SIE02: Areas dominated by buildings"
+query = """
+# SIE02: Find either 1) all golf courts in the dataset 2) surfaces with lignite mining 3) areas under construction
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * WHERE {
+?x a :AreaDominatedByBuilding .
+?x rdfs:label ?name .
+
+  # Find golf courts
+  ?x :fkt [rdfs:label ?function] .
+  FILTER(LANG(?function) = "de" && STR(?function) = "Golf")
+
+  # Find areas with lignite on the ground
+  #?x :agt [rdfs:label ?minedMaterial] .
+  #FILTER(LANG(?minedMaterial) = "en" && STR(?minedMaterial) = "Lignite")
+
+  # Find areas with currently undergoing construction
+  #?x :zus [rdfs:label ?usage] .
+  #FILTER(LANG(?usage) = "en" && STR(?usage) = "Under construction")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+
+}
+LIMIT 100
+
+"""
+
+[[tabGroups.tabs]]
 name="SIE03: buildings and other facilities"
 query = """
+# SIE03: Find either 1) all stadiums 2) motorsport racetracks 3) areas under construction
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+?x a :BuildingFacility .
+?x rdfs:label ?name .
+
+  # Find all stadiums
+  #?x :bwf [rdfs:label ?function] .
+  #FILTER(LANG(?function) = "en" && STR(?function) = "Stadium")
+
+  # Find race tracks for motorsports
+  #?x :spo [rdfs:label ?sport] .
+  #FILTER(LANG(?sport) = "en" && STR(?sport) = "Motorsports")
+
+  # Find buildings with currently undergoing construction
+  #?x :zus [rdfs:label ?usage] .
+  #FILTER(LANG(?usage) = "en" && STR(?usage) = "Under construction")
+
+  #?x geo:hasGeometry/geo:asWKT ?xGeom .
+
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="SIE04: special facilities at settlement areas"
 query = """
+# SIE04: Find all river boat lift structures
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+?x a :SpecialFacility .
+?x rdfs:label ?name .
+
+  # Find all river boat lifts
+  ?x :kon [rdfs:label ?riverStructure] .
+  FILTER(LANG(?riverStructure) = "en" && STR(?riverStructure) = "Boat lift")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="SIE05: buildings"
 query = """
+# SIE05: Find all 1) lighthouses 2) youth hostels and label on whether they are out of service
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+?x a :Building .
+?x rdfs:label ?name .
+
+  # Find all non-building structures which are lighthouses
+  #?x :bwf [rdfs:label ?structureFunction] .
+  #FILTER(LANG(?structureFunction) = "en" && STR(?structureFunction) = "Lighthouse")
+
+  # Find all youth hostels and label whether they are no longer functional
+  ?x :gfk [rdfs:label ?buildingFunction] .
+  FILTER(LANG(?buildingFunction) = "en" && STR(?buildingFunction) = "Youth Hostel")
+  OPTIONAL { ?x :zus [ rdfs:label ?status] . }
+  FILTER(!BOUND(?status) || LANG(?status) = "en")
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+
+}
+ORDER BY DESC(?status)
 """
 
 [[tabGroups]]
@@ -401,37 +493,159 @@ name="Traffic"
 [[tabGroups.tabs]]
 name="VER01: road traffic"
 query = """
+# VER01: Find 1) International roads with specific characteristics 2) national and state roads
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+?x a :RoadTraffic .
+?x rdfs:label ?name .
+
+  # Find roads of international importance
+  ?x :ibd ?hasInternationalImportance . FILTER(?hasInternationalImportance = true) .
+  # Filter their number of lanes to be at least 4
+  ?x :fsz ?totalLanes . FILTER(?totalLanes >= 4)
+  # Filter their lane length to be above 10 metres
+  ?x :brf ?laneLength . FILTER(?laneLength > 10)
+
+  # Find national or state roads - Landesstraße, Staatsstraße
+  #?x :wdm [ rdfs:label ?roadClassification] .
+  #FILTER(LANG(?roadClassification) = "de" && STR(?roadClassification) = "Landesstraße, Staatsstraße")
+
+  #?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="VER02: paths"
 query = """
+# VER02: Find main agricultural/farm roads
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+?x a :Path .
+#?x rdfs:label ?name .
+
+  # Find main agricultural/farm road
+  ?x :fkt [ rdfs:label ?function] .
+  FILTER(LANG(?function) = "de" && STR(?function) = "Hauptwirtschaftsweg")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="VER03: railway traffic"
 query = """
+# VER03: Find 1) double-track electrified railways 2) double-track abandoned long distance railways
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * WHERE {
+  ?x a :RailwayTraffic .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find double track and electrified railways
+  ?x :spw [ rdfs:label ?function] .
+  FILTER(LANG(?function) = "en" && STR(?function) = "Double track")
+  ?x :elk ?electrified .
+  FILTER(?electrified = TRUE) .
+
+  # Find tracks with long distance stops which have been abandoned
+#  ?x :vkd [rdfs:label ?trafficType ] .
+#  FILTER(LANG(?trafficType) = "en" && STR(?trafficType) = "Long distance stop")
+#  ?x :gls [ rdfs:label ?tracks] .
+#  FILTER(LANG(?tracks) = "en" && STR(?tracks) = "Double track")
+#  ?x :zus [ rdfs:label ?trackCondition ] .
+#  FILTER(STR(?trackCondition) = "Out of service, shut down, abandoned")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 
 """
 
 [[tabGroups.tabs]]
 name="VER04: air traffic"
 query = """
+# VER04: Find 1) airports/heliports with mixed use 2) international airports
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :AirTraffic .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find airports/heliports with mixed civilian and military use
+  ?x :ntz [ rdfs:label ?usage] .
+  FILTER(LANG(?usage) = "en" && STR(?usage) = "Partly civilian, partly military")
+
+
+  # Find only international airports
+#  ?x :art [rdfs:label ?airportType ] .
+#  FILTER(LANG(?airportType) = "de" && STR(?airportType) = "Internationaler Flughafen")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="VER05: shipping traffic"
 query = """
+# VER05: Find passenger ferry service lines
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :ShippingTraffic .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find routes used for passenger ferry service
+  ?x :art [rdfs:label ?shipTrafficType ] .
+  FILTER(LANG(?shipTrafficType) = "de" && STR(?shipTrafficType) = "Personenfährverkehr")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="VER06: transport buildings and facilities"
 query = """
+# VER06: Find runways
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :TransportBuildingAndFacility .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find runways/landing strips air transport, made of concrete and with width over 50 metres
+  ?x :ofm [rdfs:label ?surfaceMaterial ] .
+  FILTER(LANG(?surfaceMaterial) = "de" && STR(?surfaceMaterial) = "Beton")
+  ?x :bro ?width . FILTER(?width > 50)
+  ?x :art [rdfs:label ?structureType] .
+  FILTER(LANG(?structureType) = "de" && STR(?structureType) = "Startbahn, Landebahn")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups]]
@@ -440,25 +654,89 @@ name="Vegetation"
 [[tabGroups.tabs]]
 name="VEG01: agricultural area"
 query = """
+# VEG01: Find fruit and nut plantations
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :Agricultural .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find fruit and nut plantations
+  ?x :veg [rdfs:label ?agroArea ] .
+  FILTER(LANG(?agroArea) = "de" && STR(?agroArea) = "Obst- und Nussplantage")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="VEG02: forestry use"
 query = """
+# VEG02: Find forest burial areas
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :Forestry .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find forest burial areas
+  ?x :ntz [rdfs:label ?usage ] .
+  FILTER(LANG(?usage) = "en" && STR(?usage) = "Forest burial area")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="VEG03: vegetation areas"
 query = """
+# VEG03: Find vegetation free areas
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :VegetationArea .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find "Vegetation-free area"s
+  ?x :fkt [rdfs:label ?function ] .
+  FILTER(LANG(?function) = "de" && STR(?function) = "Vegetationslose Fläche")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
-name="VEG03: characteristic of vegetation"
+name="VEG04: characteristic of vegetation"
 query = """
+# VEG04: Find areas with trees
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :VegetationCharacteristic .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find areas with trees
+  ?x :bws [rdfs:label ?groundCover ] .
+  FILTER(LANG(?groundCover) = "de" && STR(?groundCover) = "Baumbestand")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups]]
@@ -467,19 +745,68 @@ name="Water bodies"
 [[tabGroups.tabs]]
 name="GEW01: water bodies"
 query = """
+# GEW01: Find sea waterways by width
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :WaterBodyCourse .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find sea waterways by width
+  ?x :sfk [rdfs:label ?navigationCategory ] .
+  FILTER(LANG(?navigationCategory) = "de" && STR(?navigationCategory) = "Seewasserstraße")
+  ?x :brg ?widthOfWaterBody .
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="GEW02: special characteristics of water bodies"
 query = """
+# GEW02: Find all waterfalls
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :WaterBodyCharacteristic .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # GEW01: Find all waterfalls
+  ?x :art [rdfs:label ?description ] .
+  FILTER(LANG(?description) = "de" && STR(?description) = "Wasserfall")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="GEW03: axis of water line"
 query = """
+# GEW03: Find all see routes with the waterline axis approximately at the center
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :WaterLineAxis .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # GEW03: Find all see routes with the waterline axis approximately at the center
+  ?x :sfk [rdfs:label ?navigationCategory ] .
+  FILTER(LANG(?navigationCategory) = "de" && STR(?navigationCategory) = "Seewasserstraße")
+  ?x :aga [rdfs:label ?axisLocation]
+  FILTER(LANG(?axisLocation) = "de" && STR(?axisLocation) = "Genäherte Mittellinie in Gewässern")
+}
+LIMIT 100
 """
 
 [[tabGroups]]
@@ -488,19 +815,67 @@ name="Areas"
 [[tabGroups.tabs]]
 name="GEB01: administrative areas"
 query = """
+# GEB01: Find free and Hanseatic area boundaries
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :Administrative .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find free and Hanseatic area boundaries
+  ?x :adm [rdfs:label ?admBoundary ] .
+  FILTER(LANG(?admBoundary) = "de" && STR(?admBoundary) = "Freie und Hansestadt")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="GEW02: geographical areas"
 query = """
+# GEB02: Find moorlands
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :Geographical .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find moorlands
+  ?x :ltp [rdfs:label ?landType ] .
+  FILTER(LANG(?landType) = "de" && STR(?landType) = "Moorlandschaft")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="GEW03: protected areas"
 query = """
+# GEB03: Find protected nature parks
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :Protected .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find protected nature parks
+  ?x :adf [rdfs:label ?landType ] .
+  FILTER(LANG(?landType) = "de" && STR(?landType) = "Naturpark")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups]]
@@ -509,13 +884,46 @@ name="Relief"
 [[tabGroups.tabs]]
 name="REL01: relief forms"
 query = """
+# REL01: Find relief areas with flood protection, storm surge protection and traffic management
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :ReliefForm .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find relief areas with flood protection, storm surge protection and traffic management
+  ?x :fkt [rdfs:label ?description ] .
+  FILTER(LANG(?description) = "de" && STR(?description) = "Hochwasserschutz, Sturmflutschutz zugleich Verkehrsführung")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
 name="REL02: measurement data 3D"
 query = """
+# REL02: Find measurements above 2500 metres
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :MeasurementData .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find measurements above 2500 metres
+  ?x :art [rdfs:label ?description ] .
+  ?x :hoehe ?height .
+  FILTER(?height > 2500)
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+}
+LIMIT 100
 """
 
 [[tabGroups]]
@@ -524,5 +932,15 @@ name="Vertical relation"
 [[tabGroups.tabs]]
 name="HDU01: relation"
 query = """
+# HDU01: Vertical relation
+# TODO: Check if it makes sense
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT * WHERE {
+  ?x a :VerticalRelation .
+}
+LIMIT 100
 """
