@@ -29,83 +29,105 @@
 :adf rdf:type owl:ObjectProperty ;
     rdfs:domain :Protected ;
     rdfs:range :SpecificationType ;
-    rdfs:comment "Specification type"@en ;
-    rdfs:comment "Art Der Festlegung"@de .
+    rdfs:label "specificationType"@en ;
+    rdfs:label "artDerFestlegung"@de ;
+    rdfs:comment "Type of designation is the type of restriction, encumbrance or other, e.g. water protection area, nature conservation area, etc."@en ;
+    rdfs:comment "Art der Festlegung ist die auf den Grund und Boden bezogene Art der Beschränkung, Belastung oder andere, z.B Wasserschutzgebiet, Naturschutzgebiet usw."@de .
 
 ###  http://example.org/ontologies/atkis#adm
 :adm rdf:type owl:ObjectProperty ;
     rdfs:range :AdministrativeFunction ;
-    rdfs:comment "Administrative function"@en ;
-    rdfs:comment "Administrativefunktion"@de .
+    rdfs:label "administrativeFunction"@en ;
+    rdfs:label "administrativeFunktion"@de ;
+    rdfs:comment "Administrative function describes the administrative function of the entity, e.g. administrative country, Free and Hanseatic city, etc."@en ;
+    rdfs:comment "Administrative Funktion beschreibt die Verwaltungsfunktion der Entität, z.B. Land, Freie und Hansestadt usw."@de .
 
 ###  http://example.org/ontologies/atkis#aga
 :aga rdf:type owl:ObjectProperty ;
     rdfs:domain :WaterLineAxis ;
     rdfs:range :WaterStationingAxis ;
-    rdfs:comment "water stationing axis"@en ;
-    rdfs:comment "artDerGewaesserachse"@de .
+    rdfs:label "waterStationingAxis"@en ;
+    rdfs:label "artDerGewaesserachse"@de ;
+    rdfs:comment "Type of watercourse stationing axis describes the definition of the watercourse stationing axis, e.g. approximate centre line in watercourses, fictitious connection in watercourses, etc."@en ;
+    rdfs:comment "Art der Gewässerstationierungsachse beschreibt die Festlegung von Gewässerstationierungsachse, z.B Genäherte Mittellinie in Gewässern, Fiktive Verbindung in Fließgewässern usw."@de .
 
 ###  http://example.org/ontologies/atkis#agt
 :agt rdf:type owl:ObjectProperty ;
     rdfs:domain :AreaDominatedByBuilding ;
     rdfs:range :MinedMaterial ;
-    rdfs:comment "mined material"@en ;
-    rdfs:comment "abbaugut"@de .
+    rdfs:label "minedMaterial"@en ;
+    rdfs:label "abbaugut"@de ;
+    rdfs:comment "Mined material indicates which material is mined, e.g. soil, loose rock, clay, etc."@en ;
+    rdfs:comment "Abbaugut gibt an, welches Material abgebaut wird, z.B Erden, Lockergestein, Ton usw."@de .
 
 ###  http://example.org/ontologies/atkis#agz
 :agz rdf:type owl:ObjectProperty ;
     rdfs:range :BoundaryType ;
-    rdfs:comment "Boundary type"@en ;
-    rdfs:comment "Art Der Gebietsgrenze"@de .
+    rdfs:label "boundaryType"@en ;
+    rdfs:label "artDerGebietsgrenze"@de ;
+    rdfs:comment "Art der Gebietsgrenze gibt die administrative Bedeutung von Gebietsgrenze an, z.B Grenze eines Staates, Grenze der Bundesrepublik Deutschland usw."@de ;
+    rdfs:comment "Type of territorial boundary indicates the administrative meaning of a territorial boundary, e.g. boundary of a state, boundary of the Federal Republic of Germany, etc."@en .
 
 ###  http://example.org/ontologies/atkis#art
 :art rdf:type owl:ObjectProperty ;
     rdfs:range :SpecificType ;
-    rdfs:comment "type"@en ;
-    rdfs:comment "art"@de .
+    rdfs:label "type"@en ;
+    rdfs:label "art"@de .
 
 ###  http://example.org/ontologies/atkis#atp
 :atp rdf:type owl:ObjectProperty ;
      rdfs:domain :BuildingFacility ;
      rdfs:range :ArchaologicalType ;
-     rdfs:comment "archeological type"@en ;
-     rdfs:comment "archäologischerTyp"@de .
+     rdfs:label "archeologicalType"@en ;
+     rdfs:label "archäologischerTyp"@de ;
+     rdfs:comment "Archaeological type describes the type of historical structure or facility, e.g. tomb, aqueduct, etc."@en ;
+     rdfs:comment "Archäologischer Typ beschreibt die Art von Historisches Bauwerk oder historische Einrichtung, z.B Grab, Aquädukt usw."@de .
 
 ###  http://example.org/ontologies/atkis#bkt
 :bkt rdf:type owl:ObjectProperty ;
      rdfs:domain :RailwayTraffic ;
      rdfs:range :RailwayCategory ;
-     rdfs:comment "Railway category"@en ;
-     rdfs:comment "Bahn Kategorie"@de .
+     rdfs:label "railwayCategory"@en ;
+     rdfs:label "bahnKategorie"@de ;
+     rdfs:comment "Railway category describes the type of transport mode, e.g. freight transport, passenger transport, etc."@en ;
+     rdfs:comment "Bahnkategorie beschreibt die Art des Verkehrsmittels, z.B Güterverkehr, Personenverkehr usw."@de .
 
 ###  http://example.org/ontologies/atkis#bvb
 :bvb rdf:type owl:ObjectProperty ;
-     rdfs:comment "Special traffic importance"@en ;
-     rdfs:comment "besondereVerkehrsbedeutung"@de ;
      rdfs:domain :RoadTraffic ;
-     rdfs:range :SpecialTrafficImportance .
+     rdfs:range :SpecialTrafficImportance ;
+     rdfs:label "specialTrafficImportance"@en ;
+     rdfs:label "besondereVerkehrsbedeutung"@de ;
+     rdfs:comment "Special traffic importance distinguishes the importance of road axis within the road network, e.g. local traffic, interurban traffic, etc."@en ;
+     rdfs:comment "Besondere Verkehrsbedeutung unterscheidet die Bedeutung von Straßenachse innerhalb des Straßennetzes, z.B Nahverkehr, Überörtlicher Verkehr usw."@de .
 
 ###  http://example.org/ontologies/atkis#bwf
 :bwf rdf:type owl:ObjectProperty ;
-        rdfs:comment "StructureFunction"@en ;
-        rdfs:comment "BauersFunktion"@de ;
-        rdfs:range :StructureFunction .
+    rdfs:range :StructureFunction ;
+    rdfs:label "structureFunction"@en ;
+    rdfs:label "bauwerksFunktion"@de ;
+    rdfs:comment "Structure function describes the type or function, e.g. water tower, silo, etc."@en ;
+    rdfs:comment "Bauwerksfunktion beschreibt die Art oder Funktion, z.B Wasserturm, Silo usw."@de .
 
 ###  http://example.org/ontologies/atkis#bws
 :bws rdf:type owl:ObjectProperty ;
-        rdfs:comment "GroundCover"@en ;
-        rdfs:comment "Bewuchs"@de ;
-        rdfs:domain :VegetationCharacteristic ;
-        rdfs:range :GroundCover .
+    rdfs:domain :VegetationCharacteristic ;
+    rdfs:range :GroundCover ;
+    rdfs:label "groundCover"@en ;
+    rdfs:label "bewuchs"@de ;
+    rdfs:comment "Vegetation is the type of vegetation feature, e.g. conifer, hedge, etc."@en ;
+    rdfs:comment "Bewuchs ist die Art des Vegetationsmerkmals, z.B Nadelbaum, Hecke usw."@de .
 
 ###  http://example.org/ontologies/atkis#existsIn
 :existsIn rdf:type owl:ObjectProperty .
 
 ###  http://example.org/ontologies/atkis#fkt
 :fkt rdf:type owl:ObjectProperty ;
-        rdfs:label "function"@en ;
-        rdfs:label "Funktion"@de ;
-        rdfs:range :Function .
+    rdfs:range :Function ;
+    rdfs:label "function"@en ;
+    rdfs:label "funktion"@de ;
+    rdfs:comment "Specifies the function of an entity"@en ;
+    rdfs:comment "Gibt die Funktion einer Entität an"@de .
 
 ###  http://example.org/ontologies/atkis#gfk
 :gfk rdf:type owl:ObjectProperty ;
@@ -113,10 +135,12 @@
 
 ###  http://example.org/ontologies/atkis#gls
 :gls rdf:type owl:ObjectProperty ;
-        rdfs:comment "Number of Railway Tracks"@en ;
-        rdfs:comment "Anzahl Der Streckengleise"@de ;
-        rdfs:domain :RailwayTraffic ;
-        rdfs:range :RailwayTracks .
+    rdfs:domain :RailwayTraffic ;
+    rdfs:range :RailwayTracks ;
+    rdfs:label "numberOfRailwayTracks"@en ;
+    rdfs:label "anzahlDerStreckengleise"@de ;
+    rdfs:comment "Anzahl der Streckengleise gibt die Anzahl der Gleise von Bahnstrecke an, z.B Eingleisig, Zweigleisig usw."@en ;
+    rdfs:comment "Number of tracks specifies the number of tracks of the railway line, e.g. single track, double track, etc."@de .
 
 ###  http://example.org/ontologies/atkis#hasArea
 :hasArea rdf:type owl:ObjectProperty .
@@ -132,10 +156,9 @@
 
 ###  http://example.org/ontologies/atkis#hatDirektUnderpass
 :hasDirectlyUnder rdf:type owl:ObjectProperty ;
-    rdfs:comment "Has direct under pass"@en ;
-    rdfs:comment "hatDirektUnten"@de ;
-    rdfs:domain :Vertic .
-
+    rdfs:domain :VerticalRelation ;
+    rdfs:label "hasDirectlyUnderTheme"@en ;
+    rdfs:label "hatDirektUnten"@de .
 
 ###  http://example.org/ontologies/atkis#intersectsWith
 :intersectsWith rdf:type owl:ObjectProperty ;
@@ -154,78 +177,102 @@
 :kon rdf:type owl:ObjectProperty ;
     rdfs:domain :SpecialFacility ;
     rdfs:range :WaterNavigationLock ;
-    rdfs:comment "Design Feature"@en ;
-    rdfs:comment "Konstruktionsmerkmal Bauart"@de .
+    rdfs:label "designFeature"@en ;
+    rdfs:label "konstruktionsmerkmalBauart"@de ;
+    rdfs:comment "Design feature, type of construction is the type of ‘lock’, e.g. ship lift, chamber lock, etc."@en ;
+    rdfs:comment "Konstruktionsmerkmal, Bauart ist die Art von Schleuse, z.B Schiffshebewerk, Kammerschleuse usw."@de .
 
 ###  http://example.org/ontologies/atkis#ltp
 :ltp rdf:type owl:ObjectProperty ;
     rdfs:domain :Geographical ;
     rdfs:range :LandscapeType ;
-    rdfs:comment "Landscape Type"@en ;
-    rdfs:comment "Landschaftstyp"@de .
+    rdfs:label "landscapeType"@en ;
+    rdfs:label "landschaftstyp"@de ;
+    rdfs:comment "Landscape type describes the appearance of landscape, e.g. forest, meadow, etc."@en ;
+    rdfs:comment "Landschaftstyp beschreibt das Erscheinungsbild von Landschaft, z.B. Wald, Wiese usw."@de .
 
 ###  http://example.org/ontologies/atkis#nrb
 :nrb rdf:type owl:ObjectProperty ;
      rdfs:range :RailwayNumber ;
-     rdfs:comment "Railway number"@en ;
-     rdfs:comment "Nummer Der Bahnstrecke"@de .
+     rdfs:label "railwayNumber"@en ;
+     rdfs:label "nummerDerBahnstrecke"@de ;
+     rdfs:comment "Number of the railway line is the coding of the railway line defined by Deutsche Bahn AG."@en ;
+     rdfs:comment "Nummer der Bahnstrecke ist die von der Bahn AG festgelegte Verschlüsselung der Bahnstrecke."@de .
 
 ###  http://example.org/ontologies/atkis#ntz
 :ntz rdf:type owl:ObjectProperty ;
      rdfs:range :Usage ;
-     rdfs:comment "Usage"@en ;
-     rdfs:comment "Nutzung"@de .
+     rdfs:label "Usage"@en ;
+     rdfs:label "Nutzung"@de ;
+     rdfs:comment "Usage describes the use of the entity, e.g. civilian, military, etc."@en ;
+     rdfs:comment "Nutzung beschreibt die Nutzung der Entität, z.B. Zivil, Militärisch usw."@de .
 
 ###  http://example.org/ontologies/atkis#ofm
 :ofm rdf:type owl:ObjectProperty ;
-     rdfs:comment "Surface material"@en ;
-     rdfs:comment "Oberflaechenmaterial"@de ;
-     rdfs:range :SurfaceMaterial .
+     rdfs:range :SurfaceMaterial ;
+     rdfs:label "surfaceMaterial"@en ;
+     rdfs:label "oberflaechenmaterial"@de ;
+     rdfs:comment "Surface material describes the material of the surface of the road, e.g. asphalt, concrete, etc."@en ;
+     rdfs:comment "Oberflächenmaterial beschreibt das Material der Oberfläche der Straße, z.B. Asphalt, Beton usw."@de .
 
 ###  http://example.org/ontologies/atkis#sfk
 :sfk rdf:type owl:ObjectProperty ;
      rdfs:range :NavigationCategory ;
-     rdfs:comment "navigation category e.g. inland waterway, see route etc."@en ;
-     rdfs:comment "schifffahrtskategorie"@de .
+     rdfs:label "navigationCategory"@en ;
+     rdfs:label "schifffahrtskategorie"@de ;
+     rdfs:comment "Navigation category based on federal regulation e.g. inland waterway, see route etc."@en ;
+     rdfs:comment "Schifffahrtskategorie gibt die Zuordnung von Landesverkehrsordnungen., z.B. Binnenwasserstraße, Seeweg usw."@de .
 
 ###  http://example.org/ontologies/atkis#spo
 :spo rdf:type owl:ObjectProperty ;
      rdfs:domain :BuildingFacility ;
-     rdfs:comment "type of sport"@en ;
-     rdfs:comment "sportart"@de .
+     rdfs:label "typeOfSport"@en ;
+     rdfs:label "sportart"@de ;
+     rdfs:comment "Sport type describes which sports can be practised, e.g. football, tennis, etc."@en ;
+     rdfs:comment "Sportart beschreibt, welche Sportarten ausgeübt werden können, z.B. Fußball, Tennis usw."@de .
 
 ###  http://example.org/ontologies/atkis#spw
 :spw rdf:type owl:ObjectProperty ;
      rdfs:domain :RailwayTraffic ;
      rdfs:range :TrackGauge ;
-     rdfs:comment "Track gauge"@en ;
-     rdfs:comment "Spurweite"@de .
+     rdfs:label "trackGauge"@en ;
+     rdfs:label "spurweite"@de ;
+     rdfs:comment "Track gauge describes the distance between the rails of a track, e.g. standard gauge"@en ;
+     rdfs:comment "Spurweite beschreibt den Abstand der Schienen eines Gleises zueinander, z.B. Normalspur usw."@de .
 
 ###  http://example.org/ontologies/atkis#wdm
 :wdm rdf:type owl:ObjectProperty ;
-        rdfs:comment "EntityClassification"@en ;
-        rdfs:comment "Widmung"@de ;
-        rdfs:range :EntityClassification .
+    rdfs:range :EntityClassification ;
+    rdfs:label "entityClassification"@en ;
+    rdfs:label "widmung"@de ;
+    rdfs:comment "Entity classification is the allocation or classification of roads and other transporation segments according to their traffic significance by means of the administrative act, e.g. country road, state road, etc."@en ;
+    rdfs:comment "Widmung ist die Zuordnung bzw. Klassifizierung von Straßen nach ihrer Verkehrsbedeutung durch den Verwaltungsakt 'Widmung', z.B. Landesstraße, Staatsstraße usw."@de .
 
 ###  http://example.org/ontologies/atkis#zus
 :zus rdf:type owl:ObjectProperty ;
-     rdfs:comment "Condition"@en ;
-     rdfs:comment "Zustand"@de ;
-        rdfs:range :EntityCondition .
+     rdfs:range :EntityCondition ;
+     rdfs:label "condition"@en ;
+     rdfs:label "zustand"@de ;
+     rdfs:comment "Status describes the operational readiness of traffic system, e.g. under construction etc."@en ;
+     rdfs:comment "Zustand beschreibt die Betriebsbereitschaft von 'Verkehrsanlage', z.B. Im Bau usw."@de .
 
 ###  http://example.org/ontologies/atkis#vkd
 :vkd rdf:type owl:ObjectProperty ;
-     rdfs:comment "Traffic service"@en ;
-     rdfs:comment "Verkehrsdienst"@de ;
      rdfs:domain :RailwayTraffic ;
-     rdfs:range :TrafficService .
+     rdfs:range :TrafficService ;
+     rdfs:label "trafficService"@en ;
+     rdfs:label "verkehrsdienst"@de ;
+     rdfs:comment "Transport service describes whether a long-distance passenger rail service is provided at the rail transport facility, e.g. long-distance stop, etc."@en ;
+     rdfs:comment "Verkehrsdienst beschreibt, ob an der Bahnverkehrsanlage ein Schienenpersonenfernverkehrsdienst erbracht wird, z.B. Fernverkehrshalt usw."@de .
 
 ###  http://example.org/ontologies/atkis#veg
 :veg rdf:type owl:ObjectProperty ;
-     rdfs:comment "Vegetation feature"@en ;
-     rdfs:comment "Vegetationsmerkmal"@de ;
      rdfs:domain :Agricultural ;
-     rdfs:range :VegetationFeature .
+     rdfs:range :VegetationFeature ;
+     rdfs:label "vegetationFeature"@en ;
+     rdfs:label "vegetationsmerkmal"@de ;
+     rdfs:comment "Vegetation feature is the predominant agricultural use recognisable or identifiable at the time of the survey (dominance principle). e.g. arable land, fruit and nut plantation etc."@en ;
+     rdfs:comment "Vegetationsmerkmal ist die zum Zeitpunkt der Erhebung erkennbare oder feststellbare vorherrschend vorkommende landwirtschaftliche Nutzung (Dominanzprinzip). z.B. Ackerland, Obst- und Nussplantage usw."@de .
 
 #################################################################
 #    Data properties
@@ -233,295 +280,261 @@
 
 ###  http://example.org/ontologies/atkis#begin
 :begin rdf:type owl:DatatypeProperty ;
-        rdfs:subPropertyOf owl:topDataProperty ;
-        rdfs:comment "Lifetime interval begins"@en ;
-        rdfs:comment "Lebenszeitintervall Beginnt"@de ;
-        rdfs:label "begin"@en ;
-        rdfs:label "Beginn"@de ;
-        rdfs:range xsd:dateTime .
+    rdfs:comment "Lifetime interval begins"@en ;
+    rdfs:comment "Lebenszeitintervall Beginnt"@de ;
+    rdfs:label "begin"@en ;
+    rdfs:label "Beginn"@de ;
+    rdfs:range xsd:dateTime .
 
 ###  http://example.org/ontologies/atkis#remark
 :remark rdf:type owl:DatatypeProperty ;
-        rdfs:subPropertyOf owl:topDataProperty ;
-        rdfs:comment "Remark or comment"@en ;
-        rdfs:comment "Bemerkung oder Kommentar"@de ;
-        rdfs:label "remark"@en ;
-        rdfs:label "Bemerkung"@de .
-
+    rdfs:comment "Remark or comment"@en ;
+    rdfs:comment "Bemerkung oder Kommentar"@de ;
+    rdfs:label "remark"@en ;
+    rdfs:label "Bemerkung"@de .
 
 ###  http://example.org/ontologies/atkis#bez
 :bez rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Designation"@en ;
-     skos:example "Traffic code, highway code; e.g. E6" ;
-     rdfs:comment "bezeichnung"@de ;
-     rdfs:range xsd:string .
-
+    rdfs:range xsd:string ;
+    rdfs:label "Designation"@en ;
+    rdfs:label "bezeichnung"@de ;
+    skos:example "Traffic code, highway code; e.g. E6" .
 
 ###  http://example.org/ontologies/atkis#bez_nat
 :bez_nat rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Country designation"@en ;
-     rdfs:comment "Bezeichnung Nationalstaat"@de ;
-     rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    rdfs:label "countryDesignation"@en ;
+    rdfs:label "bezeichnungNationalstaat"@de .
 
 ###  http://example.org/ontologies/atkis#bez_lan
 :bez_lan rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "State designation"@en ;
-     rdfs:comment "Bezeichnung Land"@de ;
-     rdfs:range xsd:string .
+    rdfs:label "stateDesignation"@en ;
+    rdfs:label "bezeichnungLand"@de ;
+    rdfs:range xsd:string .
 
 ###  http://example.org/ontologies/atkis#bez_rbz
 :bez_rbz rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "District designation"@en ;
-     rdfs:comment "Bezeichnung Regierungsbezirk"@de ;
-     rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    rdfs:label "districtDesignation"@en ;
+    rdfs:label "bezeichnungRegierungsbezirk"@de .
 
 ###  http://example.org/ontologies/atkis#bez_krs
 :bez_krs rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Circle designation"@en ;
-     rdfs:comment "Bezeichnung Kreis"@de ;
-     rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    rdfs:label "circleDesignation"@en ;
+    rdfs:label "bezeichnungKreis"@de .
 
 ###  http://example.org/ontologies/atkis#bez_vwg
 :bez_vwg rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Township esignation"@en ;
-     rdfs:comment "Bezeichnung Verwaltungsgemeinschaft"@de ;
-     rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    rdfs:label "TownshipDesignation"@en ;
+    rdfs:label "bezeichnungVerwaltungsgemeinschaft"@de .
 
 ###  http://example.org/ontologies/atkis#bez_gem
 :bez_gem rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Municipality esignation"@en ;
-     rdfs:comment "Bezeichnung Gemeinde"@de ;
-     rdfs:range xsd:string .
-
-###  http://example.org/ontologies/atkis#bound
-:bound rdf:type owl:DatatypeProperty .
-
+    rdfs:range xsd:string ;
+    rdfs:label "municipalityDesignation"@en ;
+    rdfs:label "bezeichnungGemeinde"@de .
 
 ###  http://example.org/ontologies/atkis#brf
 :brf rdf:type owl:DatatypeProperty ;
-     rdfs:comment "Width of roadway"@en ;
-     rdfs:comment "breiteDerFahrbahn"@de ;
-     skos:example "The minimum value for one lane is 2.5 meters."@en ;
-     skos:example "Der Mindestwert für eine Fahrspur beträgt 2,5 Meter."@de ;
-     rdfs:domain :RoadTraffic ;
-     rdfs:range xsd:decimal .
+    rdfs:domain :RoadTraffic ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "widthOfRoadway"@en ;
+    rdfs:label "breiteDerFahrbahn"@de ;
+    rdfs:comment "The minimum value for one lane is 2.5 metres."@en ;
+    rdfs:comment "Der Mindestwert für eine Fahrspur beträgt 2,5 Meter."@de .
 
 ###  http://example.org/ontologies/atkis#wsg
 :brg rdf:type owl:DatatypeProperty ;
-     rdfs:comment "Width of a water body"@en ;
-     rdfs:comment "Breite Des Gewaessers"@de ;
-     rdfs:domain :WaterBodyCourse ;
-     rdfs:range xsd:integer .
+    rdfs:domain :WaterBodyCourse ;
+    rdfs:range xsd:integer ;
+    rdfs:label "widthOfWaterbody"@en ;
+    rdfs:label "breiteDesGewaessers"@de .
 
 ###  http://example.org/ontologies/atkis#bro
 :bro rdf:type owl:DatatypeProperty ;
-     rdfs:comment "Object width"@en ;
-     rdfs:comment "breiteDesObjekts"@de ;
-     rdfs:range xsd:decimal ;
-     rdfs:subPropertyOf uom:length ;
-     uom:unit uom:metre .
+    rdfs:range xsd:decimal ;
+    rdfs:subPropertyOf uom:length ;
+    uom:unit uom:metre ;
+    rdfs:label "objectWidth"@en ;
+    rdfs:label "breiteDesObjekts"@de .
 
 ###  http://example.org/ontologies/atkis#elk
 :elk rdf:type owl:DatatypeProperty ;
-       rdfs:subPropertyOf owl:topDataProperty ;
-       rdfs:comment "Electrified rail"@en ;
-       rdfs:comment "Elektrifizierung"@de ;
-       rdfs:domain :RailwayTraffic ;
-       rdfs:range xsd:boolean .
+    rdfs:domain :RailwayTraffic ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "electrifiedRail"@en ;
+    rdfs:label "elektrifizierung"@de .
 
 ###  http://example.org/ontologies/atkis#end
 :end rdf:type owl:DatatypeProperty ;
-        rdfs:subPropertyOf owl:topDataProperty ;
-        rdfs:comment "Lifetime interval ends"@en ;
-        rdfs:comment "Lebenszeitintervall Endet"@de ;
-        rdfs:label "end"@en ;
-        rdfs:label "Ende"@de ;
-        rdfs:range xsd:dateTime .
+    rdfs:range xsd:dateTime ;
+    rdfs:label "end"@en ;
+    rdfs:label "ende"@de ;
+    rdfs:comment "Lifetime interval ends"@en ;
+    rdfs:comment "Lebenszeitintervall Endet"@de .
 
 ###  http://example.org/ontologies/atkis#elk
 :flr rdf:type owl:DatatypeProperty ;
-       rdfs:subPropertyOf owl:topDataProperty ;
-       rdfs:comment "‘Flow direction’ is the direction in which the water flows. The direction of the geometry of the
-       water stationing axis and the direction of flow are identical (true)."@en ;
-       rdfs:comment "Fließrichtung"@de ;
-       rdfs:range xsd:boolean .
+    rdfs:range xsd:boolean ;
+    rdfs:label "flowDirection"@en ;
+    rdfs:label "Fließrichtung"@de ;
+    rdfs:comment "‘Flow direction’ is the direction in which the water flows. The direction of the geometry of the
+       water stationing axis and the direction of flow are identical (true)."@en .
 
 ###  http://example.org/ontologies/atkis#fsz
 :fsz rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Number of lanes"@en ;
-     rdfs:comment "Anzahl Der Fahrstreifen"@de ;
-     rdfs:domain :RoadTraffic ;
-     rdfs:range xsd:integer .
-
+    rdfs:domain :RoadTraffic ;
+    rdfs:range xsd:integer ;
+    rdfs:label "numberOfLanes"@en ;
+    rdfs:label "anzahlDerFahrstreifen"@de .
 
 ###  http://example.org/ontologies/atkis#ftr
 :ftr rdf:type owl:DatatypeProperty ;
-     rdfs:comment "Lane seperation" ;
-     rdfs:comment "Fahrbahntrennung"@de ;
-     rdfs:domain :RoadTraffic ;
-     rdfs:range xsd:boolean .
+    rdfs:domain :RoadTraffic ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "laneSeparation" ;
+    rdfs:label "Fahrbahntrennung"@de .
 
 ###  http://example.org/ontologies/atkis#gwk
 :gwk rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "'Watercourse code' is the coding of 'watercourse' assigned by the specialist administration."@en ;
-     rdfs:comment "'Gewässerkennzahl' ist die von der Fachverwaltung vergebene Verschlüsselung von 'Wasserlauf'."@de ;
-     rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    rdfs:label "watercourseCode"@en ;
+    rdfs:label "gewässerkennzahl"@de ;
+    rdfs:comment "Watercourse code is the coding of watercourse assigned by the specialist administration."@en ;
+    rdfs:comment "Gewässerkennzahl ist die von der Fachverwaltung vergebene Verschlüsselung von Wasserlauf."@de .
 
 ###  http://example.org/ontologies/atkis#hdu_x
 :hdu_x rdf:type owl:DatatypeProperty ;
-       rdfs:subPropertyOf owl:topDataProperty ;
-       rdfs:comment "Has direct under pass"@en ;
-       rdfs:comment "Hat Direkt Unten Existiert"@de ;
-       rdfs:domain :RoadTraffic ;
-       rdfs:range xsd:boolean .
+    rdfs:range xsd:boolean ;
+    rdfs:label "hasDirectlyUnderExists"@en ;
+    rdfs:label "hatDirektUntenExistiert"@de .
 
 ###  http://example.org/ontologies/atkis#hhl
 :hhl rdf:type owl:DatatypeProperty ;
-     rdfs:comment "Height from highline"@en ;
-     rdfs:comment "Hoehe Von Hoehenlinie"@de ;
-     rdfs:domain :ReliefForm ;
-     rdfs:range xsd:decimal .
+    rdfs:domain :ReliefForm ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "heightFromHighline"@en ;
+    rdfs:label "hoeheVonHoehenlinie"@de .
 
 ###  http://example.org/ontologies/atkis#hho
 :hho rdf:type owl:DatatypeProperty ;
-     rdfs:comment "Object height"@en ;
-     rdfs:comment "objekthoehe"@de ;
-     rdfs:range xsd:decimal .
+    rdfs:range xsd:decimal ;
+    rdfs:label "objectHeight"@en ;
+    rdfs:label "objekthoehe"@de .
 
 ###  http://example.org/ontologies/atkis#hho
 :hoehe rdf:type owl:DatatypeProperty ;
-     rdfs:comment "Height"@en ;
-     rdfs:comment "hoehe"@de ;
-     rdfs:range xsd:decimal ;
-     rdfs:subPropertyOf uom:length ;
-     uom:unit uom:metre .
+    rdfs:range xsd:decimal ;
+    rdfs:subPropertyOf uom:length ;
+    uom:unit uom:metre ;
+    rdfs:label "Height"@en ;
+    rdfs:label "hoehe"@de .
 
 ###  http://example.org/ontologies/atkis#hyd
 :hyd rdf:type owl:DatatypeProperty ;
-       rdfs:subPropertyOf owl:topDataProperty ;
-       rdfs:comment "Hydrological feature, only one code 2000 for not constantly carrying water"@en ;
-       rdfs:comment "Hydrologisches Merkmal"@de ;
-       rdfs:domain :WaterBodyCourse ;
-       rdfs:range xsd:boolean .
-
+    rdfs:domain :WaterBodyCourse ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "hydrologicalFeature"@en ;
+    rdfs:label "hydrologischesMerkmal"@de ;
+    rdfs:comment "Hydrological feature, only one code 2000 for not constantly carrying water"@en ;
+    rdfs:comment "Hydrologisches Merkmal"@de .
 
 ###  http://example.org/ontologies/atkis#idb
 :ibd rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:label "International importance"@en ;
-     rdfs:label "Internationale Bedeutung"@de ;
-     rdfs:comment "'European roads' are sections of federal highways that form part of the international European road network adopted by the European Conference of Transport Ministers."@en ;
-     rdfs:comment "'Europastraßen' sind Abschnitte von Bundesfernstraßen, die einen Teil des von der Europäischen Konferenz der Verkehrsminister beschlossenen internationalen europäischen Straßennetzes bilden."@de ;
-     rdfs:domain :RoadTraffic ;
-     rdfs:range xsd:boolean .
-
+    rdfs:domain :RoadTraffic ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "internationalImportance"@en ;
+    rdfs:label "internationaleBedeutung"@de ;
+    rdfs:comment "European roads are sections of federal highways that form part of the international European road network adopted by the European Conference of Transport Ministers."@en ;
+    rdfs:comment "Europastraßen sind Abschnitte von Bundesfernstraßen, die einen Teil des von der Europäischen Konferenz der Verkehrsminister beschlossenen internationalen europäischen Straßennetzes bilden."@de .
 
 ###  http://example.org/ontologies/atkis#land
 :land rdf:type owl:DatatypeProperty ;
-      rdfs:subPropertyOf owl:topDataProperty ;
-      rdfs:comment "Country code"@en ;
-      rdfs:comment "Landeskennung"@de ;
-      skos:example "DE" .
+    rdfs:label "countryCode"@en ;
+    rdfs:label "Landeskennung"@de ;
+    skos:example "DE" .
 
 
 ###  http://example.org/ontologies/atkis#modellart
 :modellart rdf:type owl:DatatypeProperty ;
-           rdfs:subPropertyOf owl:topDataProperty ;
-           rdfs:comment "Model type identifier"@en ;
-           rdfs:comment "Modellarten Kennung"@de ;
-           skos:example "Basis-DLM" ;
-           rdfs:range xsd:string .
-
+    rdfs:range xsd:string ;
+    rdfs:comment "Model type identifier"@en ;
+    rdfs:comment "Modellarten Kennung"@de ;
+    skos:example "Basis-DLM" .
 
 ###  http://example.org/ontologies/atkis#objart
 :objart rdf:type owl:DatatypeProperty ;
-        rdfs:subPropertyOf owl:topDataProperty ;
-        rdfs:comment "Object type"@en ;
-        rdfs:comment "Objektart"@de ;
-        rdfs:range xsd:string .
-
+    rdfs:range xsd:string ;
+    rdfs:comment "Object type"@en ;
+    rdfs:comment "Objektart"@de .
 
 ###  http://example.org/ontologies/atkis#objart_txt
 :objart_txt rdf:type owl:DatatypeProperty ;
-            rdfs:subPropertyOf owl:topDataProperty ;
-            rdfs:domain :Settlement ;
-            rdfs:comment "Object type text"@en ;
-            rdfs:comment "Objektart Text"@de ;
-            rdfs:range xsd:string .
-
+    rdfs:range xsd:string ;
+    rdfs:comment "Object type text"@en ;
+    rdfs:comment "Objektart Text"@de .
 
 ###  http://example.org/ontologies/atkis#objart_z
 :objart_z rdf:type owl:DatatypeProperty ;
-            rdfs:comment "Object types without spatial references (ZUSO)"@en ;
-            rdfs:comment "Objektarten ohne räumlichen Bezug (ZUSO)"@de .
+    rdfs:comment "Object types without spatial references (ZUSO)"@en ;
+    rdfs:comment "Objektarten ohne räumlichen Bezug (ZUSO)"@de .
 
 
 ###  http://example.org/ontologies/atkis#objid
 :objid rdf:type owl:DatatypeProperty ;
-       rdfs:subPropertyOf owl:topDataProperty ;
-       rdfs:comment "Unique Object identifier"@en ;
-       rdfs:comment "Eindeutiger Objektidentifikator"@de .
+    rdfs:comment "Unique Object identifier"@en ;
+    rdfs:comment "Eindeutiger Objektidentifikator"@de .
 
 
 ###  http://example.org/ontologies/atkis#objid_z
 :objid_z rdf:type owl:DatatypeProperty ;
-         rdfs:subPropertyOf owl:topDataProperty ;
-         rdfs:comment "Unique identifier for feature types without spatial reference (ZUSO)"@en ;
-         rdfs:comment "Eindeutiger Identifikator für Objektarten ohne räumlichen Bezug (ZUSO)"@de .
-
+    rdfs:comment "Unique identifier for feature types without spatial reference (ZUSO)"@en ;
+    rdfs:comment "Eindeutiger Identifikator für Objektarten ohne räumlichen Bezug (ZUSO)"@de .
 
 ###  http://example.org/ontologies/atkis#rgs
 :rgs rdf:type owl:DatatypeProperty ;
-     rdfs:domain :Settlement ;
      rdfs:range xsd:string ;
-     rdfs:comment "regional language"@en ;
-     rdfs:comment "Regional Sprache"@de .
-
+     rdfs:label "regionalLanguage"@en ;
+     rdfs:label "regionalSprache"@de .
 
 ###  http://example.org/ontologies/atkis#gwk
 :sch rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "Catalogue entry abbreviation"@en ;
-     rdfs:comment "Schluessel Gesamt"@de ;
-     rdfs:range xsd:string .
+     rdfs:range xsd:string ;
+     rdfs:comment "catalogueEntryAbbreviation"@en ;
+     rdfs:comment "schluesselGesamt"@de .
 
 ###  http://example.org/ontologies/atkis#sgn
 :sgn rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "'Nummer des Schutzgebietes' ist die amtlich festgelegte Verschlüsselung von 'Schutzgebiet nach Natur-, Umwelt- oder Bodenschutzrecht'."@de ;
-     rdfs:comment "'Number of the protected area' is the officially defined code for 'protected area under nature, environmental or soil protection law'."@en ;
-     rdfs:range xsd:integer .
+    rdfs:range xsd:integer ;
+    rdfs:label "numberOfProtectedArea"@en ;
+    rdfs:label "nummerDesSchutzgebietes"@de ;
+    rdfs:comment "Nummer des Schutzgebietes ist die amtlich festgelegte Verschlüsselung von Schutzgebiet nach Natur-, Umwelt- oder Bodenschutzrecht."@de ;
+    rdfs:comment "Number of the protected area is the officially defined code for protected area under nature, environmental or soil protection law."@en .
 
 ###  http://example.org/ontologies/atkis#skz
 :skz rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf owl:topDataProperty ;
-     rdfs:comment "'Sea code' is the code assigned by the responsible specialist agency."@en ;
-     rdfs:comment "'Seekennzahl' ist die von der zuständigen Fachstelle vergebene Verschlüsselung."@de ;
-     rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    rdfs:label "seaCode"@en ;
+    rdfs:label "seekennzahl"@de ;
+    rdfs:comment "Sea code is the code assigned by the responsible specialist agency."@en ;
+    rdfs:comment "Seekennzahl ist die von der zuständigen Fachstelle vergebene Verschlüsselung."@de .
 
 ###  http://example.org/ontologies/atkis#wsg
 :wsg rdf:type owl:DatatypeProperty ;
-     rdfs:comment "Water level in standing water"@en ;
-     rdfs:comment "Wasserspiegelhoehe In Stehendem Gewaesser"@de ;
-     skos:example "Difference between e.g. tank height and current water level"@en ;
-     rdfs:domain :WaterBodyCourse ;
-     rdfs:range xsd:decimal .
+    rdfs:domain :WaterBodyCourse ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "Water level in standing water"@en ;
+    rdfs:comment "Wasserspiegelhoehe In Stehendem Gewaesser"@de ;
+    skos:example "Difference between e.g. tank height and current water level"@en .
+
 
 ###  http://example.org/ontologies/atkis#znm
 :znm rdf:type owl:DatatypeProperty ;
-        rdfs:subPropertyOf owl:topDataProperty ;
-        rdfs:comment "Middle name"@en ;
-        rdfs:comment "Zweit Name"@de ;
-        rdfs:range xsd:string .
+    rdfs:comment "Middle name"@en ;
+    rdfs:comment "Zweit Name"@de ;
+    rdfs:range xsd:string .
 
 
 #################################################################

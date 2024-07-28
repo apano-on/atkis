@@ -544,7 +544,7 @@ LIMIT 100
 [[tabGroups.tabs]]
 name="VER03: railway traffic"
 query = """
-# VER03: Find 1) double-track electrified railways 2) double-track abandoned long distance railways
+# VER03: Find 1) standard gauge electrified railways 2) standard gauge abandoned long distance railways
 PREFIX : <http://example.org/ontologies/atkis#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -556,7 +556,7 @@ SELECT * WHERE {
 
   # Find double track and electrified railways
   ?x :spw [ rdfs:label ?function] .
-  FILTER(LANG(?function) = "en" && STR(?function) = "Double track")
+  FILTER(LANG(?function) = "en" && STR(?function) = "Standard gauge")
   ?x :elk ?electrified .
   FILTER(?electrified = TRUE) .
 
@@ -571,7 +571,6 @@ SELECT * WHERE {
   ?x geo:hasGeometry/geo:asWKT ?xGeom .
 }
 LIMIT 100
-
 """
 
 [[tabGroups.tabs]]
