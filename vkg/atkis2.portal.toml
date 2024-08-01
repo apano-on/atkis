@@ -890,7 +890,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT * WHERE {
-  ?x a :ReliefForm .
+  ?x a :Relief .
   OPTIONAL {?x rdfs:label ?name .}
 
   # Find relief areas with flood protection, storm surge protection and traffic management
@@ -940,6 +940,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT * WHERE {
   ?x a :VerticalRelation .
+  ?y :hasDirectlyUnder ?z .
 }
 LIMIT 100
 """

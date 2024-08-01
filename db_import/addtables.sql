@@ -1,18 +1,18 @@
 -- Add 2 missing linkage tables
 CREATE TABLE building_in_city AS
-SELECT DISTINCT ON (t1.gid) t1.gid AS b_gid, t2.gid AS loc_gid
+SELECT DISTINCT ON (t1.objid) t1.objid AS b_objid, t2.objid AS loc_objid
     FROM "sie05_p" t1
     INNER JOIN "sie01_f" t2 ON st_within(t1.geom, t2.geom);
 
-ALTER TABLE building_in_city ADD PRIMARY KEY (b_gid);
+ALTER TABLE building_in_city ADD PRIMARY KEY (b_objid);
 
 
 CREATE TABLE wbcourse_in_loc AS
-SELECT DISTINCT ON (t1.gid) t1.gid AS w_gid, t2.gid AS loc_gid
+SELECT DISTINCT ON (t1.objid) t1.objid AS w_objid, t2.objid AS loc_objid
     FROM "gew01_f" t1
     INNER JOIN "sie01_f" t2 ON st_intersects(t1.geom, t2.geom);
 
-ALTER TABLE wbcourse_in_loc ADD PRIMARY KEY (w_gid);
+ALTER TABLE wbcourse_in_loc ADD PRIMARY KEY (w_objid);
 
 
 -- Some attributes in the RoadTraffic table contain -9998 instead of NULL values
@@ -51,6 +51,48 @@ SET hho = CASE
               WHEN hho = -9998 THEN NULL
               ELSE hho
     END;
+
+
+-- Add unique constraints based on objid
+ALTER TABLE hdu01_b ADD CONSTRAINT hdu01_b_objid_unique UNIQUE (objid_1, objid_2);
+ALTER TABLE sie01_f ADD CONSTRAINT sie01_f_objid_unique UNIQUE (objid);
+ALTER TABLE sie01_p ADD CONSTRAINT sie01_p_objid_unique UNIQUE (objid);
+ALTER TABLE sie02_f ADD CONSTRAINT sie02_f_objid_unique UNIQUE (objid);
+ALTER TABLE sie03_f ADD CONSTRAINT sie03_f_objid_unique UNIQUE (objid);
+ALTER TABLE sie03_l ADD CONSTRAINT sie03_l_objid_unique UNIQUE (objid);
+ALTER TABLE sie03_p ADD CONSTRAINT sie03_p_objid_unique UNIQUE (objid);
+ALTER TABLE sie04_f ADD CONSTRAINT sie04_f_objid_unique UNIQUE (objid);
+ALTER TABLE sie04_l ADD CONSTRAINT sie04_l_objid_unique UNIQUE (objid);
+ALTER TABLE sie04_p ADD CONSTRAINT sie04_p_objid_unique UNIQUE (objid);
+ALTER TABLE sie05_p ADD CONSTRAINT sie05_p_objid_unique UNIQUE (objid);
+ALTER TABLE ver01_l ADD CONSTRAINT ver01_l_objid_unique UNIQUE (objid);
+ALTER TABLE ver02_l ADD CONSTRAINT ver02_l_objid_unique UNIQUE (objid);
+ALTER TABLE ver03_f ADD CONSTRAINT ver03_f_objid_unique UNIQUE (objid);
+ALTER TABLE ver03_l ADD CONSTRAINT ver03_l_objid_unique UNIQUE (objid);
+ALTER TABLE ver04_f ADD CONSTRAINT ver04_f_objid_unique UNIQUE (objid);
+ALTER TABLE ver05_l ADD CONSTRAINT ver05_l_objid_unique UNIQUE (objid);
+ALTER TABLE ver06_f ADD CONSTRAINT ver06_f_objid_unique UNIQUE (objid);
+ALTER TABLE ver06_l ADD CONSTRAINT ver06_l_objid_unique UNIQUE (objid);
+ALTER TABLE ver06_p ADD CONSTRAINT ver06_p_objid_unique UNIQUE (objid);
+ALTER TABLE veg01_f ADD CONSTRAINT veg01_f_objid_unique UNIQUE (objid);
+ALTER TABLE veg02_f ADD CONSTRAINT veg02_f_objid_unique UNIQUE (objid);
+ALTER TABLE veg03_f ADD CONSTRAINT veg03_f_objid_unique UNIQUE (objid);
+ALTER TABLE veg04_f ADD CONSTRAINT veg04_f_objid_unique UNIQUE (objid);
+ALTER TABLE gew01_f ADD CONSTRAINT gew01_f_objid_unique UNIQUE (objid);
+ALTER TABLE gew01_l ADD CONSTRAINT gew01_l_objid_unique UNIQUE (objid);
+ALTER TABLE gew02_f ADD CONSTRAINT gew02_f_objid_unique UNIQUE (objid);
+ALTER TABLE gew02_p ADD CONSTRAINT gew02_p_objid_unique UNIQUE (objid);
+ALTER TABLE gew03_l ADD CONSTRAINT gew03_l_objid_unique UNIQUE (objid);
+ALTER TABLE geb01_f ADD CONSTRAINT geb01_f_objid_unique UNIQUE (objid);
+ALTER TABLE geb01_l ADD CONSTRAINT geb01_l_objid_unique UNIQUE (objid);
+ALTER TABLE geb02_f ADD CONSTRAINT geb02_f_objid_unique UNIQUE (objid);
+ALTER TABLE geb03_f ADD CONSTRAINT geb03_f_objid_unique UNIQUE (objid);
+ALTER TABLE rel01_l ADD CONSTRAINT rel01_l_objid_unique UNIQUE (objid);
+ALTER TABLE rel01_p ADD CONSTRAINT rel01_p_objid_unique UNIQUE (objid);
+ALTER TABLE rel02_p ADD CONSTRAINT rel02_p_objid_unique UNIQUE (objid);
+
+
+
 
 -- Source: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/binarywriterservlet?imgUid=78f7a5be-17ae-4819-393b-216067bef8a0&uBasVariant=11111111-1111-1111-1111-111111111111#_C11007-_A11007_46283
 -- FROM: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/, OK AAA-Anwendungsschema 7.1.2 (HTML)
