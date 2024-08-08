@@ -16,59 +16,59 @@ schema:		http://schema.org/
 
 [MappingDeclaration] @collection [[
 mappingId	Area for linestring_l
-target		:Administrative/l/{objid} a :Administrative ; :land {land}^^xsd:string ; :objart {objart}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :zus :EntityCondition/{zus} ; :agz :BoundaryType/{agz_1} ; geo:hasDefaultGeometry :Administrative/geo/l/{objid} . :Administrative/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:Administrative/l/{objid} a :Administrative ; :countryCode {land}^^xsd:string ; :objectType {objart}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :condition :EntityCondition/{zus} ; :boundaryType :BoundaryType/{agz_1} ; geo:hasDefaultGeometry :Administrative/geo/l/{objid} . :Administrative/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, st_astext(geom) as wkt, objart, beginn, land, zus, agz_1 from "geb01_l"
 
 mappingId	Area for linestring_l - agz2
-target		:Administrative/l/{objid} :agz :BoundaryType/{agz_2} .
+target		:Administrative/l/{objid} :boundaryType :BoundaryType/{agz_2} .
 source		select objid, agz_2 from "geb01_l" where agz_2 is not null
 
 mappingId	Area for linestring_l - agz3
-target		:Administrative/l/{objid} :agz :BoundaryType/{agz_3} .
+target		:Administrative/l/{objid} :boundaryType :BoundaryType/{agz_3} .
 source		select objid, agz_3 from "geb01_l" where agz_3 is not null
 
 mappingId	Area for linestring_l - agz4
-target		:Administrative/l/{objid} :agz :BoundaryType/{agz_4} .
+target		:Administrative/l/{objid} :boundaryType :BoundaryType/{agz_4} .
 source		select objid, agz_4 from "geb01_l" where agz_4 is not null
 
 mappingId	Area for linestring_l - agz5
-target		:Administrative/l/{objid} :agz :BoundaryType/{agz_5} .
+target		:Administrative/l/{objid} :boundaryType :BoundaryType/{agz_5} .
 source		select objid, agz_5 from "geb01_l" where agz_5 is not null
 
 mappingId	Area for linestring_l - agz6
-target		:Administrative/l/{objid} :agz :BoundaryType/{agz_6} .
+target		:Administrative/l/{objid} :boundaryType :BoundaryType/{agz_6} .
 source		select objid, agz_6 from "geb01_l" where agz_6 is not null
 
 mappingId	administrative polygon
-target		:Administrative/f/{objid} a :Administrative ; rdfs:label {bez_lan}^^xsd:string ; :bez_nat {bez_nat}^^xsd:string ; :bez_lan {bez_lan}^^xsd:string ; :bez_rbz {bez_rbz}^^xsd:string ; :bez_krs {bez_krs}^^xsd:string ; :bez_vwg {bez_vwg}^^xsd:string ; :bez_gem {bez_gem}^^xsd:string ; :sch {sch}^^xsd:string ; :adm :AdministrativeFunction/{adm} ; geo:hasDefaultGeometry :Administrative/geo/f/{objid} . :Administrative/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:Administrative/f/{objid} a :Administrative ; rdfs:label {bez_lan}^^xsd:string ; :countryDesignation {bez_nat}^^xsd:string ; :stateDesignation {bez_lan}^^xsd:string ; :districtDesignation {bez_rbz}^^xsd:string ; :circleDesignation {bez_krs}^^xsd:string ; :townshipDesignation {bez_vwg}^^xsd:string ; :municipalityDesignation {bez_gem}^^xsd:string ; :catalogueEntryAbbreviation {sch}^^xsd:string ; :administrativeFunction :AdministrativeFunction/{adm} ; geo:hasDefaultGeometry :Administrative/geo/f/{objid} . :Administrative/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, adm, sch, bez_nat, bez_lan, bez_rbz, bez_krs, bez_vwg, bez_gem, st_astext(geom) as wkt from "geb01_f"
 
 mappingId	Area, geographical areas polygon (f)
-target		:Geographical/f/{objid} a :Geographical ; rdfs:label {nam}^^xsd:string ; :ltp :LandscapeType/{ltp} ; geo:hasDefaultGeometry :Geographical/geo/f/{objid} . :Geographical/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:Geographical/f/{objid} a :Geographical ; rdfs:label {nam}^^xsd:string ; :landscapeType :LandscapeType/{ltp} ; geo:hasDefaultGeometry :Geographical/geo/f/{objid} . :Geographical/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, ltp, st_astext(geom) as wkt from "geb02_f"
 
 mappingId	Protected areas polygons_f
-target		:Protected/f/{objid} a :Protected ; rdfs:label {nam}^^xsd:string ; :adf :SpecificationType/{adf} ; :sgn {sgn}^^xsd:integer ; geo:hasDefaultGeometry :Protected/geo/f/{objid} . :Protected/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:Protected/f/{objid} a :Protected ; rdfs:label {nam}^^xsd:string ; :specificationType :SpecificationType/{adf} ; :numberOfProtectedArea {sgn}^^xsd:integer ; geo:hasDefaultGeometry :Protected/geo/f/{objid} . :Protected/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, adf, sgn, st_astext(geom) as wkt from "geb03_f"
 
 mappingId	WaterBody polygon_f
-target		:WaterBodyCourse/f/{objid} a :WaterBodyCourse ; rdfs:label {nam}^^xsd:string ; :fkt :Function/{objart}/{fkt} ; :gwk {gwk}^^xsd:string ; :skz {skz}^^xsd:string ; :hyd {hyd_boolean}^^xsd:boolean ; :wsg {wsg}^^xsd:decimal ; :sfk :NavigationCategory/{sfk} ; :zus :EntityCondition/{zus} ; :objart_txt {objart_txt} ; geo:hasDefaultGeometry :WaterBodyCourse/geo/f/{objid} . :WaterBodyCourse/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral ; :wdm :EntityClassification/{objart}/{wdm} .
+target		:WaterBodyCourse/f/{objid} a :WaterBodyCourse ; rdfs:label {nam}^^xsd:string ; :function :Function/{objart}/{fkt} ; :watercourseCode {gwk}^^xsd:string ; :seaCode {skz}^^xsd:string ; :hydrologicalFeature {hyd_boolean}^^xsd:boolean ; :waterLevel {wsg}^^xsd:decimal ; :navigationCategory :NavigationCategory/{sfk} ; :condition :EntityCondition/{zus} ; :objectTypeLabel {objart_txt} ; geo:hasDefaultGeometry :WaterBodyCourse/geo/f/{objid} . :WaterBodyCourse/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral ; :entityClassification :EntityClassification/{objart}/{wdm} .
 source		select objid, nam, objart, objart_txt, fkt, sfk, gwk, skz, wdm, wsg, zus, st_astext(geom) as wkt, CASE WHEN (hyd='2000') THEN TRUE ELSE FALSE END AS hyd_boolean from "gew01_f"
 
 mappingId	WaterBody linestrings_l
-target		:WaterBodyCourse/l/{objid} a :WaterBodyCourse ; rdfs:label {nam}^^xsd:string ; :fkt :Function/{objart}/{fkt} ; :gwk {gwk}^^xsd:string ; :brg {brg}^^xsd:integer ; :flr {flr}^^xsd:boolean ; :sfk :NavigationCategory/{sfk} ; :zus :EntityCondition/{zus} ; geo:hasDefaultGeometry :WaterBodyCourse/geo/l/{objid} . :WaterBodyCourse/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral ; :wdm :EntityClassification/{objart}/{wdm} .
+target		:WaterBodyCourse/l/{objid} a :WaterBodyCourse ; rdfs:label {nam}^^xsd:string ; :function :Function/{objart}/{fkt} ; :watercourseCode {gwk}^^xsd:string ; :widthOfWaterbody {brg}^^xsd:integer ; :flowDirection {flr}^^xsd:boolean ; :navigationCategory :NavigationCategory/{sfk} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :WaterBodyCourse/geo/l/{objid} . :WaterBodyCourse/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral ; :entityClassification :EntityClassification/{objart}/{wdm} .
 source		select objid, nam, objart, sfk, fkt, flr, gwk, brg, wdm, zus, st_astext(geom) as wkt from "gew01_l"
 
 mappingId	WaterBodyCharacteristic polygon_f
-target		:WaterBodyCharacteristic/f/{objid} a :WaterBodyCharacteristic ; rdfs:label {nam}^^xsd:string ; :art :SpecificType/{objart}/{art} ; geo:hasDefaultGeometry :WaterBodyCharacteristic/geo/f/{objid} . :WaterBodyCharacteristic/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:WaterBodyCharacteristic/f/{objid} a :WaterBodyCharacteristic ; rdfs:label {nam}^^xsd:string ; :type :SpecificType/{objart}/{art} ; geo:hasDefaultGeometry :WaterBodyCharacteristic/geo/f/{objid} . :WaterBodyCharacteristic/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, art, objart, st_astext(geom) as wkt from "gew02_f"
 
 mappingId	WaterBodyCharacteristic point_p
-target		:WaterBodyCharacteristic/p/{objid} a :WaterBodyCharacteristic ; rdfs:label {nam}^^xsd:string ; :art :SpecificType/{objart}/{art} ; geo:hasDefaultGeometry :WaterBodyCharacteristic/geo/p/{objid} . :WaterBodyCharacteristic/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:WaterBodyCharacteristic/p/{objid} a :WaterBodyCharacteristic ; rdfs:label {nam}^^xsd:string ; :type :SpecificType/{objart}/{art} ; geo:hasDefaultGeometry :WaterBodyCharacteristic/geo/p/{objid} . :WaterBodyCharacteristic/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, art, objart, st_astext(geom) as wkt from "gew02_p"
 
 mappingId	WaterLineAxis linestring_l
-target		:WaterLineAxis/l/{objid} a :WaterLineAxis ; rdfs:label {nam}^^xsd:string ; :gwk {gwk}^^xsd:string ; :flr {flr}^^xsd:boolean ; :aga :WaterStationingAxis/{aga} ; :sfk :NavigationCategory/{sfk} ;  geo:hasDefaultGeometry :WaterLineAxis/geo/l/{objid} . :WaterLineAxis/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:WaterLineAxis/l/{objid} a :WaterLineAxis ; rdfs:label {nam}^^xsd:string ; :watercourseCode {gwk}^^xsd:string ; :flowDirection {flr}^^xsd:boolean ; :waterStationingAxis :WaterStationingAxis/{aga} ; :navigationCategory :NavigationCategory/{sfk} ;  geo:hasDefaultGeometry :WaterLineAxis/geo/l/{objid} . :WaterLineAxis/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, aga, flr, gwk, sfk, st_astext(geom) as wkt from "gew03_l"
 
 mappingId	VerticalRelation
@@ -96,7 +96,7 @@ target		:WaterBodyCourse/f/{objid_1} :hasDirectlyUnder :TransportBuildingAndFaci
 source		select objid_1, objid_2 FROM "hdu01_b" WHERE ebene_1 = 'gew01_f' and ebene_2 = 'ver06_l'
 
 mappingId	Relief linestring_l
-target		:ReliefForm/l/{objid} a :Relief ; rdfs:label {nam} ; :fkt :Function/{objart}/{fkt} ; :art :SpecificType/{objart}/{art} ; :hhl {hhl}^^xsd:decimal ; :hho {hho}^^xsd:decimal ; geo:hasDefaultGeometry :ReliefForm/geo/l/{objid} . :ReliefForm/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:ReliefForm/l/{objid} a :Relief ; rdfs:label {nam} ; :function :Function/{objart}/{fkt} ; :type :SpecificType/{objart}/{art} ; :hhl {hhl}^^xsd:decimal ; :objectHeight {hho}^^xsd:decimal ; geo:hasDefaultGeometry :ReliefForm/geo/l/{objid} . :ReliefForm/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, art, fkt, hhl, hho, objart, st_astext(geom) as wkt from "rel01_l"
 
 mappingId	Relief point_p
@@ -104,51 +104,51 @@ target		:ReliefForm/p/{objid} a :Relief ; rdfs:label {nam} ; geo:hasDefaultGeome
 source		select objid, nam, st_astext(geom) as wkt from "rel01_p"
 
 mappingId	Relief MeasurementData point_p
-target		:MeasurementData/p/{objid} a :MeasurementData ; :art :SpecificType/{objart}/{art} ; :hoehe {hoehe}^^xsd:decimal ; geo:hasDefaultGeometry :MeasurementData/geo/p/{objid} . :MeasurementData/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:MeasurementData/p/{objid} a :MeasurementData ; :type :SpecificType/{objart}/{art} ; :elevation {hoehe}^^xsd:decimal ; geo:hasDefaultGeometry :MeasurementData/geo/p/{objid} . :MeasurementData/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, st_astext(geom), art, objart, hoehe, st_astext(geom) as wkt from "rel02_p"
 
 mappingId	Settlement, named location polygon_f
-target		:Location/f/{objid} a :Location ; rdfs:label {nam}^^xsd:string ; :rgs {rgs}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :land {land}^^xsd:string ; :hdu_x {hdux_boolean}^^xsd:boolean ; geo:hasDefaultGeometry :Location/geo/f/{objid} . :Location/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:Location/f/{objid} a :Location ; rdfs:label {nam}^^xsd:string ; :regionalLanguage {rgs}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :countryCode {land}^^xsd:string ; :hasDirectlyUnderExists {hdux_boolean}^^xsd:boolean ; geo:hasDefaultGeometry :Location/geo/f/{objid} . :Location/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, rgs, beginn, ende, land, CASE WHEN (hdu_x=1) THEN TRUE ELSE FALSE END AS hdux_boolean, st_astext(geom) as wkt from "sie01_f"
 
 mappingId	Settlement, named location point_p
-target		:Location/p/{objid} a :Location ; rdfs:label {nam}^^xsd:string ; :rgs {rgs}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :land {land}^^xsd:string ; :hdu_x {hdux_boolean}^^xsd:boolean ; geo:hasDefaultGeometry :Location/geo/p/{objid} . :Location/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:Location/p/{objid} a :Location ; rdfs:label {nam}^^xsd:string ; :regionalLanguage {rgs}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :countryCode {land}^^xsd:string ; :hasDirectlyUnderExists {hdux_boolean}^^xsd:boolean ; geo:hasDefaultGeometry :Location/geo/p/{objid} . :Location/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, rgs, beginn, ende, land, CASE WHEN (hdu_x=1) THEN TRUE ELSE FALSE END AS hdux_boolean, st_astext(geom) as wkt  from "sie01_p"
 
 mappingId	areas dominated by buildings, polygon f
-target		:AreaDominatedByBuilding/f/{objid} a :AreaDominatedByBuilding ; :objart {objart} ; :beginn {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; rdfs:label {nam}^^xsd:string ; :agt :MinedMaterial/{objart}/{agt} ; :fkt :Function/{objart}/{fkt} ; :zus :EntityCondition/{zus} ; geo:hasDefaultGeometry :AreaDominatedByBuilding/geo/f/{objid} . :AreaDominatedByBuilding/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:AreaDominatedByBuilding/f/{objid} a :AreaDominatedByBuilding ; :objectType {objart} ; :beginn {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; rdfs:label {nam}^^xsd:string ; :minedMaterial :MinedMaterial/{objart}/{agt} ; :function :Function/{objart}/{fkt} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :AreaDominatedByBuilding/geo/f/{objid} . :AreaDominatedByBuilding/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, agt, fkt, objart, zus, beginn, ende, st_astext(geom) as wkt from "sie02_f"
 
 mappingId	Building/facilities polygon_f
-target		:BuildingFacility/f/{objid} a :BuildingFacility ; rdfs:label {nam}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :hho {hho}^^xsd:decimal ; :bwf :StructureFunction/{objart}/{bwf} ; :zus :EntityCondition/{zus} ; geo:hasDefaultGeometry :BuildingFacility/geo/f/{objid} . :BuildingFacility/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:BuildingFacility/f/{objid} a :BuildingFacility ; rdfs:label {nam}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :objectHeight {hho}^^xsd:decimal ; :structureFunction :StructureFunction/{objart}/{bwf} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :BuildingFacility/geo/f/{objid} . :BuildingFacility/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, objart, hho, bwf, zus, beginn, ende, st_astext(geom) as wkt from "sie03_f"
 
 mappingId	Building/facilities linestring_l
-target		:BuildingFacility/l/{objid} a :BuildingFacility ; :beginn {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :bwf :StructureFunction/{objart}/{bwf} ; geo:hasDefaultGeometry :BuildingFacility/geo/l/{objid} . :BuildingFacility/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:BuildingFacility/l/{objid} a :BuildingFacility ; :beginn {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :structureFunction :StructureFunction/{objart}/{bwf} ; geo:hasDefaultGeometry :BuildingFacility/geo/l/{objid} . :BuildingFacility/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, objart, bwf, beginn, ende, st_astext(geom) as wkt from "sie03_l"
 
 mappingId	Building/facilities point_p, using the geom4326 column for visualisation
-target		:BuildingFacility/p/{objid} a :BuildingFacility ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; rdfs:label {nam}^^xsd:string ; :bwf :StructureFunction/{objart}/{bwf} ; :atp :ArchaeologicalType/{atp} ; :spo :SportType/{spo} ; :zus :EntityCondition/{zus} ; :hho {hho}^^xsd:decimal ; geo:hasDefaultGeometry :BuildingFacility/geo/p/{objid} . :BuildingFacility/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:BuildingFacility/p/{objid} a :BuildingFacility ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; rdfs:label {nam}^^xsd:string ; :structureFunction :StructureFunction/{objart}/{bwf} ; :archeologicalType :ArchaeologicalType/{atp} ; :typeOfSport :SportType/{spo} ; :condition :EntityCondition/{zus} ; :objectHeight {hho}^^xsd:decimal ; geo:hasDefaultGeometry :BuildingFacility/geo/p/{objid} . :BuildingFacility/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, bwf, objart, hho, spo, zus, atp, beginn, ende, st_astext(geom) as wkt from "sie03_p"
 
 mappingId	SpecialFacility polygon_f
-target		:SpecialFacility/f/{objid} a :SpecialFacility ; rdfs:label {nam}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :objart_txt {objart_txt} ; geo:hasDefaultGeometry :SpecialFacilitiy/geo/f/{objid} . :SpecialFacilitiy/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:SpecialFacility/f/{objid} a :SpecialFacility ; rdfs:label {nam}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :objectTypeLabel {objart_txt} ; geo:hasDefaultGeometry :SpecialFacilitiy/geo/f/{objid} . :SpecialFacilitiy/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, beginn, ende, st_astext(geom) as wkt, objart_txt from "sie04_f"
 
 mappingId	SpecialFacility linestring_l
-target		:SpecialFacility/l/{objid} a :SpecialFacility ; rdfs:label {nam}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :kon :WaterNavigationLock/{kon} ; :zus :EntityCondition/{zus} ; :objart_txt {objart_txt} ; geo:hasDefaultGeometry :SpecialFacilitiy/geo/l/{objid} . :SpecialFacilitiy/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:SpecialFacility/l/{objid} a :SpecialFacility ; rdfs:label {nam}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :designFeature :WaterNavigationLock/{kon} ; :condition :EntityCondition/{zus} ; :objectTypeLabel {objart_txt} ; geo:hasDefaultGeometry :SpecialFacilitiy/geo/l/{objid} . :SpecialFacilitiy/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, kon, zus, beginn, ende, st_astext(geom) as wkt, objart_txt from "sie04_l"
 
 mappingId	SpecialFacility point_p
-target		:SpecialFacility/p/{objid} a :SpecialFacility ; rdfs:label {nam}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :zus :EntityCondition/{zus} ; :objart_txt {objart_txt} ; geo:hasDefaultGeometry :SpecialFacilitiy/geo/p/{objid} . :SpecialFacilitiy/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral ; :objart_txt {objart_txt} .
+target		:SpecialFacility/p/{objid} a :SpecialFacility ; rdfs:label {nam}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :condition :EntityCondition/{zus} ; :objectTypeLabel {objart_txt} ; geo:hasDefaultGeometry :SpecialFacilitiy/geo/p/{objid} . :SpecialFacilitiy/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral ; :objectTypeLabel {objart_txt} .
 source		select objid, nam, zus, beginn, ende, st_astext(geom) as wkt, objart_txt from "sie04_p"
 
 mappingId	Building point_p
-target		:Building/p/{objid} a :Building ; rdfs:label {nam}^^xsd:string ; :gfk :BuildingFunction/p/{gfk} ; :hho {hho}^^xsd:decimal ; :bwf :StructureFunction/{objart}/{bwf_1} ; :zus :EntityCondition/{zus} ; geo:hasDefaultGeometry :Building/geo/p/{objid} . :Building/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:Building/p/{objid} a :Building ; rdfs:label {nam}^^xsd:string ; :buildingFunction :BuildingFunction/p/{gfk} ; :objectHeight {hho}^^xsd:decimal ; :structureFunction :StructureFunction/{objart}/{bwf_1} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :Building/geo/p/{objid} . :Building/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, bwf_1, objart, gfk, zus, hho, st_astext(geom) as wkt from "sie05_p"
 
 mappingId	Building point_p - second structure function
-target		:Building/p/{objid} :bwf :StructureFunction/{objart}/{bwf_2} .
+target		:Building/p/{objid} :structureFunction :StructureFunction/{objart}/{bwf_2} .
 source		select objid, objart, bwf_2 from "sie05_p" where bwf_2 is not null
 
 mappingId	BuildingFunction
@@ -160,26 +160,26 @@ target		:BuildingFunction/p/{code} rdfs:label {name_en}@en .
 source		select code, name_en from "gebaeudefunktion"
 
 mappingId	Agricultural polygon_f
-target		:Agricultural/f/{objid} a :Agricultural ; rdfs:label {nam}^^xsd:string ; :veg :VegetationFeature/{veg} ; geo:hasDefaultGeometry :Agricultural/geo/f/{objid} . :Agricultural/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:Agricultural/f/{objid} a :Agricultural ; rdfs:label {nam}^^xsd:string ; :vegetationFeature :VegetationFeature/{veg} ; geo:hasDefaultGeometry :Agricultural/geo/f/{objid} . :Agricultural/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, veg, st_astext(geom) as wkt from "veg01_f"
 
 mappingId	Forestry polygon_f
-target		:Forestry/f/{objid} a :Forestry ; rdfs:label {nam}^^xsd:string ; :ntz :Usage/{objart}/{ntz} ; geo:hasDefaultGeometry :Forestry/geo/f/{objid} . :Forestry/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:Forestry/f/{objid} a :Forestry ; rdfs:label {nam}^^xsd:string ; :usage :Usage/{objart}/{ntz} ; geo:hasDefaultGeometry :Forestry/geo/f/{objid} . :Forestry/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, objart, ntz, st_astext(geom) as wkt from "veg02_f"
 
 mappingId	VegetationArea polygon_f
-target		:VegetationArea/f/{objid} a :VegetationArea ; rdfs:label {nam}^^xsd:string ; :fkt :Function/{objart}/{fkt} ; :ofm :SurfaceMaterial/{objart}/{ofm} ; geo:hasDefaultGeometry :Vegetation/geo/f/{objid} . :Vegetation/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:VegetationArea/f/{objid} a :VegetationArea ; rdfs:label {nam}^^xsd:string ; :function :Function/{objart}/{fkt} ; :surfaceMaterial :SurfaceMaterial/{objart}/{ofm} ; geo:hasDefaultGeometry :Vegetation/geo/f/{objid} . :Vegetation/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, ofm, fkt, objart, st_astext(geom) as wkt from "veg03_f"
 
 mappingId	vegetation_characteristics polygon_f
-target		:VegetationCharacteristic/f/{objid} a :VegetationCharacteristic ; rdfs:label {nam}^^xsd:string ; :bws :GroundCover/{bws} ; :zus :EntityCondition/{zus} ; geo:hasDefaultGeometry :VegetationCharacteristic/geo/f/{objid} . :VegetationCharacteristic/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:VegetationCharacteristic/f/{objid} a :VegetationCharacteristic ; rdfs:label {nam}^^xsd:string ; :groundCover :GroundCover/{bws} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :VegetationCharacteristic/geo/f/{objid} . :VegetationCharacteristic/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, bws, zus, st_astext(geom) as wkt from "veg04_f"
 
 ;Via the relation istTeilVon the objects of REOs AX_Strassenachse (42003) refer to the ZUSOs
 ; of the feature type AX_Strasse (42002). The concrete attribution is defined by the attributes
 ; OBJART_Z and OBJID_Z. The attributes of the ZUSO are attached to all related REOs.
 mappingId	Road traffic linestring_l
-target		:RoadTraffic/l/{objid} a :RoadTraffic ; rdfs:label {bez}^^xsd:string ; :znm {znm}^^xsd:string ; :fsz {fsz}^^xsd:integer ; :brf {brf}^^xsd:decimal ; :ftr {ftr_boolean}^^xsd:boolean ; :hdu_x {hdux_boolean}^^xsd:boolean ; :ibd {ibd_boolean}^^xsd:boolean ; :zus :EntityCondition/{zus} ; :bvb :SpecialTrafficImportance/{bvb} ; :wdm :EntityClassification/{objart_z}/{wdm} ; geo:hasDefaultGeometry :RoadTraffic/geo/l/{objid} . :RoadTraffic/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:RoadTraffic/l/{objid} a :RoadTraffic ; rdfs:label {bez}^^xsd:string ; :secondaryLabel {znm}^^xsd:string ; :numberOfLanes {fsz}^^xsd:integer ; :widthOfRoadway {brf}^^xsd:decimal ; :laneSeparation {ftr_boolean}^^xsd:boolean ; :hasDirectlyUnderExists {hdux_boolean}^^xsd:boolean ; :internationalImportance {ibd_boolean}^^xsd:boolean ; :condition :EntityCondition/{zus} ; :specialTrafficImportance :SpecialTrafficImportance/{bvb} ; :entityClassification :EntityClassification/{objart_z}/{wdm} ; geo:hasDefaultGeometry :RoadTraffic/geo/l/{objid} . :RoadTraffic/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, bez, brf, bvb, fsz, objart_z, CASE WHEN (ftr='2000') THEN TRUE ELSE FALSE END AS ftr_boolean, CASE WHEN (hdu_x=1) THEN TRUE ELSE FALSE END AS hdux_boolean, CASE WHEN (ibd='2001') THEN TRUE ELSE FALSE END AS ibd_boolean, wdm, znm, zus, st_astext(geom) as wkt from "ver01_l"
 
 mappingId	Road traffic - special traffic importance - German
@@ -191,7 +191,7 @@ target		:SpecialTrafficImportance/{code} rdfs:label {name_en}@en .
 source		select code, name_en from "besondereverkehrsbedeutung"
 
 mappingId	Road paths linestring_l
-target		:Path/l/{objid} a :Path ; rdfs:label {nam}^^xsd:string ; :fkt :Function/{objart}/{fkt} ; geo:hasMetricLength {length}^^xsd:double ; geo:hasDefaultGeometry :Path/geo/l/{objid} . :Path/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:Path/l/{objid} a :Path ; rdfs:label {nam}^^xsd:string ; :function :Function/{objart}/{fkt} ; geo:hasMetricLength {length}^^xsd:double ; geo:hasDefaultGeometry :Path/geo/l/{objid} . :Path/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, objart, fkt, st_astext(geom) as wkt, st_length(geom) as length from "ver02_l"
 
 mappingId	RailwayTraffic polygon_f
@@ -199,36 +199,52 @@ target		:RailwayTraffic/f/{objid} a :RailwayTraffic ; geo:hasDefaultGeometry :Ra
 source		select objid ,st_astext(geom) as wkt from "ver03_f"
 
 mappingId	RailwayTraffic linestring_l
-target		:RailwayTraffic/l/{objid} a :RailwayTraffic ; rdfs:label {nam}^^xsd:string ; :znm {znm}^^xsd:string ; :elk {elk_boolean}^^xsd:boolean ; :gls :RailwayTracks/{gls} ; :spw :TrackGauge/{spw} ; :vkd :TrafficService/{vkd} ; :zus :EntityCondition/{zus} ; geo:hasDefaultGeometry :RailwayTraffic/geo/l/{objid} . :RailwayTraffic/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
-source		select objid, nam, bkt, CASE WHEN (elk='1000') THEN TRUE ELSE FALSE END AS elk_boolean, gls, spw, vkd, znm, zus, st_astext(geom) as wkt from "ver03_l"
+target		:RailwayTraffic/l/{objid} a :RailwayTraffic ; rdfs:label {nam}^^xsd:string ; :secondaryLabel {znm}^^xsd:string ; :electrifiedRail {elk_boolean}^^xsd:boolean ; :railwayCategory :RailwayTracks/{bkt_1} ; :railwayNumber {nrb}^^xsd:string ; :numberOfRailwayTracks :RailwayTracks/{gls} ; :trackGauge :TrackGauge/{spw} ; :trafficService :TrafficService/{vkd} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :RailwayTraffic/geo/l/{objid} . :RailwayTraffic/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
+source		select objid, nam, bkt_1, CASE WHEN (elk='1000') THEN TRUE ELSE FALSE END AS elk_boolean, gls, spw, vkd, znm, zus, nrb, st_astext(geom) as wkt from "ver03_l"
+
+mappingId	RailwayTraffic linestring_l - bkt2
+target		:RailwayTraffic/l/{objid} :railwayCategory :RailwayTracks/{bkt_2} .
+source		select objid, bkt_2 from "ver03_l"
+
+mappingId	RailwayTraffic linestring_l - bkt3
+target		:RailwayTraffic/l/{objid} :railwayCategory :RailwayTracks/{bkt_3} .
+source		select objid, bkt_3 from "ver03_l"
+
+mappingId	RailwayTraffic linestring_l - bkt4
+target		:RailwayTraffic/l/{objid} :railwayCategory :RailwayTracks/{bkt_4} .
+source		select objid, bkt_4 from "ver03_l"
 
 mappingId	AirTraffic polygon_f
-target		:AirTraffic/f/{objid} a :AirTraffic ; rdfs:label {nam}^^xsd:string ; :bez {bez}^^xsd:string ; :art :SpecificType/{objart}/{art} ; :ntz :Usage/{objart}/{ntz} ; :zus :EntityCondition/{zus} ; geo:hasDefaultGeometry :AirTraffic/geo/f/{objid} . :AirTraffic/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:AirTraffic/f/{objid} a :AirTraffic ; rdfs:label {nam}^^xsd:string ; :designation {bez}^^xsd:string ; :type :SpecificType/{objart}/{art} ; :usage :Usage/{objart}/{ntz} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :AirTraffic/geo/f/{objid} . :AirTraffic/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, art, objart, bez, ntz, zus, st_astext(geom) as wkt from "ver04_f"
 
 mappingId	ShippingTraffic linestring_l
-target		:ShippingTraffic/l/{objid} a :ShippingTraffic ; rdfs:label {nam}^^xsd:string ; :art :SpecificType/{objart}/{art_1} ; geo:hasDefaultGeometry :ShippingTraffic/geo/l/{objid} . :ShippingTraffic/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:ShippingTraffic/l/{objid} a :ShippingTraffic ; rdfs:label {nam}^^xsd:string ; :type :SpecificType/{objart}/{art_1} ; geo:hasDefaultGeometry :ShippingTraffic/geo/l/{objid} . :ShippingTraffic/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, art_1, objart, st_astext(geom) as wkt from "ver05_l"
 
 mappingId	ShippingTraffic linestring_l - art2
-target		:ShippingTraffic/l/{objid} :art :SpecificType/{objart}/{art_2} .
+target		:ShippingTraffic/l/{objid} :type :SpecificType/{objart}/{art_2} .
 source		select objid, objart, art_2 from "ver05_l" where art_2 is not null
 
 mappingId	ShippingTraffic linestring_l - art3
-target		:ShippingTraffic/l/{objid} :art :SpecificType/{objart}/{art_3} .
+target		:ShippingTraffic/l/{objid} :type :SpecificType/{objart}/{art_3} .
 source		select objid, objart, art_3 from "ver05_l" where art_3 is not null
 
 mappingId	TransportBuildingAndFacility polygon_f
-target		:TransportBuildingAndFacility/f/{objid} a :TransportBuildingAndFacility ; rdfs:label {nam}^^xsd:string ; :bwf :StructureFunction/{objart}/{bwf} ; :zus :EntityCondition/{zus} ; geo:hasDefaultGeometry :TransportBuildingAndFacility/geo/f/{objid} . :TransportBuildingAndFacility/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:TransportBuildingAndFacility/f/{objid} a :TransportBuildingAndFacility ; rdfs:label {nam}^^xsd:string ; :structureFunction :StructureFunction/{objart}/{bwf} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :TransportBuildingAndFacility/geo/f/{objid} . :TransportBuildingAndFacility/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, objart, bwf, zus, st_astext(geom) as wkt from "ver06_f"
 
 mappingId	TransportBuildingAndFacility linestring_l
-target		:TransportBuildingAndFacility/l/{objid} a :TransportBuildingAndFacility ; rdfs:label {nam}^^xsd:string ; :art :SpecificType/{objart}/{art} ; :bwf :StructureFunction/{objart}/{bwf} ; :ofm :SurfaceMaterial/{objart}/{ofm} ; :bez {bez} ; :zus :EntityCondition/{zus} ; :bro {bro}^^xsd:decimal ; geo:hasDefaultGeometry :TransportBuildingAndFacility/geo/l/{objid} . :TransportBuildingAndFacility/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
+target		:TransportBuildingAndFacility/l/{objid} a :TransportBuildingAndFacility ; rdfs:label {nam}^^xsd:string ; :type :SpecificType/{objart}/{art} ; :structureFunction :StructureFunction/{objart}/{bwf} ; :surfaceMaterial :SurfaceMaterial/{objart}/{ofm} ; :designation {bez} ; :condition :EntityCondition/{zus} ; :objectWidth {bro}^^xsd:decimal ; geo:hasDefaultGeometry :TransportBuildingAndFacility/geo/l/{objid} . :TransportBuildingAndFacility/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT {wkt}^^geo:wktLiteral .
 source		select objid, nam, bez, objart, art, bro, bwf, ofm, zus, st_astext(geom) as wkt from "ver06_l"
 
 mappingId	TransportBuildingAndFacility Point
-target		:TransportBuildingAndFacility/p/{objid} a :TransportBuildingAndFacility ; rdfs:label {nam}^^xsd:string ; :art :SpecificType/{objart}/{art} ; :bwf :StructureFunction/{objart}/{bwf} ; :ofm :SurfaceMaterial/{objart}/{ofm} ; :bez {bez} ; :zus :EntityCondition/{zus} ; :bro {bro}^^xsd:decimal ; geo:hasDefaultGeometry :TransportBuildingAndFacility/geo/p/{objid} . :TransportBuildingAndFacility/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
-source		select objid, nam, bez, art, objart, bro, bwf, zus, ofm, st_astext(geom) as wkt from "ver06_p"
+target		:TransportBuildingAndFacility/p/{objid} a :TransportBuildingAndFacility ; rdfs:label {nam}^^xsd:string ; :railwayCategory :RailwayTracks/{bkt_1} ; :type :SpecificType/{objart}/{art} ; :structureFunction :StructureFunction/{objart}/{bwf} ; :surfaceMaterial :SurfaceMaterial/{objart}/{ofm} ; :designation {bez} ; :condition :EntityCondition/{zus} ; :objectWidth {bro}^^xsd:decimal ; geo:hasDefaultGeometry :TransportBuildingAndFacility/geo/p/{objid} . :TransportBuildingAndFacility/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT {wkt}^^geo:wktLiteral .
+source		select objid, nam, bez, bkt_1, art, objart, bro, bwf, zus, ofm, st_astext(geom) as wkt from "ver06_p"
+
+mappingId	TransportBuildingAndFacility Point
+target		:TransportBuildingAndFacility/p/{objid} :railwayCategory :RailwayTracks/{bkt_2} .
+source		select objid, bkt_2 from "ver06_p"
 
 mappingId	sie02 inside settlements
 target		:Location/f/{objid1} geo:sfContains :AreaDominatedByBuilding/f/{objid2} .
@@ -583,6 +599,14 @@ source		select code, name_de, definition_de from "anzahlderstreckengleise"
 mappingId	Railway Tracks - English
 target		:RailwayTracks/{code} rdfs:label {name_en}@en .
 source		select code, name_en from "anzahlderstreckengleise"
+
+mappingId	Railway Category - German
+target		:RailwayTracks/{code} a :RailwayCategory ; rdfs:label {name_de}@de ; rdfs:comment {definition_de}@de .
+source		select code, name_de, definition_de from "bahnkategorie"
+
+mappingId	Railway Category - English
+target		:RailwayCategory/{code} rdfs:label {name_en}@en .
+source		select code, name_en from "bahnkategorie"
 
 mappingId	Track Gauge - German
 target		:TrackGauge/{code} a :TrackGauge ; rdfs:label {name_de}@de ; rdfs:comment {definition_de}@de .

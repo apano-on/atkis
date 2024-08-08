@@ -184,6 +184,55 @@ SET agz_1 = CASE WHEN POSITION('#' IN agz) > 0
                  ELSE NULL
         END;
 
+-- CASE 4: ver03_l.bkt property can have cardinality without an upper bound, in practice up to 4
+ALTER TABLE ver03_l
+ADD COLUMN bkt_1 VARCHAR(4),
+ADD COLUMN bkt_2 VARCHAR(4),
+ADD COLUMN bkt_3 VARCHAR(4),
+ADD COLUMN bkt_4 VARCHAR(4);
+
+UPDATE ver03_l
+SET bkt_1 = CASE WHEN POSITION('#' IN bkt) > 0
+                     THEN CAST(SPLIT_PART(bkt, '#', 1) AS VARCHAR(4))
+                 ELSE bkt
+    END,
+    bkt_2 = CASE WHEN POSITION('#' IN bkt) > 0
+                     THEN CASE WHEN LENGTH(SPLIT_PART(bkt, '#', 2)) > 0
+                                   THEN CAST(SPLIT_PART(bkt, '#', 2) AS VARCHAR(4))
+                               ELSE NULL
+            END
+                 ELSE NULL
+        END,
+    bkt_3 = CASE WHEN POSITION('#' IN bkt) > 0
+                     THEN CASE WHEN LENGTH(SPLIT_PART(bkt, '#', 3)) > 0
+                                   THEN CAST(SPLIT_PART(bkt, '#', 3) AS VARCHAR(4))
+                               ELSE NULL
+            END
+                 ELSE NULL
+        END,
+    bkt_4 = CASE WHEN POSITION('#' IN bkt) > 0
+                     THEN CASE WHEN LENGTH(SPLIT_PART(bkt, '#', 4)) > 0
+                                   THEN CAST(SPLIT_PART(bkt, '#', 4) AS VARCHAR(4))
+                               ELSE NULL
+            END
+                 ELSE NULL
+        END;
+
+-- CASE 5: ver06_p.bkt where bkt has cardinality without an upper bound
+ALTER TABLE ver06_p
+ADD COLUMN bkt_1 VARCHAR(4),
+ADD COLUMN bkt_2 VARCHAR(4);
+
+UPDATE ver06_p
+SET bkt_1 = CASE WHEN POSITION('#' IN bkt) > 0
+                     THEN CAST(SPLIT_PART(bkt, '#', 1) AS VARCHAR(4))
+                 ELSE bkt
+    END,
+    bkt_2 = CASE WHEN POSITION('#' IN bkt) > 0
+                     THEN CAST(SPLIT_PART(bkt, '#', 2) AS VARCHAR(4))
+                 ELSE NULL
+        END;
+
 -- Source: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/binarywriterservlet?imgUid=78f7a5be-17ae-4819-393b-216067bef8a0&uBasVariant=11111111-1111-1111-1111-111111111111#_C11007-_A11007_46283
 -- FROM: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/, OK AAA-Anwendungsschema 7.1.2 (HTML)
 -- VERSION 7.1.2 needed for this dataset
@@ -1937,3 +1986,42 @@ ALTER TABLE "gew01_l" ADD CONSTRAINT fkt_fk FOREIGN KEY (fkt, objart) REFERENCES
 ALTER TABLE "rel01_l" ADD CONSTRAINT fkt_fk FOREIGN KEY (fkt, objart) REFERENCES funktion(code, objart);
 
 
+-- Attribute:  bahnkategorie
+CREATE TABLE bahnkategorie (
+                                      code VARCHAR(4) PRIMARY KEY,
+                                      name_en TEXT,
+                                      name_de TEXT,
+                                      definition_de TEXT,
+                                      CONSTRAINT check_column_format CHECK (
+                                          code ~ '^[0-9]{4}$' OR LENGTH(code) = 4 )
+    );
+
+INSERT INTO bahnkategorie VALUES (1100, '', 'Eisenbahn', '''Eisenbahn'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, auf dem im Nah- und/oder Fernverkehr Personen befördert und/oder Güter transportiert werden.');
+INSERT INTO bahnkategorie VALUES (1101, '', 'Personenverkehr', '''Personenverkehr'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, auf dem im Nah- und/oder Fernverkehr Personen befördert werden.');
+INSERT INTO bahnkategorie VALUES (1102, '', 'Güterverkehr', '''Güterverkehr'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, auf dem im Nah- und/oder Fernverkehr Güter transportiert werden.');
+INSERT INTO bahnkategorie VALUES (1103, '', 'Betriebsverkehr', '''Betriebsverkehr'' ist die Bezeichnung für eine Bahnverkehrsanlage, die aus innerbetrieblichen Gründen erforderlich ist.');
+INSERT INTO bahnkategorie VALUES (1104, '', 'S-Bahn', '''S-Bahn'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, der zur schnellen Personenbeförderung in Ballungsräumen dient und meist auf eigenen Gleisen verläuft.');
+INSERT INTO bahnkategorie VALUES (1200, '', 'Stadtbahn', '''Stadtbahn'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, auf dem eine elektrisch betriebene Schienenbahn zur Personenbeförderung im öffentlichen Nahverkehr fährt. Sie kann sowohl ober- als auch unterirdisch verlaufen.');
+INSERT INTO bahnkategorie VALUES (1201, '', 'Straßenbahn', '''Straßenbahn'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, auf dem eine elektrisch betriebene Schienenbahn zur Personenbeförderung fährt. Sie verläuft i. d. R. oberirdisch.');
+INSERT INTO bahnkategorie VALUES (1202, '', 'U-Bahn', '''U-Bahn'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, auf dem eine elektrisch betriebene Schienenbahn zur Personenbeförderung in Großstädten fährt. Sie verläuft i. d. R. unterirdisch.');
+INSERT INTO bahnkategorie VALUES (1300, '', 'Seilbahn, Bergbahn', '''Seilbahn, Bergbahn'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, auf dem eine Schienenbahn große Höhenunterschiede überwindet.');
+INSERT INTO bahnkategorie VALUES (1301, '', 'Zahnradbahn', '''Zahnradbahn'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, auf dem eine Schienenbahn mittels Zahnradantrieb große Höhenunterschiede in stark geneigtem Gelände überwindet.');
+INSERT INTO bahnkategorie VALUES (1302, '', 'Standseilbahn', '''Standseilbahn'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, auf dem eine Schienenbahn auf einer stark geneigten, meist kurzen und geraden Strecke verläuft. Mit Hilfe eines oder mehrerer Zugseile wird ein Schienenfahrzeug bergauf gezogen und gleichzeitig ein zweites bergab gelassen.');
+INSERT INTO bahnkategorie VALUES (1400, '', 'Museumsbahn', '''Museumsbahn'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, auf dem ausschließlich Touristen in alten, meist restaurierten Zügen befördert werden.');
+INSERT INTO bahnkategorie VALUES (1500, '', 'Bahn im Freizeitpark', '''Bahn im Freizeitpark'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg innerhalb eines Freizeitparks.');
+INSERT INTO bahnkategorie VALUES (1600, '', 'Magnetschwebebahn', '''Magnetschwebebahn'' ist die Bezeichnung für einen schienengebundenen Verkehrsweg, auf dem räderlose Schienenfahrzeuge mit Hilfe von Magnetfeldern an oder auf einer Fahrschiene schwebend entlanggeführt werden.');
+INSERT INTO bahnkategorie VALUES (2100, '', 'Luftseilbahn, Großkabinenbahn', '''Luftseilbahn, Großkabinenbahn'' ist die Bezeichnung für eine Seilbahn, die Personen befördert und Güter transportiert. Die Kabinen und Transporteinrichtungen werden an einem Zugseil über ein Tragseil fortbewegt.');
+INSERT INTO bahnkategorie VALUES (2200, '', 'Kabinenbahn, Umlaufseilbahn', '''Kabinenbahn, Umlaufseilbahn'' ist die Bezeichnung für eine Seilbahn zur Beförderung von Personen und zum Transport von Gütern. Die Wagen oder Kabinen sind an einem umlaufenden Seil festgeklemmt.');
+INSERT INTO bahnkategorie VALUES (2300, '', 'Sessellift', '''Sessellift'' ist die Bezeichnung für eine Seilbahn zur Beförderung von Personen in Sitzen ohne Kabinenverkleidung.');
+INSERT INTO bahnkategorie VALUES (2400, '', 'Ski-, Schlepplift', '''Ski-, Schlepplift'' ist die Bezeichnung für eine Seilbahn, mit der Skifahrer stehend den Berg hinauf gezogen werden.');
+INSERT INTO bahnkategorie VALUES (2500, '', 'Schwebebahn', '''Schwebebahn'' ist die Bezeichnung für eine Bahn, bei der elektrisch angetriebene Fahrzeuge unter einer Fahrschiene hängen.');
+INSERT INTO bahnkategorie VALUES (2600, '', 'Materialseilbahn', '''Materialseilbahn'' ist die Bezeichnung für eine Seilbahn, die ausschließlich Güter transportiert.');
+INSERT INTO bahnkategorie VALUES (9999, '', 'Sonstiges', '''Sonstiges'' bedeutet, dass die Bahnkategorie bekannt, aber nicht in der Attributwertliste aufgeführt ist.');
+
+-- bkt has cardinality>1, separated by hash
+ALTER TABLE "ver03_l" ADD CONSTRAINT bkt_fk1 FOREIGN KEY (bkt_1) REFERENCES bahnkategorie(code);
+ALTER TABLE "ver03_l" ADD CONSTRAINT bkt_fk2 FOREIGN KEY (bkt_2) REFERENCES bahnkategorie(code);
+ALTER TABLE "ver03_l" ADD CONSTRAINT bkt_fk3 FOREIGN KEY (bkt_3) REFERENCES bahnkategorie(code);
+ALTER TABLE "ver03_l" ADD CONSTRAINT bkt_fk4 FOREIGN KEY (bkt_4) REFERENCES bahnkategorie(code);
+ALTER TABLE "ver06_p" ADD CONSTRAINT bkt_fk1 FOREIGN KEY (bkt_1) REFERENCES bahnkategorie(code);
+ALTER TABLE "ver06_p" ADD CONSTRAINT bkt_fk2 FOREIGN KEY (bkt_2) REFERENCES bahnkategorie(code);
