@@ -92,7 +92,97 @@ ALTER TABLE rel01_p ADD CONSTRAINT rel01_p_objid_unique UNIQUE (objid);
 ALTER TABLE rel02_p ADD CONSTRAINT rel02_p_objid_unique UNIQUE (objid);
 
 
+-- For some cases where property cardinality is >1, split the property column into 2 columns
+-- CASE 1: sie05_p.bwf where bwf has cardinality=2 for towers/AX_Turm
+ALTER TABLE sie05_p
+ADD COLUMN bwf_1 VARCHAR(4),
+ADD COLUMN bwf_2 VARCHAR(4);
 
+UPDATE sie05_p
+SET bwf_1 = CASE WHEN POSITION('#' IN bwf) > 0
+    THEN CAST(SPLIT_PART(bwf, '#', 1) AS VARCHAR(4))
+    ELSE bwf
+    END,
+    bwf_2 = CASE WHEN POSITION('#' IN bwf) > 0
+    THEN CAST(SPLIT_PART(bwf, '#', 2) AS VARCHAR(4))
+    ELSE NULL
+    END;
+
+-- CASE 2: ver05_l.art where art has cardinality 2 or 3 for AX_SchifffahrtslinieFaehrverkehr
+ALTER TABLE ver05_l
+ADD COLUMN art_1 VARCHAR(4),
+ADD COLUMN art_2 VARCHAR(4),
+ADD COLUMN art_3 VARCHAR(4);
+
+UPDATE ver05_l
+SET art_1 = CASE WHEN POSITION('#' IN art) > 0
+                THEN CAST(SPLIT_PART(art, '#', 1) AS VARCHAR(4))
+                ELSE art
+                END,
+    art_2 = CASE WHEN POSITION('#' IN art) > 0
+                THEN CASE WHEN LENGTH(SPLIT_PART(art, '#', 2)) > 0
+                    THEN CAST(SPLIT_PART(art, '#', 2) AS VARCHAR(4))
+                    ELSE NULL
+                    END
+                ELSE NULL
+                END,
+    art_3 = CASE WHEN POSITION('#' IN art) > 0
+                THEN CASE WHEN LENGTH(SPLIT_PART(art, '#', 3)) > 0
+                    THEN CAST(SPLIT_PART(art, '#', 3) AS VARCHAR(4))
+                    ELSE NULL
+                    END
+                ELSE NULL
+                END;
+
+-- CASE 3: geb01_l.agz property can have cardinality of up to 6 in areas
+ALTER TABLE geb01_l
+ADD COLUMN agz_1 VARCHAR(4),
+ADD COLUMN agz_2 VARCHAR(4),
+ADD COLUMN agz_3 VARCHAR(4),
+ADD COLUMN agz_4 VARCHAR(4),
+ADD COLUMN agz_5 VARCHAR(4),
+ADD COLUMN agz_6 VARCHAR(4);
+
+UPDATE geb01_l
+SET agz_1 = CASE WHEN POSITION('#' IN agz) > 0
+                     THEN CAST(SPLIT_PART(agz, '#', 1) AS VARCHAR(4))
+                 ELSE agz
+    END,
+    agz_2 = CASE WHEN POSITION('#' IN agz) > 0
+                     THEN CASE WHEN LENGTH(SPLIT_PART(agz, '#', 2)) > 0
+                                   THEN CAST(SPLIT_PART(agz, '#', 2) AS VARCHAR(4))
+                               ELSE NULL
+            END
+                 ELSE NULL
+        END,
+    agz_3 = CASE WHEN POSITION('#' IN agz) > 0
+                     THEN CASE WHEN LENGTH(SPLIT_PART(agz, '#', 3)) > 0
+                                   THEN CAST(SPLIT_PART(agz, '#', 3) AS VARCHAR(4))
+                               ELSE NULL
+            END
+                 ELSE NULL
+        END,
+    agz_4 = CASE WHEN POSITION('#' IN agz) > 0
+                     THEN CASE WHEN LENGTH(SPLIT_PART(agz, '#', 4)) > 0
+                                   THEN CAST(SPLIT_PART(agz, '#', 4) AS VARCHAR(4))
+                               ELSE NULL
+            END
+                 ELSE NULL
+        END,
+    agz_5 = CASE WHEN POSITION('#' IN agz) > 0
+                     THEN CASE WHEN LENGTH(SPLIT_PART(agz, '#', 5)) > 0
+                                   THEN CAST(SPLIT_PART(agz, '#', 5) AS VARCHAR(4))
+                               ELSE NULL
+            END
+                 ELSE NULL
+        END,
+    agz_6 = CASE WHEN POSITION('#' IN agz) > 0
+                     THEN CASE WHEN LENGTH(SPLIT_PART(agz, '#', 6)) > 0
+                                   THEN CAST(SPLIT_PART(agz, '#', 6) AS VARCHAR(4))
+                               ELSE NULL
+            END
+                 ELSE NULL
+        END;
 
 -- Source: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/binarywriterservlet?imgUid=78f7a5be-17ae-4819-393b-216067bef8a0&uBasVariant=11111111-1111-1111-1111-111111111111#_C11007-_A11007_46283
 -- FROM: https://www.adv-online.de/GeoInfoDok/Aktuelle-Anwendungsschemata/AAA-Anwendungsschema-7.1.2-Referenz-7.1/, OK AAA-Anwendungsschema 7.1.2 (HTML)
@@ -650,8 +740,9 @@ ALTER TABLE "sie03_l" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES
 --2 out of 5 examples are: 1610 Zoo/Canopy, 1650 Ramp/Staircase
 --We add a composite key based on bwf and class identifier i.e. objart.
 ALTER TABLE "sie03_p" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
---TODO: Table "sie05_p" contains some invalid values for bwf e.g. 9999#1003, 1008#1003 which need to be cleaned
---ALTER TABLE "sie05_p" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf) REFERENCES bauwerksfunktion(code);
+--Table "sie05_p" contains some cases with cardinality 2 for AX_Turm/tower. Values for bwf e.g. 9999#1003, 1008#1003 which need to be split
+ALTER TABLE "sie05_p" ADD CONSTRAINT bwf_fk1 FOREIGN KEY (bwf_1, objart) REFERENCES bauwerksfunktion(code, objart);
+ALTER TABLE "sie05_p" ADD CONSTRAINT bwf_fk2 FOREIGN KEY (bwf_2, objart) REFERENCES bauwerksfunktion(code, objart);
 ALTER TABLE "ver06_f" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
 ALTER TABLE "ver06_l" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
 ALTER TABLE "ver06_p" ADD CONSTRAINT bwf_fk FOREIGN KEY (bwf, objart) REFERENCES bauwerksfunktion(code, objart);
@@ -1333,9 +1424,10 @@ INSERT INTO art VALUES (2401, '08110', '', 'VPN sortiert nach vorläufigen Punkt
 INSERT INTO art VALUES (1000, '08400', '', 'alleObjekte', 'Diese Werteart bedeutet eine zwingende Themenbildung. Dabei sind alle in der Themendefinition genannten Objektarten Bestandteil des Themas und die Objektarten teilen sich stets die Geometrien.');
 
 ALTER TABLE "ver04_f" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
--- 1710#1730 present for art in ver05_l
--- TODO: Fix data quality issue or drop value?
---ALTER TABLE "ver05_l" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
+-- 1710#1730 and 1710#1720#1730 present for art in ver05_l
+ALTER TABLE "ver05_l" ADD CONSTRAINT art_fk1 FOREIGN KEY (art_1, objart) REFERENCES art(code, objart);
+ALTER TABLE "ver05_l" ADD CONSTRAINT art_fk2 FOREIGN KEY (art_2, objart) REFERENCES art(code, objart);
+ALTER TABLE "ver05_l" ADD CONSTRAINT art_fk3 FOREIGN KEY (art_3, objart) REFERENCES art(code, objart);
 ALTER TABLE "ver06_l" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
 ALTER TABLE "ver06_p" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
 ALTER TABLE "gew02_f" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
@@ -1662,8 +1754,13 @@ INSERT INTO artdergebietsgrenze VALUES (7106, 'Municipality border', 'Grenze der
 INSERT INTO artdergebietsgrenze VALUES (7107, 'District border', 'Grenze des Gemeindeteils', '''Grenze des Gemeindeteils'' begrenzt das Gebiet einer Verwaltungseinheit auf der Gemeindeteilebene.');
 INSERT INTO artdergebietsgrenze VALUES (7108, 'Condominium border', 'Grenze eines Kondominiums', '''Grenze eines Kondominiums'' begrenzt ein Gebiet, das unter gemeinsamer Verwaltung von zwei oder mehreren Staaten steht.');
 
--- TODO: Cannot add primary keys due to values like 7104#7105#7106 in the table
---ALTER TABLE "geb01_l" ADD CONSTRAINT agz_fk FOREIGN KEY (agz) REFERENCES artdergebietsgrenze(code);
+-- agz contains values like 7104#7105#7106 in the table, i.e. cardinality can reach up to 6
+ALTER TABLE "geb01_l" ADD CONSTRAINT agz_fk1 FOREIGN KEY (agz_1) REFERENCES artdergebietsgrenze(code);
+ALTER TABLE "geb01_l" ADD CONSTRAINT agz_fk2 FOREIGN KEY (agz_2) REFERENCES artdergebietsgrenze(code);
+ALTER TABLE "geb01_l" ADD CONSTRAINT agz_fk3 FOREIGN KEY (agz_3) REFERENCES artdergebietsgrenze(code);
+ALTER TABLE "geb01_l" ADD CONSTRAINT agz_fk4 FOREIGN KEY (agz_4) REFERENCES artdergebietsgrenze(code);
+ALTER TABLE "geb01_l" ADD CONSTRAINT agz_fk5 FOREIGN KEY (agz_5) REFERENCES artdergebietsgrenze(code);
+ALTER TABLE "geb01_l" ADD CONSTRAINT agz_fk6 FOREIGN KEY (agz_6) REFERENCES artdergebietsgrenze(code);
 
 
 -- Attribute: funktion

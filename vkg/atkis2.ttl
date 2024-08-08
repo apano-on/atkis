@@ -129,6 +129,9 @@
 
 ###  http://example.org/ontologies/atkis#gfk
 :gfk rdf:type owl:ObjectProperty ;
+     rdfs:range :BuildingFunction ;
+     rdfs:label "buildingFunction"@en ;
+     rdf:label "gebaeudeFunktion"@de ;
      rdfs:comment """categorisation of buildings defined by gfk values. e.g. gfk 2072 = youth hostel"""@en .
 
 ###  http://example.org/ontologies/atkis#gls
@@ -621,7 +624,9 @@
 
 
 ###  http://example.org/ontologies/atkis#BuildingFunction
-:BuildingFunction rdf:type owl:Class .
+:BuildingFunction rdf:type owl:Class ;
+                    rdfs:subClassOf :AttributeType ;
+                    rdfs:comment "Gebäudefunktion"@de .
 
 
 ###  http://example.org/ontologies/atkis#CableOrSuspensionRailway

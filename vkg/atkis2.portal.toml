@@ -932,15 +932,19 @@ name="Vertical relation"
 name="HDU01: relation"
 query = """
 # HDU01: Vertical relation
-# TODO: Check if it makes sense
 PREFIX : <http://example.org/ontologies/atkis#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT * WHERE {
-  ?x a :VerticalRelation .
-  ?y :hasDirectlyUnder ?z .
+  ?x a :RailwayTraffic .
+  OPTIONAL {?x :znm ?otherName .}
+  # Get Black Forest Railway in Baden
+  FILTER(?otherName = "Schwarzwaldbahn")
+  # Find vertical relation
+  ?x :hasDirectlyUnder ?subComponent .
+  OPTIONAL { ?subComponent rdfs:label ?railwayComponentName } .
 }
 LIMIT 100
 """
