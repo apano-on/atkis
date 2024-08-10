@@ -1,0 +1,14 @@
+services:
+  qgis:
+    #image: qgis/qgis:latest
+    #image: qgis/qgis:3.38.1
+    container_name: qgis
+    build:
+        context: qgis
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+     # - ./qgis-plugin:/home/qgis
+    network_mode: host
+    command: qgis

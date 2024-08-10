@@ -19,9 +19,9 @@ do
 
   echo "Importing $filename to table $tablename"
 
-  #shp2pgsql -s 4326 -I "$shp" "$tablename" | psql -h atkisdb -U "$POSTGRES_USER" -d "$POSTGRES_DB"
+  #shp2pgsql -s 31467 -I "$shp" "$tablename" | psql -h atkisdb -U "$POSTGRES_USER" -d "$POSTGRES_DB"
   # Use sed to replace commas with periods in numeric fields
-  shp2pgsql -s 4326 -I "$shp" "$tablename" | \
+  shp2pgsql -s 31467 -I "$shp" "$tablename" | \
     # For US data, replace commas with periods in numeric fields
     sed -E 's/([0-9]),([0-9])/\1.\2/g' | \
     # For data quality issues, remove extra dots in numeric fields i.e. "839.0.0" in gew01_f.shp
