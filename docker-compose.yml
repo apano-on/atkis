@@ -28,7 +28,8 @@ services:
 
   ontop:
     container_name: ontop
-    image: ontop/ontop:5.1.2
+    #image: ontop/ontop:5.2.0
+    image: albulenpano/ontop:5.2.0-SNAPSHOT
     restart: unless-stopped
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/atkis2.ttl

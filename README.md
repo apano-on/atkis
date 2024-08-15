@@ -65,10 +65,13 @@ SELECT ?item ?geo WHERE {
   ?item geo:hasGeometry/geo:asWKT ?geo .
 }
 ```
-and click "Add Layer"
-6. Next visualize the results in QGIS
-    * Set the project CRS: Go to "Project" > "Properties" > "CRS". Set the project CRS to EPSG:31467 (This is the CRS of your relief layer)
-    * Add a background map: Go to "Browser" panel, Expand "XYZ Tiles", Double-click on "OpenStreetMap" (or another suitable background map)
-    * Visualize the results by ensuring Layer Order places the GeoJSON layer on top of the background map. 
-      * If needed go to View > Panel > Layer Order to adjust the layer order.
-      * If needed set new layer CRS to EPSG:31467 (Right-click on the layer > Set Layer CRS)
+and click "Add Layer"   
+
+6. Next visualize the results in QGIS.
+   1. Add a background map: Go to "Browser" panel, Expand "XYZ Tiles", Double-click on "OpenStreetMap" (or another suitable background map)
+   2. Visualize the results by ensuring Layer Order places the GeoJSON layer on top of the background map.
+      1. If needed go to View > Panel > Layer Order to adjust the layer order.
+      2. If needed set new layer CRS to EPSG:31467 (Right-click on the layer > Set Layer CRS)
+      3. I needed set the project CRS: Go to "Project" > "Properties" > "CRS". Set the project CRS to EPSG:31467 (This is the CRS of your relief layer)
+    
+    
