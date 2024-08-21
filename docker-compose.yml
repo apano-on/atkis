@@ -28,8 +28,7 @@ services:
 
   ontop:
     container_name: ontop
-    #image: ontop/ontop:5.2.0
-    image: albulenpano/ontop:5.2.0-SNAPSHOT
+    image: ontop/ontop:5.2.0
     restart: unless-stopped
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/atkis2.ttl
@@ -45,6 +44,6 @@ services:
       - ./jdbc:/opt/ontop/jdbc
     ports:
       - "${SERVER_PORT}:8080"
-    depends_on:
-      db_import:
-        condition: service_completed_successfully
+#    depends_on:
+#      db_import:
+#        condition: service_completed_successfully
