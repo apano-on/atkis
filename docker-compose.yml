@@ -44,6 +44,6 @@ services:
       - ./jdbc:/opt/ontop/jdbc
     ports:
       - "${SERVER_PORT}:8080"
-#    depends_on:
-#      db_import:
-#        condition: service_completed_successfully
+    depends_on:
+      db_import:
+        condition: service_completed_successfully

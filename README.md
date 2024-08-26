@@ -22,7 +22,7 @@ It is possible to visualize SPARQL results using QGIS. In order to do
 that we use the [SPARQLing Unicorn QGIS plugin](https://plugins.qgis.org/plugins/sparqlunicorn/).
 
 If you already have QGIS installed on your machine, just import the plugin via the zipfile. 
-Alternatively, we provdide a simple docker setup below:
+Alternatively, we provide a simple docker setup below:
 
 1. Depending on your machine, to run QGIS via docker you might first need to run:
 ``` 
