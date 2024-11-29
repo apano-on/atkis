@@ -1,0 +1,67 @@
+{
+  "relations": [
+    {
+      "name": ["\"lenses\"", "\"l1\""],
+      "unionRelations": [
+        ["\"lenses\"", "\"bwf1\""],
+        ["\"lenses\"", "\"bwf2\""]
+      ],
+      "makeDistinct": false,
+      "provenanceColumn": "\"prov\"",
+      "otherFunctionalDependencies": {
+        "added": []
+      },
+      "foreignKeys": {
+        "added": []
+      },
+      "nonNullConstraints": {
+        "added": []
+      },
+      "type": "UnionLens"
+    },
+    {
+      "name": ["\"lenses\"", "\"bwf1\""],
+      "baseRelation": ["\"sie05_p\""],
+      "columns": {
+        "added": [
+          {
+            "name": "bwf",
+            "expression": "bwf_1"
+          }
+        ],
+        "hidden": ["\"gid\"", "\"land\"", "\"modellart\"", "\"objart_txt\"", "\"hdu_x\"", "\"beginn\"", "\"ende\"", "\"gfk\"", "\"hho\"", "\"nam\"", "\"znm\"", "\"zus\"", "\"bemerkung\"", "\"geom\"", "\"bwf\"", "\"bwf_1\"", "\"bwf_2\""]
+      },
+      "uniqueConstraints": {
+        "added": [
+          {
+            "name": "uc",
+            "determinants": ["objid"]
+          }
+        ]
+      },
+      "type": "BasicLens"
+    },
+    {
+      "name": ["\"lenses\"", "\"bwf2\""],
+      "baseRelation": ["\"sie05_p\""],
+      "columns": {
+        "added": [
+          {
+            "name": "bwf",
+            "expression": "bwf_2"
+          }
+        ],
+        "hidden": ["\"gid\"", "\"land\"", "\"modellart\"", "\"objart_txt\"", "\"hdu_x\"", "\"beginn\"", "\"ende\"", "\"gfk\"", "\"hho\"", "\"nam\"", "\"znm\"", "\"zus\"", "\"bemerkung\"", "\"geom\"", "\"bwf\"", "\"bwf_1\"", "\"bwf_2\""]
+      },
+      "uniqueConstraints": {
+        "added": [
+          {
+            "name": "uc",
+            "determinants": ["objid"]
+          }
+        ]
+      },
+      "type": "BasicLens"
+    }
+  ]
+}

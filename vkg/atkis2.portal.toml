@@ -931,7 +931,7 @@ name="Vertical relation"
 [[tabGroups.tabs]]
 name="HDU01: relation"
 query = """
-# HDU01: Vertical relation
+# HDU01: Vertical relation - Tunnels over which Schwarzwald Railway passes
 PREFIX : <http://example.org/ontologies/atkis#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -939,7 +939,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT * WHERE {
   ?x a :RailwayTraffic .
-  OPTIONAL {?x :secondaryLabel ?otherName .}
+  ?x :secondaryLabel ?otherName .
   # Get Black Forest Railway in Baden
   FILTER(?otherName = "Schwarzwaldbahn")
   # Find vertical relation
@@ -947,4 +947,115 @@ SELECT * WHERE {
   OPTIONAL { ?subComponent rdfs:label ?railwayComponentName } .
 }
 LIMIT 100
+"""
+
+[[tabGroups]]
+name="GeoSPARQL 1.1"
+
+[[tabGroups.tabs]]
+name="HDU01: relation - aggUnion"
+query = """
+# Aggregate Union query
+# HDU01: Vertical relation - Complete MultiLineString of Black Forest Railway in Baden
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?rail_line WHERE {
+  ?x a :RailwayTraffic .
+  ?x :secondaryLabel ?otherName .
+  # Get Black Forest Railway in Baden
+  FILTER(?otherName = "Schwarzwaldbahn")
+  # Find vertical relation
+  ?x :hasDirectlyUnder ?subComponent .
+  OPTIONAL { ?subComponent rdfs:label ?railwayComponentName } .
+  ?subComponent geo:hasDefaultGeometry/geo:asWKT ?geom .
+  BIND(geof:aggUnion(?geom) AS ?rail_line) .
+}
+"""
+
+[[tabGroups.tabs]]
+name="HDU01: relation - aggUnion with EPSG 4326 transformation"
+query = """
+# Aggregate Union query
+# HDU01: Vertical relation - Complete MultiLineString of Black Forest Railway in Baden
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?tunnelsGeom ?tunnelsGeomColor WHERE {
+  ?x a :RailwayTraffic .
+  ?x :secondaryLabel ?otherName .
+  # Get Black Forest Railway in Baden
+  FILTER(?otherName = "Schwarzwaldbahn")
+  # Find vertical relation
+  ?x :hasDirectlyUnder ?subComponent .
+  OPTIONAL { ?subComponent rdfs:label ?railwayComponentName } .
+  FILTER(CONTAINS(?railwayComponentName, 'Tunnel'))
+  ?subComponent geo:hasDefaultGeometry/geo:asWKT ?geom .
+  BIND(geof:aggUnion(?geom) AS ?rail_tunnels_line) .
+  BIND (geof:transform(?rail_tunnels_line, <http://www.opengis.net/def/crs/EPSG/0/4326>) AS ?tunnelsGeom) .
+  BIND("jet,0.8" AS ?tunnelsGeomColor)
+}
+"""
+
+[[tabGroups.tabs]]
+name="geometry metadata"
+query = """
+# SIE03: Check what type of data we get for motorcycle tracks
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+
+SELECT * WHERE {
+?x a :BuildingFacility .
+?x rdfs:label ?name .
+
+  # Find race tracks for motorsports and some info on their geometries
+  ?x :typeOfSport [rdfs:label ?sport] .
+  FILTER(LANG(?sport) = "en" && STR(?sport) = "Motorsports")
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+  BIND(geof:is3D(?xGeom) AS ?is_3d) .
+  BIND(geof:coordinateDimension(?xGeom) AS ?coord_dim) .
+  BIND(geof:spatialDimension(?xGeom) AS ?spatial_dim) .
+  BIND(geof:geometryType(?xGeom) AS ?geo_type) .
+  BIND(geof:numGeometries(?xGeom) AS ?num_geometries) .
+
+}
+LIMIT 100
+"""
+
+[[tabGroups.tabs]]
+name="Largest fruit and nut area in Germany"
+query = """
+# VEG01: Find area with most fruit and nut plantations
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+
+SELECT ?transformedGeom ?transformedGeomColor WHERE {
+  ?x a :Agricultural .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find fruit and nut plantations
+  ?x :vegetationFeature [rdfs:label ?fruitNutPlantation ] .
+  FILTER(LANG(?fruitNutPlantation) = "de" && STR(?fruitNutPlantation) = "Obst- und Nussplantage")
+
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+  BIND(geof:transform(?xGeom, <http://www.opengis.net/def/crs/EPSG/0/4326>) AS ?transformedGeom)
+  BIND("jet,0.8" AS ?transformedGeomColor)
+
+  # Square kilometres
+  BIND(geof:metricArea(?xGeom)/1000000 AS ?fruitNutMetricArea) .
+}
+ORDER BY DESC(?fruitNutMetricArea)
+LIMIT 1
 """
