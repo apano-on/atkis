@@ -29,7 +29,7 @@ services:
   ontop:
     container_name: ontop
     #image: ontop/ontop:5.2.0
-    image: albulenpano/geosparql_1.1:v3
+    image: albulenpano/geosparql_1.1:v6
     restart: unless-stopped
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/atkis2.ttl
