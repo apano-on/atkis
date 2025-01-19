@@ -29,8 +29,9 @@ services:
   ontop:
     container_name: ontop
     image: ontop/ontop:5.2.1
+    command: [ "ontop", "materialize", "-f", "turtle", "--output", "/opt/ontop/input/materialized-triples.ttl" ]
     #image: albulenpano/geosparql_1.1:v6
-    restart: unless-stopped
+    #restart: unless-stopped
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/atkis2.ttl
       ONTOP_MAPPING_FILE: /opt/ontop/input/atkis1.obda
@@ -39,10 +40,9 @@ services:
       ONTOP_XML_CATALOG_FILE: /opt/ontop/input/catalog-v001.xml
       ONTOP_PROPERTIES_FILE: /opt/ontop/input/atkis1.docker.properties
       #ONTOP_PORTAL_FILE: /opt/ontop/input/experiments.portal.toml
-      ONTOP_PORTAL_FILE: /opt/ontop/input/visualization_geosparql1_1.portal.toml
-      ONTOP_CORS_ALLOWED_ORIGINS: "*"
-      ONTOP_DEV_MODE: "true"
-      ONTOP_LOG_LEVEL: "DEBUG"
+      #ONTOP_CORS_ALLOWED_ORIGINS: "*"
+      #ONTOP_DEV_MODE: "true"
+      #ONTOP_LOG_LEVEL: "DEBUG"
     volumes:
       - ./vkg:/opt/ontop/input
       - ./jdbc:/opt/ontop/jdbc

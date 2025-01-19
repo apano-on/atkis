@@ -250,7 +250,7 @@ CREATE TABLE gebaeudefunktion (
         AND LENGTH(code) = 4 )
     );
 
-INSERT INTO gebaeudefunktion VALUES (1000, 'Residential building', '''Wohngebäude'' ist ein Gebäude, das zum Wohnen genutzt wird.');
+INSERT INTO gebaeudefunktion VALUES (1000, 'Residential building', 'Wohngebäude','''Wohngebäude'' ist ein Gebäude, das zum Wohnen genutzt wird.');
 INSERT INTO gebaeudefunktion VALUES (1010, 'Residential house', 'Wohnhaus', '''Wohnhaus'' ist ein Gebäude, in dem Menschen ihren Wohnsitz haben.');
 INSERT INTO gebaeudefunktion VALUES (1020, 'Dormitory', 'Wohnheim', '''Wohnheim'' ist ein Gebäude, das nach seiner baulichen Anlage und Ausstattung zur Unterbringung von Studenten, Arbeitern u. a. bestimmt ist.');
 INSERT INTO gebaeudefunktion VALUES (1021, 'Children''s home', 'Kinderheim', '''Kinderheim'' ist ein Gebäude, welches zur Unterbringung und Betreuung von Kindern, die vorübergehend oder dauerhaft getrennt von ihren leiblichen Eltern oder sonstigen Erziehungsberechtigten leben, dient.');

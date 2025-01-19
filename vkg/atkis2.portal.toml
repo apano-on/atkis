@@ -834,7 +834,7 @@ LIMIT 100
 """
 
 [[tabGroups.tabs]]
-name="GEW02: geographical areas"
+name="GEB02: geographical areas"
 query = """
 # GEB02: Find moorlands
 PREFIX : <http://example.org/ontologies/atkis#>
@@ -856,7 +856,7 @@ LIMIT 100
 """
 
 [[tabGroups.tabs]]
-name="GEW03: protected areas"
+name="GEB03: protected areas"
 query = """
 # GEB03: Find protected nature parks
 PREFIX : <http://example.org/ontologies/atkis#>
