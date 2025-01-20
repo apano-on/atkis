@@ -81,7 +81,7 @@
 ###  http://example.org/ontologies/atkis#archeologicalType
 :archeologicalType rdf:type owl:ObjectProperty ;
      rdfs:domain :BuildingFacility ;
-     rdfs:range :ArchaologicalType ;
+     rdfs:range :ArchaeologicalType ;
      skos:altLabel "atp"@de ;
      rdfs:label "archeologicalType"@en ;
      rdfs:label "archäologischerTyp"@de ;
@@ -865,8 +865,8 @@
                 rdfs:subClassOf :Protected .
 
 
-###  http://example.org/ontologies/atkis#ArchaologicalType
-:ArchaologicalType rdf:type owl:Class ;
+###  http://example.org/ontologies/atkis#ArchaeologicalType
+:ArchaeologicalType rdf:type owl:Class ;
             rdfs:subClassOf :AttributeType ;
             rdfs:comment "Archäologischer Typ"@de .
 

@@ -116,7 +116,7 @@ target		:Location/p/{objid} a :Location ; rdfs:label {nam}^^xsd:string ; :region
 source		select objid, nam, rgs, beginn, ende, land, CASE WHEN (hdu_x=1) THEN TRUE ELSE FALSE END AS hdux_boolean, st_astext(geom) as wkt  from "sie01_p"
 
 mappingId	areas dominated by buildings, polygon f
-target		:AreaDominatedByBuilding/f/{objid} a :AreaDominatedByBuilding ; :objectType {objart} ; :beginn {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; rdfs:label {nam}^^xsd:string ; :minedMaterial :MinedMaterial/{objart}/{agt} ; :function :Function/{objart}/{fkt} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :AreaDominatedByBuilding/geo/f/{objid} . :AreaDominatedByBuilding/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
+target		:AreaDominatedByBuilding/f/{objid} a :AreaDominatedByBuilding ; :objectType {objart} ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; rdfs:label {nam}^^xsd:string ; :minedMaterial :MinedMaterial/{objart}/{agt} ; :function :Function/{objart}/{fkt} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :AreaDominatedByBuilding/geo/f/{objid} . :AreaDominatedByBuilding/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
 source		select objid, nam, agt, fkt, objart, zus, beginn, ende, st_astext(geom) as wkt from "sie02_f"
 
 mappingId	Building/facilities polygon_f
@@ -124,7 +124,7 @@ target		:BuildingFacility/f/{objid} a :BuildingFacility ; rdfs:label {nam}^^xsd:
 source		select objid, nam, objart, hho, bwf, zus, beginn, ende, st_astext(geom) as wkt from "sie03_f"
 
 mappingId	Building/facilities linestring_l
-target		:BuildingFacility/l/{objid} a :BuildingFacility ; :beginn {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :structureFunction :StructureFunction/{objart}/{bwf} ; geo:hasDefaultGeometry :BuildingFacility/geo/l/{objid} . :BuildingFacility/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
+target		:BuildingFacility/l/{objid} a :BuildingFacility ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :structureFunction :StructureFunction/{objart}/{bwf} ; geo:hasDefaultGeometry :BuildingFacility/geo/l/{objid} . :BuildingFacility/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
 source		select objid, objart, bwf, beginn, ende, st_astext(geom) as wkt from "sie03_l"
 
 mappingId	Building/facilities point_p, using the geom4326 column for visualisation
