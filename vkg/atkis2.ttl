@@ -815,10 +815,6 @@
               rdfs:subClassOf :Administrative .
 
 
-###  http://example.org/ontologies/atkis#NationalArea
-:NavigationCategory rdf:type owl:Class .
-
-
 ###  http://example.org/ontologies/atkis#NatureEnvironmentOrSoilProtectionLaw
 :NatureEnvironmentOrSoilProtectionLaw rdf:type owl:Class ;
                                       rdfs:subClassOf :Protected .
@@ -869,10 +865,22 @@
                 rdfs:subClassOf :Protected .
 
 
+###  http://example.org/ontologies/atkis#ArchaologicalType
+:ArchaologicalType rdf:type owl:Class ;
+            rdfs:subClassOf :AttributeType ;
+            rdfs:comment "Archäologischer Typ"@de .
+
+
 ###  http://example.org/ontologies/atkis#RailwayCategory
 :RailwayCategory rdf:type owl:Class ;
             rdfs:subClassOf :AttributeType ;
             rdfs:comment "Bahn Kategorie"@de .
+
+
+###  http://example.org/ontologies/atkis#SpecialTrafficImportance
+:SpecialTrafficImportance rdf:type owl:Class ;
+            rdfs:subClassOf :AttributeType ;
+            rdfs:comment "Besondere Verkehrsbedeutung"@de .
 
 
 ###  http://example.org/ontologies/atkis#RailwayNumber
@@ -969,17 +977,15 @@ ReliefForms and MeasurementData for the relief""" .
 :SpecialFacility rdf:type owl:Class ;
                  rdfs:subClassOf :Settlement .
 
-
-###  http://example.org/ontologies/atkis#SpecialTrafficImportance
-:SpecialTrafficImportance rdf:type owl:Class .
-
 ###  http://example.org/ontologies/atkis#SpecificationType
 :SpecificationType rdf:type owl:Class ;
             rdfs:subClassOf :AttributeType ;
             rdfs:comment "Art Der Festlegung"@de .
 
 ###  http://example.org/ontologies/atkis#SpecificType
-:SpecificType rdf:type owl:Class .
+:SpecificType rdf:type owl:Class ;
+            rdfs:subClassOf :AttributeType ;
+            rdfs:comment "art"@de .
 
 ###  http://example.org/ontologies/atkis#SpoilHeap
 :SpoilHeap rdf:type owl:Class ;
@@ -1030,6 +1036,11 @@ ReliefForms and MeasurementData for the relief""" .
             rdfs:subClassOf :AttributeType ;
             rdfs:comment "oberflaechenmaterial"@de .
 
+
+###  http://example.org/ontologies/atkis#NavigationCategory
+:NavigationCategory rdf:type owl:Class ;
+            rdfs:subClassOf :AttributeType ;
+            rdfs:comment "schifffahrtskategorie"@de .
 
 ###  http://example.org/ontologies/atkis#Swamp
 :Swamp rdf:type owl:Class ;
