@@ -242,7 +242,7 @@ mappingId	TransportBuildingAndFacility Point
 target		:TransportBuildingAndFacility/p/{objid} a :TransportBuildingAndFacility ; rdfs:label {nam}^^xsd:string ; :railwayCategory :RailwayTracks/{bkt_1} ; :type :SpecificType/{objart}/{art} ; :structureFunction :StructureFunction/{objart}/{bwf} ; :surfaceMaterial :SurfaceMaterial/{objart}/{ofm} ; :designation {bez} ; :condition :EntityCondition/{zus} ; :objectWidth {bro}^^xsd:decimal ; geo:hasDefaultGeometry :TransportBuildingAndFacility/geo/p/{objid} . :TransportBuildingAndFacility/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
 source		select objid, nam, bez, bkt_1, art, objart, bro, bwf, zus, ofm, st_astext(geom) as wkt from "ver06_p"
 
-mappingId	TransportBuildingAndFacility Point
+mappingId	TransportBuildingAndFacility Point - bkt2
 target		:TransportBuildingAndFacility/p/{objid} :railwayCategory :RailwayTracks/{bkt_2} .
 source		select objid, bkt_2 from "ver06_p"
 
@@ -576,11 +576,11 @@ mappingId	Archaeological Type - English
 target		:ArchaelogicalType/{code} rdfs:label {name_en}@en .
 source		select code, name_en from "archaeologischertyp"
 
-mappingId	Archaeological Type - German
+mappingId	Mined Material - German
 target		:MinedMaterial/{objart}/{code} a :MinedMaterial ; rdfs:label {name_de}@de ; rdfs:comment {definition_de}@de .
 source		select code, objart, name_de, definition_de from "abbaugut"
 
-mappingId	Archaeological Type - English
+mappingId	Mined Material - English
 target		:MinedMaterial/{objart}/{code} rdfs:label {name_en}@en .
 source		select code, objart, name_en from "abbaugut"
 
@@ -620,7 +620,7 @@ mappingId	Traffic Service - German
 target		:TrafficService/{code} a :TrafficService ; rdfs:label {name_de}@de ; rdfs:comment {definition_de}@de .
 source		select code, name_de, definition_de from "verkehrsdienst"
 
-mappingId	Track Gauge - English
+mappingId	Traffic Service - English
 target		:TrafficService/{code} rdfs:label {name_en}@en .
 source		select code, name_en from "verkehrsdienst"
 
@@ -656,11 +656,11 @@ mappingId	Vegetation Feature - English
 target		:VegetationFeature/{code} rdfs:label {name_en}@en .
 source		select code, name_en from "vegetationsmerkmal"
 
-mappingId	Vegetation Feature - German
+mappingId	Ground Cover - German
 target		:GroundCover/{code} a :GroundCover ; rdfs:label {name_de}@de ; rdfs:comment {definition_de}@de .
 source		select code, name_de, definition_de from "bewuchs"
 
-mappingId	Vegetation Feature - English
+mappingId	Ground Cover - English
 target		:GroundCover/{code} rdfs:label {name_en}@en .
 source		select code, name_en from "bewuchs"
 
