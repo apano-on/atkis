@@ -1,0 +1,140 @@
+title="ATKIS VKG"
+
+[[tabGroups.tabs]]
+name="1. Administrative Areas and Hydrography"
+query = """
+# Identify cities that are within 500m from federal water bodies (e.g., rivers, lakes)
+# that might indicate flooding risk for which the federal government is responsible.
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?waterBodyName ?cityName WHERE {
+
+	?waterCourse a :WaterBodyCourse .
+  	OPTIONAL {?waterCourse rdfs:label ?waterBodyName .}
+  	?waterCourse :entityClassification [rdfs:label ?classification] .
+  	FILTER(LANG(?classification) = "en" && STR(?classification) = "Waterbodies 1. order - federal waterway")
+  	?waterCourse geo:hasGeometry/geo:asWKT ?waterBodyGeom .
+
+  	?area a :Administrative .
+  	OPTIONAL {?area :municipalityDesignation ?cityName .}
+  	# Find free and Hanseatic area boundaries
+  	?area :administrativeFunction [rdfs:label ?city ] .
+  	FILTER(LANG(?city) = "de" && (STR(?city) = "Free and Hanseatic City" || STR(?city) = "Free Hanseatic City" || STR(?city) = "City (Bremerhaven)" || 'City without circle' || 'City' || 'Official city' || 'Large city belonging to a district' || 'City district'))
+  	?area geo:hasGeometry/geo:asWKT ?cityGeom .
+  	FILTER(geof:distance(?waterBodyGeom, ?cityGeom, uom:metre) < 500)
+}
+"""
+
+[[tabGroups.tabs]]
+name="2. Industrial Waster Areas and Hydrography"
+query = """
+# Identify refineries or landfills that are within 500m from any water bodies
+# as they pose a potential risk of water pollution.
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?areaName WHERE {
+
+	?waterCourse a :WaterBodyCourse .
+  	OPTIONAL {?waterCourse rdfs:label ?waterBodyName .}
+  	?waterCourse geo:hasGeometry/geo:asWKT ?waterBodyGeom .
+
+  	?area a :AreaDominatedByBuilding .
+  	OPTIONAL {?area rdfs:label ?areaName .}
+  	?area :function [rdfs:label ?function ] .
+    FILTER(LANG(?function) = "de" && (STR(?function) = "Raffinerie" || STR(?function) = "Deponie (oberirdisch)"))
+  	?area geo:hasGeometry/geo:asWKT ?areaGeom .
+  	FILTER(geof:distance(?waterBodyGeom, ?areaGeom, uom:metre) < 500)
+}
+"""
+
+[[tabGroups.tabs]]
+name="3. Most common surface type by relief contour lines height"
+query = """
+# Find most common surface type by relief height
+# Relief height is determined by contour lines
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?hhl ?surfaceType (COUNT(*) AS ?count) WHERE {
+
+	?relief a :Relief .
+  	?relief :heightFromHighline ?hhl .
+    ?relief :objectTypeLabel ?objectLabel .
+	FILTER(?objectLabel = "AX_Hoehenlinie") .
+  	?relief geo:hasGeometry/geo:asWKT ?reliefGeom .
+
+  	?area a :Vegetation .
+  	OPTIONAL {?area rdfs:label ?areaName .}
+  	?area :surfaceMaterial [rdfs:label ?surfaceType ] .
+    FILTER(STR(?surfaceType) != "")
+    FILTER(LANG(?surfaceType) = "en")
+  	?area geo:hasGeometry/geo:asWKT ?areaGeom .
+    FILTER(geof:sfIntersects(?reliefGeom, ?areaGeom))
+}
+GROUP BY ?hhl ?surfaceType
+ORDER BY DESC(?hhl) DESC(?count)
+"""
+
+[[tabGroups.tabs]]
+name="4. Find railway lines (Transportation) that cross forest areas (Vegetation).
+#This can help assess the degree to which railways are fragmenting forest habitats, which can have negative consequences for wildlife movement and ecosystem health."
+query = """
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * WHERE {
+
+	?railway a :RailwayTraffic .
+	OPTIONAL {?railway rdfs:label ?railwayName .}
+  	?railway geo:hasGeometry/geo:asWKT ?railwayGeom .
+
+  	?forest a :Forestry .
+  	?forest geo:hasGeometry/geo:asWKT ?forestGeom .
+    FILTER(geof:sfIntersects(?railwayGeom, ?forestGeom))
+}
+"""
+
+[[tabGroups.tabs]]
+name="5. International airports by German State"
+query = """
+# International airports by German State
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?stateName ?name WHERE {
+  ?x a :AirTraffic .
+  OPTIONAL {?x rdfs:label ?name .}
+
+  # Find only international airports
+  ?x :type [rdfs:label ?airportType ] .
+  FILTER(LANG(?airportType) = "de" && STR(?airportType) = "Internationaler Flughafen")
+  ?x geo:hasGeometry/geo:asWKT ?xGeom .
+
+  ?area a :Administrative .
+  ?area :stateDesignation ?stateName .
+  ?area geo:hasGeometry/geo:asWKT ?areaGeom .
+  FILTER(geof:sfIntersects(?areaGeom, ?xGeom)) .
+}
+"""

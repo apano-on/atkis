@@ -1,0 +1,28 @@
+title="ATKIS VKG"
+
+[[tabGroups]]
+name="Example"
+
+[[tabGroups.tabs]]
+name="HDU01: relation - aggUnion"
+query = """
+# Aggregate Union query
+# HDU01: Vertical relation - Complete MultiLineString of Black Forest Railway in Baden
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX : <http://example.org/ontologies/atkis#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?rail_line WHERE {
+  ?x a :RailwayTraffic .
+  ?x :secondaryLabel ?otherName .
+  # Get Black Forest Railway in Baden
+  FILTER(?otherName = "Schwarzwaldbahn")
+  # Find vertical relation
+  ?x :hasDirectlyUnder ?subComponent .
+  OPTIONAL { ?subComponent rdfs:label ?railwayComponentName } .
+  ?subComponent geo:hasDefaultGeometry/geo:asWKT ?geom .
+  BIND(geof:aggUnion(?geom) AS ?rail_line) .
+}
+"""

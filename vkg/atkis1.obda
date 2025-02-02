@@ -52,11 +52,11 @@ target		:Protected/f/{objid} a :Protected ; rdfs:label {nam}^^xsd:string ; :spec
 source		select objid, nam, adf, sgn, st_astext(geom) as wkt from "geb03_f"
 
 mappingId	WaterBody polygon_f
-target		:WaterBodyCourse/f/{objid} a :WaterBodyCourse ; rdfs:label {nam}^^xsd:string ; :function :Function/{objart}/{fkt} ; :watercourseCode {gwk}^^xsd:string ; :seaCode {skz}^^xsd:string ; :hydrologicalFeature {hyd_boolean}^^xsd:boolean ; :waterLevel {wsg}^^xsd:decimal ; :navigationCategory :NavigationCategory/{sfk} ; :condition :EntityCondition/{zus} ; :objectTypeLabel {objart_txt} ; geo:hasDefaultGeometry :WaterBodyCourse/geo/f/{objid} . :WaterBodyCourse/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral ; :entityClassification :EntityClassification/{objart}/{wdm} .
+target		:WaterBodyCourse/f/{objid} a :WaterBodyCourse ; rdfs:label {nam}^^xsd:string ; :function :Function/{objart}/{fkt} ; :watercourseCode {gwk}^^xsd:string ; :seaCode {skz}^^xsd:string ; :hydrologicalFeature {hyd_boolean}^^xsd:boolean ; :waterLevel {wsg}^^xsd:decimal ; :navigationCategory :NavigationCategory/{sfk} ; :condition :EntityCondition/{zus} ; :objectTypeLabel {objart_txt} ; geo:hasDefaultGeometry :WaterBodyCourse/geo/f/{objid} ; :entityClassification :EntityClassification/{objart}/{wdm} . :WaterBodyCourse/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
 source		select objid, nam, objart, objart_txt, fkt, sfk, gwk, skz, wdm, wsg, zus, st_astext(geom) as wkt, CASE WHEN (hyd='2000') THEN TRUE ELSE FALSE END AS hyd_boolean from "gew01_f"
 
 mappingId	WaterBody linestrings_l
-target		:WaterBodyCourse/l/{objid} a :WaterBodyCourse ; rdfs:label {nam}^^xsd:string ; :function :Function/{objart}/{fkt} ; :watercourseCode {gwk}^^xsd:string ; :widthOfWaterbody {brg}^^xsd:integer ; :flowDirection {flr}^^xsd:boolean ; :navigationCategory :NavigationCategory/{sfk} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :WaterBodyCourse/geo/l/{objid} . :WaterBodyCourse/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral ; :entityClassification :EntityClassification/{objart}/{wdm} .
+target		:WaterBodyCourse/l/{objid} a :WaterBodyCourse ; rdfs:label {nam}^^xsd:string ; :function :Function/{objart}/{fkt} ; :watercourseCode {gwk}^^xsd:string ; :widthOfWaterbody {brg}^^xsd:integer ; :flowDirection {flr}^^xsd:boolean ; :navigationCategory :NavigationCategory/{sfk} ; :condition :EntityCondition/{zus} ; geo:hasDefaultGeometry :WaterBodyCourse/geo/l/{objid} ; :entityClassification :EntityClassification/{objart}/{wdm} . :WaterBodyCourse/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
 source		select objid, nam, objart, sfk, fkt, flr, gwk, brg, wdm, zus, st_astext(geom) as wkt from "gew01_l"
 
 mappingId	WaterBodyCharacteristic polygon_f
@@ -96,16 +96,16 @@ target		:WaterBodyCourse/f/{objid_1} :hasDirectlyUnder :TransportBuildingAndFaci
 source		select objid_1, objid_2 FROM "hdu01_b" WHERE ebene_1 = 'gew01_f' and ebene_2 = 'ver06_l'
 
 mappingId	Relief linestring_l
-target		:ReliefForm/l/{objid} a :Relief ; rdfs:label {nam} ; :function :Function/{objart}/{fkt} ; :type :SpecificType/{objart}/{art} ; :hhl {hhl}^^xsd:decimal ; :objectHeight {hho}^^xsd:decimal ; geo:hasDefaultGeometry :ReliefForm/geo/l/{objid} . :ReliefForm/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
-source		select objid, nam, art, fkt, hhl, hho, objart, st_astext(geom) as wkt from "rel01_l"
+target		:ReliefForm/l/{objid} a :Relief ; rdfs:label {nam} ; :objectTypeLabel {objart_txt} ; :function :Function/{objart}/{fkt} ; :type :SpecificType/{objart}/{art} ; :heightFromHighline {hhl}^^xsd:decimal ; :objectHeight {hho}^^xsd:decimal ; geo:hasDefaultGeometry :ReliefForm/geo/l/{objid} . :ReliefForm/geo/l/{objid} a geo:Geometry , sf:LineString ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
+source		select objid, nam, art, fkt, hhl, hho, objart, objart_txt, st_astext(geom) as wkt from "rel01_l"
 
 mappingId	Relief point_p
-target		:ReliefForm/p/{objid} a :Relief ; rdfs:label {nam} ; geo:hasDefaultGeometry :ReliefForm/geo/p/{objid} . :ReliefForm/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
-source		select objid, nam, st_astext(geom) as wkt from "rel01_p"
+target		:ReliefForm/p/{objid} a :Relief ; rdfs:label {nam} ; :objectTypeLabel {objart_txt} ; geo:hasDefaultGeometry :ReliefForm/geo/p/{objid} . :ReliefForm/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
+source		select objid, objart_txt, nam, st_astext(geom) as wkt from "rel01_p"
 
 mappingId	Relief MeasurementData point_p
-target		:MeasurementData/p/{objid} a :MeasurementData ; :type :SpecificType/{objart}/{art} ; :elevation {hoehe}^^xsd:decimal ; geo:hasDefaultGeometry :MeasurementData/geo/p/{objid} . :MeasurementData/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
-source		select objid, st_astext(geom), art, objart, hoehe, st_astext(geom) as wkt from "rel02_p"
+target		:MeasurementData/p/{objid} a :MeasurementData ; :objectTypeLabel {objart_txt} ; :type :SpecificType/{objart}/{art} ; :elevation {hoehe}^^xsd:decimal ; geo:hasDefaultGeometry :MeasurementData/geo/p/{objid} . :MeasurementData/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
+source		select objid, objart_txt, st_astext(geom), art, objart, hoehe, st_astext(geom) as wkt from "rel02_p"
 
 mappingId	Settlement, named location polygon_f
 target		:Location/f/{objid} a :Location ; rdfs:label {nam}^^xsd:string ; :regionalLanguage {rgs}^^xsd:string ; :begin {beginn}^^xsd:dateTime ; :end {ende}^^xsd:dateTime ; :countryCode {land}^^xsd:string ; :hasDirectlyUnderExists {hdux_boolean}^^xsd:boolean ; geo:hasDefaultGeometry :Location/geo/f/{objid} . :Location/geo/f/{objid} a geo:Geometry , sf:MultiPolygon ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
@@ -252,20 +252,20 @@ source		SELECT h.objid as objid1, m.objid as objid2
 			FROM sie01_f h join sie02_f m
 			on st_contains(h.geom, m.geom)
 
-mappingId	building facility in municipality
-target		:BuildingFacility/f/{inner_objid} geo:ehInside :Location/f/{outer_objid} .
-source		select a.objid AS outer_objid, b.objid AS inner_objid from
-			sie01_f a join sie03_f b on st_within(b.geom, a.geom)
+;mappingId	building facility in municipality
+;target		:BuildingFacility/f/{inner_objid} geo:ehInside :Location/f/{outer_objid} .
+;source		select a.objid AS outer_objid, b.objid AS inner_objid from
+;			sie01_f a join sie03_f b on st_within(b.geom, a.geom)
+;
+;mappingId	special facility within a municipality
+;target		:SpecialFacility/f/{objid} geo:ehInside :Location/f/{objid2} .
+;source		select a.objid as objid2, b.objid from
+;			sie01_f a join sie04_f b on st_contains(a.geom, b.geom)
 
-mappingId	special facility within a municipality
-target		:SpecialFacility/f/{objid} geo:ehInside :Location/f/{objid2} .
-source		select a.objid as objid2, b.objid from
-			sie01_f a join sie04_f b on st_contains(a.geom, b.geom)
-
-mappingId	settlement f inside admin areaas
-target		:Location/f/{objid1} geo:sfWithin :Administrative/f/{objid2} .
-source		select a.objid as objid1, b.objid as objid2 from sie01_f a
-			join geb01_f b on st_within(a.geom, b.geom)
+;mappingId	settlement f inside admin areaas
+;target		:Location/f/{objid1} geo:sfWithin :Administrative/f/{objid2} .
+;source		select a.objid as objid1, b.objid as objid2 from sie01_f a
+;			join geb01_f b on st_within(a.geom, b.geom)
 
 ;NOTE: These tables are materialized from the original
 mappingId	building inside settlement
@@ -294,9 +294,9 @@ target		:Path/l/{objid1} geo:sfContains :Location/f/{objid2} .
 source		select a.objid as objid1, b.objid as objid2 from ver02_l a
 			join sie01_f b on st_contains(b.geom, a.geom)
 
-mappingId	schema city
-target		schema:City/p/{objid} a schema:City ; rdfs:label {nam} ; geo:hasDefaultGeometry schema:City/geo/p/{objid} . schema:City/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
-source		select objid, nam, st_astext(geom) as wkt from sie01_p
+;mappingId	schema city
+;target		schema:City/p/{objid} a schema:City ; rdfs:label {nam} ; geo:hasDefaultGeometry schema:City/geo/p/{objid} . schema:City/geo/p/{objid} a geo:Geometry , sf:Point ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467> {wkt}"^^geo:wktLiteral .
+;source		select objid, nam, st_astext(geom) as wkt from sie01_p
 
 mappingId	special facility - Feature TestArea
 target		:SpecialFacility/f/{objid} a :TestSite .
@@ -308,9 +308,9 @@ target		:WaterBodyCourse/f/{objidgew01f} geo:sfIntersects :Agricultural/f/{objid
 source		select a.objid AS objidgew01f, b.objid AS objidveg01f from gew01_f a
 			join veg01_f b on st_intersects(a.geom, b.geom)
 
-mappingId	schema airport
-target		schema:Airport/f/{objid} a schema:Airport ; rdfs:label {nam} ; geo:hasDefaultGeometry schema:Airport/geo/f/{objid} . schema:Airport/geo/f/{objid} a geo:geometry , sf:MultiPolygon ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467>{wkt}"^^xsd:string .
-source		select objid, nam, st_astext(geom) as wkt, objart_txt from ver04_f
+;mappingId	schema airport
+;target		schema:Airport/f/{objid} a schema:Airport ; rdfs:label {nam} ; geo:hasDefaultGeometry schema:Airport/geo/f/{objid} . schema:Airport/geo/f/{objid} a geo:geometry , sf:MultiPolygon ; geo:asWKT "<http://www.opengis.net/def/crs/EPSG/0/31467>{wkt}"^^xsd:string .
+;source		select objid, nam, st_astext(geom) as wkt, objart_txt from ver04_f
 
 mappingId	Feature - SportAndRecreationAndLeisureArea
 target		:AreaDominatedByBuilding/f/{objid} a :SportRecreationAndLeisureArea .
