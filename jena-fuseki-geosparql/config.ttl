@@ -1,0 +1,37 @@
+PREFIX fuseki:  <http://jena.apache.org/fuseki#>
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX tdb2:    <http://jena.apache.org/2016/tdb#>
+PREFIX ja:      <http://jena.hpl.hp.com/2005/11/Assembler#>
+PREFIX geosparql: <http://www.opengis.net/ont/geosparql#> .
+PREFIX :        <#>
+
+<#service1> rdf:type fuseki:Service ;
+    fuseki:name                       "ds" ;
+    fuseki:serviceQuery               "sparql" ;
+    fuseki:serviceQuery               "query" ;
+    fuseki:serviceUpdate              "update" ;
+    fuseki:serviceUpload              "upload" ;
+    fuseki:serviceReadWriteGraphStore "data" ;
+    fuseki:serviceReadGraphStore      "get" ;
+    fuseki:dataset                    <#dataset_tdb> ;
+    .
+
+#<#dataset> rdf:type tdb2:DatasetTDB2 ;
+#    tdb2:location "/fuseki-data/databases/ds" ;
+#    tdb2:unionDefaultGraph true ;
+#    .
+
+:dataset_tdb a      ja:DatasetTDB2 ;
+    ja:context [
+        ja:cxtName "arq:queryTimeout" ;
+        ja:cxtValue "10000" ;
+    ] ;
+    ja:assembler [
+        ja:uri <http://jena.apache.org/spatial#spatialDataset> ;
+        ja:indexed :dataset_index_geo ;
+    ] .
+
+:dataset_index_geo a spatial:SpatialIndexLucene ;
+    spatial:directory <file:/fuseki/databases/spatial> ;
+    spatial:definition <http://www.opengis.net/def/crs/EPSG/0/31467> .

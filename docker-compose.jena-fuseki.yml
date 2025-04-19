@@ -1,0 +1,80 @@
+services:
+  atkisdb:
+    container_name: atkisdb
+    image: postgis/postgis:16-3.5
+    ports:
+      - "${MAPPED_POSTGRES_PORT}:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: atkis_db
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -h atkisdb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  db_import:
+    container_name: db_shp_import
+    build:
+      context: db_import
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: atkis_db
+    depends_on:
+      atkisdb:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  ontop:
+    container_name: ontop
+    image: ontop/ontop:5.2.1
+    command: [ "ontop", "materialize", "-f", "turtle", "--output", "/opt/ontop/input/materialized-triples.ttl" ]
+    #image: albulenpano/geosparql_1.1:v6
+    #restart: unless-stopped
+    environment:
+      #ONTOP_ONTOLOGY_FILE: /opt/ontop/input/atkis2.ttl
+      ONTOP_MAPPING_FILE: /opt/ontop/input/atkis1.obda
+      #ONTOP_MAPPING_FILE: /opt/ontop/input/atkis_lens.obda
+      #ONTOP_LENSES_FILE: /opt/ontop/input/union_lens.json
+      ONTOP_XML_CATALOG_FILE: /opt/ontop/input/catalog-v001.xml
+      ONTOP_PROPERTIES_FILE: /opt/ontop/input/atkis1.docker.properties
+      #ONTOP_PORTAL_FILE: /opt/ontop/input/experiments.portal.toml
+      #ONTOP_CORS_ALLOWED_ORIGINS: "*"
+      #ONTOP_DEV_MODE: "true"
+      #ONTOP_LOG_LEVEL: "DEBUG"
+    volumes:
+      - ./vkg:/opt/ontop/input
+      - ./jdbc:/opt/ontop/jdbc
+    ports:
+      - "${SERVER_PORT}:8080"
+    depends_on:
+      db_import:
+        condition: service_completed_successfully
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  jena-fuseki:
+    build:
+      context: ./jena-fuseki-geosparql
+    container_name: fuseki
+    init: true
+    environment:
+      #- user is "admin"
+      - ADMIN_PASSWORD=admin
+      - JVM_ARGS=-Xmx24G
+      #- JAVA_OPTS=-Xmx24g -Xms12g
+      #- JVM_ARGS=-Xmx4G -XX:MaxDirectMemorySize=8G
+      - TDB=2
+    #volumes:
+    #  - ./vkg/materialized-triples.ttl:/jena-fuseki/staging/materialized-triples.ttl
+    #  - ./fuseki-data:/fuseki-data
+#    depends_on:
+#      ontop:
+#        condition: service_completed_successfully
+    ports:
+      - "3030:3030"

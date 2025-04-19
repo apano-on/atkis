@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y \
 # Copy the plugin zip file
 COPY sparqlunicorn-0.17.zip /tmp/
 COPY sparqlunicorn-0.17.zip /home/qgis/.
+COPY alkis /home/alkis
+COPY georef-germany-land /home/Germany_shapefile
 # Extract the plugin
 RUN mkdir -p /home/qgis/.local/share/QGIS/QGIS3/profiles/default/python/plugins/sparqlunicorn && \
     unzip /tmp/sparqlunicorn-0.17.zip -d /home/qgis/.local/share/QGIS/QGIS3/profiles/default/python/plugins/sparqlunicorn
