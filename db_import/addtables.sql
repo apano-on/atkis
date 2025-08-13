@@ -1481,7 +1481,8 @@ ALTER TABLE "ver06_l" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES
 ALTER TABLE "ver06_p" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
 ALTER TABLE "gew02_f" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
 ALTER TABLE "gew02_p" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
-ALTER TABLE "rel01_l" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
+-- Column art removed from table at least since May 2025
+--ALTER TABLE "rel01_l" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
 ALTER TABLE "rel02_p" ADD CONSTRAINT art_fk FOREIGN KEY (art, objart) REFERENCES art(code, objart);
 
 
@@ -1780,7 +1781,7 @@ INSERT INTO administrativefunktion VALUES (7005, 'City district', 'Stadtbezirk',
 INSERT INTO administrativefunktion VALUES (7007, 'District (municipality)', 'Ortsteil (Gemeinde)', '''Ortsteil'' ist ein räumlich abgetrennter Bereich einer Gemeinde.');
 INSERT INTO administrativefunktion VALUES (8001, 'Condominium', 'Kondominium', '''Kondominium'' ist ein Gebiet, welches unter der gemeinsamen Verwaltung mehrerer Staaten steht.');
 
-ALTER TABLE "geb01_f" ADD CONSTRAINT adm_fk FOREIGN KEY (adm) REFERENCES administrativefunktion(code);
+ALTER TABLE "geb01_f" ADD CONSTRAINT adf_fk FOREIGN KEY (adf) REFERENCES administrativefunktion(code);
 
 
 -- Attribute:  artdergebietsgrenze
